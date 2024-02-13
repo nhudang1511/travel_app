@@ -1,0 +1,97 @@
+{
+  "project_info": {
+    "project_number": "276141813864",
+    "project_id": "travoapps",
+    "storage_bucket": "travoapps.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276141813864:android:9ce19a1026e918c320cbdd",
+        "android_client_info": {
+          "package_name": "com.aci.travoapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "276141813864-0en0b6mpk1mbpc62tph08pdthr3mppul.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgg3GJSMBQiGhUqfSac6haSoS04_OEt8k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276141813864-0en0b6mpk1mbpc62tph08pdthr3mppul.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276141813864:android:98850a8082052b7420cbdd",
+        "android_client_info": {
+          "package_name": "com.aci.travoapp.beta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "276141813864-0en0b6mpk1mbpc62tph08pdthr3mppul.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgg3GJSMBQiGhUqfSac6haSoS04_OEt8k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276141813864-0en0b6mpk1mbpc62tph08pdthr3mppul.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:276141813864:android:9e8d621095e0ade620cbdd",
+        "android_client_info": {
+          "package_name": "com.aci.travoapp.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "276141813864-0en0b6mpk1mbpc62tph08pdthr3mppul.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgg3GJSMBQiGhUqfSac6haSoS04_OEt8k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276141813864-0en0b6mpk1mbpc62tph08pdthr3mppul.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
