@@ -5,6 +5,7 @@ import '../../cache/cache.dart';
 import '../../config/failure.dart';
 import '../../config/shared_preferences.dart';
 import '../model/user_model.dart';
+import '../sqlite/database.dart';
 
 class AuthRepository {
   AuthRepository({
@@ -36,7 +37,8 @@ class AuthRepository {
       {required String name,
       required String country,
       required String phone,
-      required String email, required String password}) async {
+      required String email,
+      required String password}) async {
     try {
       final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
@@ -72,13 +74,17 @@ class AuthRepository {
       );
       SharedService.setUserId(_firebaseAuth.currentUser!.uid);
       SharedService.setEmail(email);
+      var newUser = User(
+          id: _firebaseAuth.currentUser!.uid,
+          name: "exp@",
+          password: password);
+      DBOP.newUser(newUser);
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw LogInWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (_) {
       throw const LogInWithEmailAndPasswordFailure();
     }
   }
-
 
   Future<bool> forgotPassword(String email) async {
     try {
@@ -92,6 +98,7 @@ class AuthRepository {
       throw Exception(e);
     }
   }
+
   Future<void> logOut() async {
     try {
       await Future.wait([
@@ -101,6 +108,7 @@ class AuthRepository {
       SharedService.clear("likedPlaces");
       SharedService.clear("email");
       sharedServiceClear();
+      DBOP.deleteAll();
     } catch (_) {
       throw LogOutFailure();
     }
@@ -110,7 +118,6 @@ class AuthRepository {
 extension on firebase_auth.User {
   /// Maps a [firebase_auth.User] into a [User].
   User get toUser {
-    return User(
-        id: uid, name: displayName, email: email, phone: phoneNumber);
+    return User(id: uid, name: displayName, email: email, phone: phoneNumber);
   }
 }

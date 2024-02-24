@@ -77,9 +77,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 child: _checkbox
                                     ? const Icon(
-                                        Icons.check,
-                                        color: Color(0xFF6155CC),
-                                      )
+                                  Icons.check,
+                                  color: Color(0xFF6155CC),
+                                )
                                     : null,
                               ),
                             ),
@@ -94,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       .textTheme
                                       .titleLarge
                                       ?.copyWith(
-                                          color: const Color(0xFF313131))),
+                                      color: const Color(0xFF313131))),
                             ),
                           ],
                         ),
@@ -109,6 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   .read<LoginCubit>()
                                   .passwordChanged(passwordController.text);
                               context.read<LoginCubit>().logInWithCredentials();
+
                             }
                           },
                         ),
@@ -149,14 +150,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                           .textTheme
                                           .titleLarge
                                           ?.copyWith(
-                                              color: const Color(0xFF313131))),
+                                          color: const Color(0xFF313131))),
                                   TextSpan(
                                       text: 'Sign Up',
                                       style: Theme.of(context)
                                           .textTheme
                                           .headlineSmall
                                           ?.copyWith(
-                                              color: const Color(0xFF6155CC))),
+                                          color: const Color(0xFF6155CC))),
                                 ],
                               ),
                             ),
