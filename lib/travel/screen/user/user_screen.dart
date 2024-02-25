@@ -17,25 +17,17 @@ class UserScreen extends StatefulWidget {
 
 class _UserScreenState extends State<UserScreen> {
   late AuthBloc _authBloc;
-  String password = '';
   String? email = SharedService.getEmail();
+  String? name = SharedService.getName();
+  String? phone = SharedService.getPhone();
+  String? country = SharedService.getCountry();
 
   @override
   void initState() {
     super.initState();
     _authBloc = BlocProvider.of<AuthBloc>(context);
-    //getClient();
   }
 
-  void getClient() async {
-    var client = await DBOP.getClient();
-    if (client != null) {
-      setState(() {
-        email = client['email']; // Cập nhật name từ dữ liệu DB
-        password = client['password'];
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,37 +36,132 @@ class _UserScreenState extends State<UserScreen> {
       isIcon: false,
       isFirst: true,
       showModalBottomSheet: () {},
-      child: Column(
-        children: [
-          Text(
-            email ?? 'email is empty',
-            textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .displayLarge
-                ?.copyWith(color: Colors.black),
-          ),
-          Text(
-            password.isNotEmpty ? password: 'password is empty',
-            textAlign: TextAlign.center,
-            style: Theme.of(context)
-                .textTheme
-                .displayLarge
-                ?.copyWith(color: Colors.black),
-          ),
-          CustomInkwell(
-            mainIcon: Icon(
-              Icons.logout,
-              color: Theme.of(context).colorScheme.primary,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Column(
+              children: [
+                CircleAvatar(
+                  radius: 53,
+                  backgroundColor: Theme
+                      .of(context)
+                      .colorScheme
+                      .primary,
+                  child: const CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 50,
+                    child: ClipOval(
+                      child: Icon(
+                        Icons.person, size: 80, color: Color(0xFF8F67E8),),
+                    ),
+                  ),
+                ),
+                //name
+                Text(
+                  name ?? 'no name',
+                  textAlign: TextAlign.center,
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .displayLarge
+                      ?.copyWith(color: Colors.black),
+                ),
+                //mail
+                Text(
+                  email ?? 'no email',
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .bodyLarge!
+                      .copyWith(fontSize: 16, color: Colors.black),
+                ),
+              ],
             ),
-            title: "Log out",
-            currentHeight: MediaQuery.of(context).size.height,
-            onTap: () {
-              _authBloc.add(AuthEventLoggedOut());
-              Navigator.pushNamed(context, LoginScreen.routeName);
-            },
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.only(top: 12.0),
+              child: CustomButton(
+                title: "Edit profile",
+                button: () {
+                  Navigator.pushNamed(context, "/edit_profile");
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 32),
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(left: 32, right: 32),
+                    child: Container(
+                      height: 1,
+                      decoration: BoxDecoration(
+                        color: Theme
+                            .of(context)
+                            .colorScheme
+                            .secondary,
+                      ),
+                    ),
+                  ),
+                  //settings
+                  CustomInkwell(
+                      onTap: () {
+                        Navigator.pushNamed(context, '/settings');
+                      },
+                      mainIcon: Icon(
+                        Icons.settings,
+                        color: Theme
+                            .of(context)
+                            .colorScheme
+                            .primary,
+                      ),
+                      title: "Settings",
+                      currentHeight: MediaQuery
+                          .of(context)
+                          .size
+                          .height),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 64, right: 64),
+                    child: Container(
+                      height: 0.5,
+                      decoration: BoxDecoration(
+                        color: Theme
+                            .of(context)
+                            .colorScheme
+                            .secondary,
+                      ),
+                    ),
+                  ),
+                  BlocBuilder<AuthBloc, AuthState>(
+                    builder: (context, state) {
+                      return CustomInkwell(
+                          onTap: () {
+                            if (state is AuthenticateState) {
+                              _authBloc.add(AuthEventLoggedOut());
+                              Navigator.pushNamed(
+                                  context, LoginScreen.routeName);
+                            }
+                          },
+                          mainIcon: Icon(
+                            Icons.logout,
+                            color: Theme
+                                .of(context)
+                                .colorScheme
+                                .primary,
+                          ),
+                          title: "Log out",
+                          currentHeight: MediaQuery
+                              .of(context)
+                              .size
+                              .height);
+                    },
+                  ),
+                ],
+              ),
+            ),
+
+          ],
+        ),
       ),
     );
   }

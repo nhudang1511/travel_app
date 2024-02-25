@@ -2,9 +2,7 @@ import 'dart:convert';
 
 import 'custom_model.dart';
 
-User userFromJson(String str) => User.fromJson(json.decode(str));
 
-String userToJson(User data) => json.encode(data.toJson);
 
 class User extends CustomModel {
   final String? name;
@@ -33,13 +31,14 @@ class User extends CustomModel {
     );
   }
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
-      id: '',
-      name: json['name'],
-      password: json['password'],
-      email: json['email'],
-      phone: json['phone'],
-      country: json['country']);
+  factory User.fromJson(Map<String, dynamic> json) =>  User(
+    id: '',
+    password: json['password'] as String?,
+    phone: json['phoneNumber'] as String?,
+    name: json['name'] as String?,
+    country: json['country'] as String?,
+    email: json['email'] as String?,
+  );
 
   Map<String, dynamic> toJson() {
     return {

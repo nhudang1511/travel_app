@@ -81,16 +81,13 @@ class AuthRepository {
         email: email,
         password: password,
       );
-      // SharedService.setUserId(_firebaseAuth.currentUser!.uid);
       // SharedService.setEmail(email);
       DBOP.getLogin(email, password).then((userData){
-        print(userData);
-        // if(userData != null){
-        //   print('has $userData');
-        //   SharedService.setUserId(_firebaseAuth.currentUser!.uid);
-        //   //SharedService.setItem(email);
-        //   setSP(userData);
-        // }
+        // print('in login: ${userData?.email}');
+        if(userData != null){
+          SharedService.setUserId(_firebaseAuth.currentUser!.uid);
+          setSP(userData);
+        }
       });
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw LogInWithEmailAndPasswordFailure.fromCode(e.code);
@@ -99,8 +96,11 @@ class AuthRepository {
     }
   }
   Future setSP(User user) async{
-    print('email ${user.email}');
     SharedService.setEmail(user.email ?? '');
+    SharedService.setName(user.name ?? '');
+    SharedService.setPhone(user.phone ?? '');
+    SharedService.setPassword(user.password ?? '');
+    SharedService.setCountry(user.country ?? '');
   }
   Future<bool> forgotPassword(String email) async {
     try {
@@ -120,10 +120,14 @@ class AuthRepository {
       await Future.wait([
         _firebaseAuth.signOut(),
       ]);
+      SharedService.clear("likedPlaces");
       SharedService.clear("userId");
-      // SharedService.clear("likedPlaces");
-      // SharedService.clear("email");
-      // sharedServiceClear();
+      SharedService.clear("email");
+      SharedService.clear("name");
+      SharedService.clear("password");
+      SharedService.clear("phone");
+      SharedService.clear("country");
+      sharedServiceClear();
       // DBOP.deleteAll();
     } catch (_) {
       throw LogOutFailure();

@@ -29,6 +29,34 @@ class SharedService {
   static void setEmail(String email){
     _pref.setString("email", email);
   }
+  static String? getName(){
+    return _pref.getString("name");
+  }
+
+  static void setName(String name){
+    _pref.setString("name", name);
+  }
+  static String? getPhone(){
+    return _pref.getString("phone");
+  }
+
+  static void setPhone(String phone){
+    _pref.setString("phone", phone);
+  }
+  static String? getPassword(){
+    return _pref.getString("password");
+  }
+
+  static void setPassword(String password){
+    _pref.setString("password", password);
+  }
+  static String? getCountry(){
+    return _pref.getString("country");
+  }
+
+  static void setCountry(String country){
+    _pref.setString("country", country);
+  }
   static List<String> getLikedPlaces(){
     return _pref.getStringList("likedPlaces") ?? [];
   }

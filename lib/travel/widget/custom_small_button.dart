@@ -43,11 +43,16 @@ class CustomSmallButton extends StatelessWidget {
               const SizedBox(
                 width: 5,
               ),
-              Text(title,
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineMedium
-                      ?.copyWith(color: color)),
+              Text(
+                title,
+                style: TextStyle(
+                  color: colorText,
+                  fontSize: 16,
+                  fontFamily: 'Rubik',
+                  fontWeight: FontWeight.w500,
+                  height: 0,
+                ),
+              ),
             ],
           )),
     );

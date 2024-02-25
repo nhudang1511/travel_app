@@ -56,7 +56,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         listener: (context, state) {
           if (state.status == SignupStatus.success) {
             Navigator.of(context).pop();
-          } else {
+          } else if (state.status == SignupStatus.error) {
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
@@ -107,6 +107,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         Container(
                           margin: const EdgeInsets.only(top: 10),
                           child: Text.rich(
+                            textAlign: TextAlign.center,
                             TextSpan(
                               children: [
                                 TextSpan(
@@ -154,11 +155,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           button: () {
                             if (_formKey.currentState!.validate()) {
                               _signupCubit.emailChanged(emailController.text);
-                              _signupCubit.passwordChanged(passwordController.text);
-                              _signupCubit.phoneNumberChanged(phoneController.text);
+                              _signupCubit
+                                  .passwordChanged(passwordController.text);
+                              _signupCubit
+                                  .phoneNumberChanged(phoneController.text);
                               _signupCubit.fullNameChanged(nameController.text);
-                             _signupCubit.countryChanged(countryController.text);
-                             _signupCubit.signUpWithEmailAndPassword();
+                              _signupCubit
+                                  .countryChanged(countryController.text);
+                              _signupCubit.signUpWithEmailAndPassword();
                             }
                           },
                         ),

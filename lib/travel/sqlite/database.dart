@@ -65,10 +65,10 @@ class DBOP {
     var res = await db?.query(DBProvider.table,
         where: '${DBProvider.email} = ? AND ${DBProvider.password} = ?',
         whereArgs: [email, password]);
-    print('res: $res');
     if (res != null && res.isNotEmpty) {
       var resMap = res.first; // Lấy phần tử đầu tiên trong danh sách
-      return resMap.isNotEmpty ? resMap : null;
+      print('toJson ${resMap}');
+      return resMap.isNotEmpty ? User.fromJson(resMap) : null;
     } else {
       return null;
     }
