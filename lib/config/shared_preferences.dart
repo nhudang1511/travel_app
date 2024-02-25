@@ -115,6 +115,7 @@ class SharedService {
   static void setListSeat(List<String> seats){
     _pref.setStringList("seats", seats);
   }
+
 }
 void sharedServiceClear(){
   SharedService.clear("startDate");

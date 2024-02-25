@@ -11,8 +11,7 @@ class SignupCubit extends Cubit<SignupState> {
   final AuthRepository _authRepository;
   User? newUser;
 
-  SignupCubit(this._authRepository)
-      :super(SignupState.initial()) {}
+  SignupCubit(this._authRepository) : super(SignupState.initial()) {}
 
   void fullNameChanged(String value) {
     emit(
@@ -40,6 +39,7 @@ class SignupCubit extends Cubit<SignupState> {
       ),
     );
   }
+
   void countryChanged(String value) {
     emit(
       state.copyWith(
@@ -62,7 +62,11 @@ class SignupCubit extends Cubit<SignupState> {
     if (state.status == SignupStatus.submitting) return;
     emit(state.copyWith(status: SignupStatus.submitting));
     try {
-      await _authRepository.signUp(name: state.name, country: state.country, phone: state.phone,email: state.email,
+      await _authRepository.signUp(
+          name: state.name,
+          country: state.country,
+          phone: state.phone,
+          email: state.email,
           password: state.password);
       emit(state.copyWith(status: SignupStatus.success));
     } on SignUpWithEmailAndPasswordFailure catch (e) {

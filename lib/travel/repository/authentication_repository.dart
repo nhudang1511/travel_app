@@ -54,8 +54,17 @@ class AuthRepository {
         "country": country
       });
 
-      //? Save Into Local
-      SharedService.setUserId(_firebaseAuth.currentUser!.uid);
+      // //? Save Into Local
+      // SharedService.setUserId(_firebaseAuth.currentUser!.uid);
+      var newUser = User(
+          id: _firebaseAuth.currentUser!.uid,
+          email: email,
+          password: password,
+          name: name,
+          country: country,
+          phone: phone);
+      DBOP.newUser(newUser);
+      print('new: $newUser');
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (_) {
@@ -72,20 +81,27 @@ class AuthRepository {
         email: email,
         password: password,
       );
-      SharedService.setUserId(_firebaseAuth.currentUser!.uid);
-      SharedService.setEmail(email);
-      var newUser = User(
-          id: _firebaseAuth.currentUser!.uid,
-          name: "exp@",
-          password: password);
-      DBOP.newUser(newUser);
+      // SharedService.setUserId(_firebaseAuth.currentUser!.uid);
+      // SharedService.setEmail(email);
+      DBOP.getLogin(email, password).then((userData){
+        print(userData);
+        // if(userData != null){
+        //   print('has $userData');
+        //   SharedService.setUserId(_firebaseAuth.currentUser!.uid);
+        //   //SharedService.setItem(email);
+        //   setSP(userData);
+        // }
+      });
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw LogInWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (_) {
       throw const LogInWithEmailAndPasswordFailure();
     }
   }
-
+  Future setSP(User user) async{
+    print('email ${user.email}');
+    SharedService.setEmail(user.email ?? '');
+  }
   Future<bool> forgotPassword(String email) async {
     try {
       bool status = false;
@@ -105,10 +121,10 @@ class AuthRepository {
         _firebaseAuth.signOut(),
       ]);
       SharedService.clear("userId");
-      SharedService.clear("likedPlaces");
-      SharedService.clear("email");
-      sharedServiceClear();
-      DBOP.deleteAll();
+      // SharedService.clear("likedPlaces");
+      // SharedService.clear("email");
+      // sharedServiceClear();
+      // DBOP.deleteAll();
     } catch (_) {
       throw LogOutFailure();
     }

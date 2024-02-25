@@ -59,30 +59,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           isPassword: true,
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _checkbox = !_checkbox;
-                                });
-                              },
-                              child: Container(
-                                width: 24,
-                                height: 24,
-                                decoration: ShapeDecoration(
-                                  color: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8)),
-                                ),
-                                child: _checkbox
-                                    ? const Icon(
-                                  Icons.check,
-                                  color: Color(0xFF6155CC),
-                                )
-                                    : null,
-                              ),
-                            ),
                             GestureDetector(
                               onTap: () {
                                 Route route = MaterialPageRoute(

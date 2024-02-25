@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_nhu_nguyen/config/shared_preferences.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/login/login_screen.dart';
 import 'package:flutter_nhu_nguyen/travel/sqlite/database.dart';
 
@@ -16,21 +17,22 @@ class UserScreen extends StatefulWidget {
 
 class _UserScreenState extends State<UserScreen> {
   late AuthBloc _authBloc;
-  String name = '';
-  String email = 'nhudang1511@gmail.com';
+  String password = '';
+  String? email = SharedService.getEmail();
 
   @override
   void initState() {
     super.initState();
     _authBloc = BlocProvider.of<AuthBloc>(context);
-    getClient();
+    //getClient();
   }
 
   void getClient() async {
     var client = await DBOP.getClient();
     if (client != null) {
       setState(() {
-        name = client['name']; // Cập nhật name từ dữ liệu DB
+        email = client['email']; // Cập nhật name từ dữ liệu DB
+        password = client['password'];
       });
     }
   }
@@ -45,7 +47,15 @@ class _UserScreenState extends State<UserScreen> {
       child: Column(
         children: [
           Text(
-            name.isNotEmpty ? name: 'Nhu',
+            email ?? 'email is empty',
+            textAlign: TextAlign.center,
+            style: Theme.of(context)
+                .textTheme
+                .displayLarge
+                ?.copyWith(color: Colors.black),
+          ),
+          Text(
+            password.isNotEmpty ? password: 'password is empty',
             textAlign: TextAlign.center,
             style: Theme.of(context)
                 .textTheme

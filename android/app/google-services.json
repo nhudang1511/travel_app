@@ -1,94 +1,26 @@
 {
   "project_info": {
-    "project_number": "276141813864",
-    "project_id": "travoapps",
-    "storage_bucket": "travoapps.appspot.com"
+    "project_number": "957890556594",
+    "project_id": "travoapps-b31c4",
+    "storage_bucket": "travoapps-b31c4.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:276141813864:android:9ce19a1026e918c320cbdd",
+        "mobilesdk_app_id": "1:957890556594:android:b2dee882a107fd1c0a0fab",
         "android_client_info": {
           "package_name": "com.aci.travoapp"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "276141813864-0en0b6mpk1mbpc62tph08pdthr3mppul.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBgg3GJSMBQiGhUqfSac6haSoS04_OEt8k"
+          "current_key": "AIzaSyCBlH2F4HdwO705LYAcIL72pOx7W0tI7g0"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "276141813864-0en0b6mpk1mbpc62tph08pdthr3mppul.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:276141813864:android:98850a8082052b7420cbdd",
-        "android_client_info": {
-          "package_name": "com.aci.travoapp.beta"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "276141813864-0en0b6mpk1mbpc62tph08pdthr3mppul.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBgg3GJSMBQiGhUqfSac6haSoS04_OEt8k"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "276141813864-0en0b6mpk1mbpc62tph08pdthr3mppul.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:276141813864:android:9e8d621095e0ade620cbdd",
-        "android_client_info": {
-          "package_name": "com.aci.travoapp.dev"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "276141813864-0en0b6mpk1mbpc62tph08pdthr3mppul.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBgg3GJSMBQiGhUqfSac6haSoS04_OEt8k"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "276141813864-0en0b6mpk1mbpc62tph08pdthr3mppul.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

@@ -1,8 +1,11 @@
 import 'dart:convert';
 
 import 'custom_model.dart';
+
 User userFromJson(String str) => User.fromJson(json.decode(str));
+
 String userToJson(User data) => json.encode(data.toJson);
+
 class User extends CustomModel {
   final String? name;
   final String? country;
@@ -10,7 +13,13 @@ class User extends CustomModel {
   final String? email;
   final String? password;
 
-  User({required String id, this.name, this.country, this.phone, this.email, this.password})
+  User(
+      {required String id,
+      this.name,
+      this.country,
+      this.phone,
+      this.email,
+      this.password})
       : super(id: id);
 
   @override
@@ -23,17 +32,25 @@ class User extends CustomModel {
       email: doc['email'] as String?,
     );
   }
+
   factory User.fromJson(Map<String, dynamic> json) => User(
       id: '',
       name: json['name'],
-      password: json['password']
-  );
+      password: json['password'],
+      email: json['email'],
+      phone: json['phone'],
+      country: json['country']);
+
   Map<String, dynamic> toJson() {
     return {
-      'name':name,
-      'password':password
+      'name': name,
+      'password': password,
+      'email': email,
+      'phone': phone,
+      'country': country
     };
   }
+
   @override
   Map<String, dynamic> toDocument() {
     return {
