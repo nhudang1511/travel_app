@@ -77,38 +77,71 @@ class AuthRepository {
     required String password,
   }) async {
     try {
+      User? userData;
+
+      // Check if user exists in local DB
+      userData = await DBOP.getLogin(email, password);
       await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      // SharedService.setEmail(email);
-      DBOP.getLogin(email, password).then((userData){
-        // print('in login: ${userData?.email}');
-        if(userData != null){
+      if (userData == null) {
+        // If sign-in successful, search for user in Firestore
+        final querySnapshot = await FirebaseFirestore.instance
+            .collection('user')
+            .where('email', isEqualTo: email)
+            .limit(1)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          final userDoc = querySnapshot.docs.first;
+          userData = User(
+            id: userDoc.id,
+            email: userDoc['email'],
+            name: userDoc['name'],
+            country: userDoc['country'],
+            phone: userDoc['phoneNumber'],
+          );
+
+          // Add user to local DB
+          await DBOP.newUser(userData);
           SharedService.setUserId(_firebaseAuth.currentUser!.uid);
           setSP(userData);
         }
-      });
+      }
+
+      if (userData != null) {
+        // Set user ID and other data
+        SharedService.setUserId(_firebaseAuth.currentUser!.uid);
+        setSP(userData);
+      } else {
+        // If user data is still null, throw failure
+        throw const LogInWithEmailAndPasswordFailure();
+      }
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw LogInWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (_) {
       throw const LogInWithEmailAndPasswordFailure();
     }
   }
-  Future setSP(User user) async{
+
+  Future setSP(User user) async {
     SharedService.setEmail(user.email ?? '');
     SharedService.setName(user.name ?? '');
     SharedService.setPhone(user.phone ?? '');
     SharedService.setPassword(user.password ?? '');
     SharedService.setCountry(user.country ?? '');
   }
+
   Future<bool> forgotPassword(String email) async {
     try {
       bool status = false;
-      await _firebaseAuth
-          .sendPasswordResetEmail(email: email)
-          .then((value) => status = true)
-          .catchError((e) => status = false);
+      await _firebaseAuth.sendPasswordResetEmail(email: email).then((value) {
+        status = true;
+
+      }).catchError((e) {
+        status = false;
+      });
       return status;
     } catch (e) {
       throw Exception(e);
