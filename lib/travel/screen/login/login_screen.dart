@@ -87,7 +87,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                   .read<LoginCubit>()
                                   .passwordChanged(passwordController.text);
                               context.read<LoginCubit>().logInWithCredentials();
-
                             }
                           },
                         ),

@@ -54,6 +54,13 @@ class SharedService {
     return _pref.getString("country");
   }
 
+  static void setEmailReset(String email){
+    _pref.setString("reset", email);
+  }
+  static String? getEmailRest(){
+    return _pref.getString("reset");
+  }
+
   static void setCountry(String country){
     _pref.setString("country", country);
   }

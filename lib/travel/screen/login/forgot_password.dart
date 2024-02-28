@@ -52,6 +52,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
                                   emailController.text);
                               context.read<ForgotPasswordCubit>()
                                   .forgotPassword();
+                              context.read<ForgotPasswordCubit>().forgotPassword();
                             }
                           },
                         ),

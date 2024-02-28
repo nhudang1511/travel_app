@@ -73,6 +73,19 @@ class DBOP {
       return null;
     }
   }
+  static updateUser(User newUser) async {
+    final db = await DBProvider().initDB();
+    var res = await db.update(DBProvider.table, newUser.toJson(),
+        where: "${DBProvider.id} = ?", whereArgs: [newUser.id]);
+    return res;
+  }
+
+  static updatePassword(String email, String password) async {
+    final db = await DBProvider().initDB();
+    var res = await db.update(DBProvider.table,  {'password': password},
+        where: "${DBProvider.email} = ?", whereArgs: [email]);
+    return res;
+  }
 
   static deleteAll() async {
     final db = await DBProvider().initDB();
