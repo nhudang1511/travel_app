@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nhu_nguyen/config/shared_preferences.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/login/login_screen.dart';
-import 'package:flutter_nhu_nguyen/travel/sqlite/database.dart';
-
 import '../../bloc/bloc.dart';
-import '../../model/user_model.dart';
 import '../../widget/widget.dart';
 
 class UserScreen extends StatefulWidget {

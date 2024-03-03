@@ -1,20 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/foundation.dart' show kIsWeb, visibleForTesting;
+import 'package:google_sign_in/google_sign_in.dart';
 import '../../cache/cache.dart';
 import '../../config/failure.dart';
 import '../../config/shared_preferences.dart';
 import '../model/user_model.dart';
-import '../sqlite/database.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class AuthRepository {
   AuthRepository({
     CacheClient? cache,
     firebase_auth.FirebaseAuth? firebaseAuth,
+    GoogleSignIn? googleSignIn,
+    FacebookAuth? facebookAuth
   })  : _cache = cache ?? CacheClient(),
-        _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance;
+        _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
+        _googleSignIn = googleSignIn ?? GoogleSignIn.standard();
   final CacheClient _cache;
   final firebase_auth.FirebaseAuth _firebaseAuth;
+  final GoogleSignIn _googleSignIn;
 
   @visibleForTesting
   bool isWeb = kIsWeb;
@@ -53,18 +58,7 @@ class AuthRepository {
         "phoneNumber": phone,
         "country": country
       });
-
-      // //? Save Into Local
-      // SharedService.setUserId(_firebaseAuth.currentUser!.uid);
-      var newUser = User(
-          id: _firebaseAuth.currentUser!.uid,
-          email: email,
-          password: password,
-          name: name,
-          country: country,
-          phone: phone);
-      DBOP.newUser(newUser);
-      print('new: $newUser');
+      // print('new: $newUser');
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (_) {
@@ -77,46 +71,27 @@ class AuthRepository {
     required String password,
   }) async {
     try {
-      User? userData;
-
-      // Check if user exists in local DB
-      userData = await DBOP.getLogin(email, password);
       await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      if (userData == null) {
-        // If sign-in successful, search for user in Firestore
-        final querySnapshot = await FirebaseFirestore.instance
-            .collection('user')
-            .where('email', isEqualTo: email)
-            .limit(1)
-            .get();
+      User? userData;
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('user')
+          .where('email', isEqualTo: email)
+          .limit(1)
+          .get();
 
-        if (querySnapshot.docs.isNotEmpty) {
-          final userDoc = querySnapshot.docs.first;
-          userData = User(
+      if (querySnapshot.docs.isNotEmpty) {
+        final userDoc = querySnapshot.docs.first;
+        userData = User(
             id: userDoc.id,
             email: userDoc['email'],
             name: userDoc['name'],
             country: userDoc['country'],
             phone: userDoc['phoneNumber'],
-          );
-
-          // Add user to local DB
-          await DBOP.newUser(userData);
-          SharedService.setUserId(_firebaseAuth.currentUser!.uid);
-          setSP(userData);
-        }
-      }
-
-      if (userData != null) {
-        // Set user ID and other data
-        SharedService.setUserId(_firebaseAuth.currentUser!.uid);
+            password: password);
         setSP(userData);
-      } else {
-        // If user data is still null, throw failure
-        throw const LogInWithEmailAndPasswordFailure();
       }
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw LogInWithEmailAndPasswordFailure.fromCode(e.code);
@@ -126,6 +101,7 @@ class AuthRepository {
   }
 
   Future setSP(User user) async {
+    SharedService.setUserId(user.id);
     SharedService.setEmail(user.email ?? '');
     SharedService.setName(user.name ?? '');
     SharedService.setPhone(user.phone ?? '');
@@ -138,7 +114,6 @@ class AuthRepository {
       bool status = false;
       await _firebaseAuth.sendPasswordResetEmail(email: email).then((value) {
         status = true;
-
       }).catchError((e) {
         status = false;
       });
@@ -146,6 +121,64 @@ class AuthRepository {
     } catch (e) {
       throw Exception(e);
     }
+  }
+
+  Future<void> logInWithGoogle() async {
+    try {
+      late final firebase_auth.AuthCredential credential;
+      final googleUser = await _googleSignIn.signIn();
+      final googleAuth = await googleUser!.authentication;
+      credential = firebase_auth.GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final userCredential =
+          await _firebaseAuth.signInWithCredential(credential);
+      final firebaseUser = userCredential.user;
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('user')
+          .where('email', isEqualTo: firebaseUser!.email)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isEmpty) {
+        // If user doesn't exist, create new user document
+        await FirebaseFirestore.instance
+            .collection("user")
+            .doc(firebaseUser.uid)
+            .set({
+          'email': firebaseUser.email,
+          "name": firebaseUser.displayName,
+          "phoneNumber": firebaseUser.phoneNumber,
+        });
+      }
+      final userData = User(
+        id: firebaseUser.uid,
+        email: firebaseUser.email,
+        name: firebaseUser.displayName,
+        phone: firebaseUser.phoneNumber,
+        // Add more fields if needed
+      );
+      await setSP(userData);
+    } on firebase_auth.FirebaseAuthException catch (e) {
+      throw LogInWithGoogleFailure.fromCode(e.code);
+    } catch (_) {
+      throw const LogInWithGoogleFailure();
+    }
+  }
+
+  Future<void> signInWithFacebook() async {
+    // Trigger the sign-in flow
+    final LoginResult loginResult = await FacebookAuth.instance.login();
+
+    // Create a credential from the access token
+    final firebase_auth.OAuthCredential facebookAuthCredential =
+        firebase_auth.FacebookAuthProvider.credential(
+            loginResult.accessToken.token);
+
+    // Once signed in, return the UserCredential
+    await _firebaseAuth.signInWithCredential(facebookAuthCredential);
   }
 
   Future<void> logOut() async {

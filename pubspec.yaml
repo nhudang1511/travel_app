@@ -63,6 +63,8 @@ dependencies:
   input_quantity: ^2.2.0
   awesome_dialog: ^3.2.0
   flutter_credit_card: ^4.0.1
+  flutter_facebook_auth: ^6.0.4
+
   book_my_seat:
     git:
       url: https://github.com/nhudang1511/book_my_seat.git
