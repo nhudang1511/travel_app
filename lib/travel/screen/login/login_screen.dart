@@ -16,7 +16,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool _checkbox = false;
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -101,12 +100,15 @@ class _LoginScreenState extends State<LoginScreen> {
                               imgLink: AppPath.iconGoogle,
                               color: Colors.white,
                               colorText: Colors.black,
+                              onPressed: () {
+                                context.read<LoginCubit>().logInWithGoogle();
+                              },
                             ),
                             CustomSmallButton(
                               title: 'Facebook',
                               imgLink: AppPath.iconFacebook,
                               color: const Color(0xff3C5A9A),
-                              colorText: Colors.white,
+                              colorText: Colors.white, onPressed: () {  },
                             ),
                           ],
                         ),
