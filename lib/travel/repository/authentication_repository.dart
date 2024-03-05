@@ -73,30 +73,29 @@ class AuthRepository {
     required String password,
   }) async {
     try {
-     if(_firebaseAuth.currentUser!.emailVerified == true){
-       await _firebaseAuth.signInWithEmailAndPassword(
-         email: email,
-         password: password,
-       );
-       User? userData;
-       final querySnapshot = await FirebaseFirestore.instance
-           .collection('user')
-           .where('email', isEqualTo: email)
-           .limit(1)
-           .get();
+     //if(_firebaseAuth.currentUser!.emailVerified == true){}
+      await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      User? userData;
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('user')
+          .where('email', isEqualTo: email)
+          .limit(1)
+          .get();
 
-       if (querySnapshot.docs.isNotEmpty) {
-         final userDoc = querySnapshot.docs.first;
-         userData = User(
-             id: userDoc.id,
-             email: userDoc['email'],
-             name: userDoc['name'],
-             country: userDoc['country'],
-             phone: userDoc['phoneNumber'],
-             password: password);
-         setSP(userData);
-       }
-     }
+      if (querySnapshot.docs.isNotEmpty) {
+        final userDoc = querySnapshot.docs.first;
+        userData = User(
+            id: userDoc.id,
+            email: userDoc['email'],
+            name: userDoc['name'],
+            country: userDoc['country'],
+            phone: userDoc['phoneNumber'],
+            password: password);
+        setSP(userData);
+      }
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw LogInWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (_) {

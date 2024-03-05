@@ -13,6 +13,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   UserBloc(this._authRepository, this._userRepository)
       :super(UserLoading()) {
     on<LoadUser>(_onLoadUser);
+    on<UpdateUser>(_onEditUser);
   }
 
   void _onLoadUser(LoadUser event, Emitter<UserState> emit) async {
@@ -21,6 +22,19 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         User user = await _userRepository.getUserById(authUser.id);
         emit(UserLoaded(user: user));
       }
+    }
+    // List<User> user = await _userRepository.getAllUser();
+    // emit(UserLoaded(user: user));
+  }
+
+  void _onEditUser(UpdateUser event, Emitter<UserState> emit) async {
+    emit(UserLoading());
+    try {
+      await _userRepository.editUserById(event.user);
+      emit(UserLoaded(user: event.user));
+    } catch (e) {
+      print(e);
+      emit(UserFailure());
     }
     // List<User> user = await _userRepository.getAllUser();
     // emit(UserLoaded(user: user));

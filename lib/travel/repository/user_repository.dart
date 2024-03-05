@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_nhu_nguyen/config/shared_preferences.dart';
 
 import '../model/user_model.dart';
 
@@ -33,5 +34,33 @@ class UserRepository {
       log(e.toString());
       rethrow;
     }
+  }
+
+  Future<void> editUserById(User user) async {
+    try {
+      await _firebaseFirestore.collection("user").doc(user?.id).update({
+        "name": user.name,
+        "phoneNumber": user.phone,
+        "country": user.country
+      });
+
+      final querySnapshot = await _firebaseFirestore.collection("user").doc(user?.id).get();
+      var data = querySnapshot.data() as Map<String, dynamic>;
+      var newUser = User(id: user.id).fromDocument(data, user.id);
+      print(newUser.name);
+      setSP(newUser);
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+  Future setSP(User user) async {
+    SharedService.setUserId(user.id);
+    SharedService.setEmail(user.email ?? '');
+    SharedService.setName(user.name ?? '');
+    SharedService.setPhone(user.phone ?? '');
+    SharedService.setPassword(user.password ?? '');
+    SharedService.setCountry(user.country ?? '');
   }
 }

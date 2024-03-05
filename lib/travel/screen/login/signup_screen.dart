@@ -108,7 +108,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           title: 'Name',
                           textController: nameController,
                           validator: validateName,
-
                         ),
                         CustomCountryField(
                           countryController: countryController,
