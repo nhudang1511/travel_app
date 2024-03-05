@@ -64,4 +64,15 @@ class LoginCubit extends Cubit<LoginState> {
       emit(state.copyWith(status: LoginStatus.error));
     }
   }
+  Future<void> logInWithFacebook() async {
+    if (state.status == LoginStatus.submitting) return;
+    emit(state.copyWith(status: LoginStatus.submitting));
+    try {
+      await _authRepository.logInWithFacebook();
+      emit(state.copyWith(status: LoginStatus.success));
+    }  catch (e) {
+      print('Unknown error: $e');
+      emit(state.copyWith(status: LoginStatus.error));
+    }
+  }
 }

@@ -1,13 +1,17 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_nhu_nguyen/travel/screen/login/verify_email.dart';
 import '../../../config/app_path.dart';
 import '../../../config/validater.dart';
+import '../../cubits/login/login_cubit.dart';
 import '../../cubits/signup/signup_cubit.dart';
 import '../../widget/widget.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
+  static const String routeName = '/sign_up';
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -29,12 +33,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   );
   CountryCode? countryCode = CountryCode.fromName('United States');
   late SignupCubit _signupCubit;
+  late LoginCubit _loginCubit;
 
   @override
   void initState() {
     super.initState();
     countryController = TextEditingController(text: countryCode?.name);
     _signupCubit = BlocProvider.of(context);
+    _loginCubit = BlocProvider.of(context);
   }
 
   @override
@@ -55,13 +61,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
       body: BlocListener<SignupCubit, SignupState>(
         listener: (context, state) {
           if (state.status == SignupStatus.success) {
-            Navigator.of(context).pop();
-          } else if (state.status == SignupStatus.error) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                const SnackBar(content: Text('Sign Up Failure')),
-              );
+            Navigator.pushNamed(context, VerifyEmailScreen.routeName);
+          }
+          else if(state.status == SignupStatus.error){
+            AwesomeDialog(
+              context: context,
+              dialogType: DialogType.error,
+              animType: AnimType.rightSlide,
+              headerAnimationLoop: false,
+              title: 'Error',
+              desc:
+              '${state.status}',
+              descTextStyle: const TextStyle(color: Colors.black),
+              btnOkOnPress: () {},
+              btnOkIcon: Icons.cancel,
+              btnOkColor: Colors.red,
+            ).show();
+          }
+          else if(state.status == SignupStatus.emailExists){
+            AwesomeDialog(
+              context: context,
+              dialogType: DialogType.warning,
+              animType: AnimType.rightSlide,
+              headerAnimationLoop: false,
+              title: 'Warning',
+              desc:
+              '${state.status}',
+              descTextStyle: const TextStyle(color: Colors.black),
+              btnOkOnPress: () {},
+              btnOkIcon: Icons.cancel,
+              btnOkColor: Colors.yellow,
+            ).show();
           }
         },
         child: SingleChildScrollView(
@@ -176,13 +206,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               title: 'Google',
                               imgLink: AppPath.iconGoogle,
                               color: Colors.white,
-                              colorText: Colors.black, onPressed: () {  },
+                              colorText: Colors.black,
+                              onPressed: () {
+                                _loginCubit.logInWithGoogle();
+                              },
                             ),
                             CustomSmallButton(
                               title: 'Facebook',
                               imgLink: AppPath.iconFacebook,
                               color: const Color(0xff3C5A9A),
-                              colorText: Colors.white, onPressed: () {  },
+                              colorText: Colors.white,
+                              onPressed: () {
+                                _loginCubit.logInWithGoogle();
+                              },
                             ),
                           ],
                         ),
