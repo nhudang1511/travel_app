@@ -9,12 +9,12 @@ import '../model/user_model.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class AuthRepository {
-  AuthRepository({
-    CacheClient? cache,
-    firebase_auth.FirebaseAuth? firebaseAuth,
-    GoogleSignIn? googleSignIn,
-    FacebookAuth? facebookAuth
-  })  : _cache = cache ?? CacheClient(),
+  AuthRepository(
+      {CacheClient? cache,
+      firebase_auth.FirebaseAuth? firebaseAuth,
+      GoogleSignIn? googleSignIn,
+      FacebookAuth? facebookAuth})
+      : _cache = cache ?? CacheClient(),
         _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
         _googleSignIn = googleSignIn ?? GoogleSignIn.standard();
   final CacheClient _cache;
@@ -58,7 +58,9 @@ class AuthRepository {
         "phoneNumber": phone,
         "country": country
       });
+      await _firebaseAuth.currentUser?.sendEmailVerification();
       // print('new: $newUser');
+
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (_) {
@@ -71,28 +73,30 @@ class AuthRepository {
     required String password,
   }) async {
     try {
-      await _firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      User? userData;
-      final querySnapshot = await FirebaseFirestore.instance
-          .collection('user')
-          .where('email', isEqualTo: email)
-          .limit(1)
-          .get();
+     if(_firebaseAuth.currentUser!.emailVerified == true){
+       await _firebaseAuth.signInWithEmailAndPassword(
+         email: email,
+         password: password,
+       );
+       User? userData;
+       final querySnapshot = await FirebaseFirestore.instance
+           .collection('user')
+           .where('email', isEqualTo: email)
+           .limit(1)
+           .get();
 
-      if (querySnapshot.docs.isNotEmpty) {
-        final userDoc = querySnapshot.docs.first;
-        userData = User(
-            id: userDoc.id,
-            email: userDoc['email'],
-            name: userDoc['name'],
-            country: userDoc['country'],
-            phone: userDoc['phoneNumber'],
-            password: password);
-        setSP(userData);
-      }
+       if (querySnapshot.docs.isNotEmpty) {
+         final userDoc = querySnapshot.docs.first;
+         userData = User(
+             id: userDoc.id,
+             email: userDoc['email'],
+             name: userDoc['name'],
+             country: userDoc['country'],
+             phone: userDoc['phoneNumber'],
+             password: password);
+         setSP(userData);
+       }
+     }
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw LogInWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (_) {
@@ -168,17 +172,53 @@ class AuthRepository {
     }
   }
 
-  Future<void> signInWithFacebook() async {
+  Future<void> logInWithFacebook() async {
     // Trigger the sign-in flow
-    final LoginResult loginResult = await FacebookAuth.instance.login();
+    final LoginResult loginResult = await FacebookAuth.instance
+        .login(permissions: (["public_profile", "email"]));
 
     // Create a credential from the access token
     final firebase_auth.OAuthCredential facebookAuthCredential =
         firebase_auth.FacebookAuthProvider.credential(
-            loginResult.accessToken.token);
+            loginResult.accessToken!.token);
 
     // Once signed in, return the UserCredential
-    await _firebaseAuth.signInWithCredential(facebookAuthCredential);
+    final userCredential = await _firebaseAuth.signInWithCredential(facebookAuthCredential);
+    final firebaseUser = userCredential.user;
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('user')
+        .where('email', isEqualTo: firebaseUser!.email)
+        .limit(1)
+        .get();
+
+    if (querySnapshot.docs.isEmpty) {
+      // If user doesn't exist, create new user document
+      await FirebaseFirestore.instance
+          .collection("user")
+          .doc(firebaseUser.uid)
+          .set({
+        'email': firebaseUser.email,
+        "name": firebaseUser.displayName,
+        "phoneNumber": firebaseUser.phoneNumber,
+      });
+    }
+    final userData = User(
+      id: firebaseUser.uid,
+      email: firebaseUser.email,
+      name: firebaseUser.displayName,
+      phone: firebaseUser.phoneNumber,
+      // Add more fields if needed
+    );
+    await setSP(userData);
+  }
+
+  Future<void> sendEmailVerification() async {
+    try {
+      await _firebaseAuth.currentUser?.sendEmailVerification();
+
+    } catch (_) {
+      throw const LogInWithEmailAndPasswordFailure();
+    }
   }
 
   Future<void> logOut() async {

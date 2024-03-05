@@ -6,6 +6,7 @@ import '../../widget/widget.dart';
 
 class ForgotScreen extends StatefulWidget {
   const ForgotScreen({super.key});
+  static const String routeName = '/forget';
 
   @override
   State<ForgotScreen> createState() => _ForgotScreenState();

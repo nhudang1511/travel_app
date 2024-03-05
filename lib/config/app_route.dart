@@ -19,6 +19,12 @@ class AppRouter {
         return _route(const OnBoardingPage());
       case LoginScreen.routeName:
         return _route(const LoginScreen());
+      case SignUpScreen.routeName:
+        return _route(const SignUpScreen());
+      case ForgotScreen.routeName:
+        return _route(const ForgotScreen());
+      case VerifyEmailScreen.routeName:
+        return _route(const VerifyEmailScreen());
       case HomeScreen.routeName:
         return _route(const HomeScreen());
       case HotelScreen.routeName:

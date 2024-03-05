@@ -76,4 +76,5 @@ class AppPath{
   static String visaCard = 'assets/card/img_visa.png';
 
   static String seats = 'assets/images/seats.png';
+  static String email = 'assets/logo/email.jpg';
 }

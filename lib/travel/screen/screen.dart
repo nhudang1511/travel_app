@@ -26,3 +26,4 @@ export 'check_out_flight/components/select_seat.dart';
 export 'finish_checkout/finish_checkout_screen.dart';
 export 'check_out/checkout_step.dart';
 export 'check_out_flight/checkout_step_flight.dart';
+export 'login/verify_email.dart';
