@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nhu_nguyen/config/shared_preferences.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/login/login_screen.dart';
+import 'package:flutter_nhu_nguyen/travel/screen/user/user_edit_screen.dart';
 import '../../bloc/bloc.dart';
 import '../../widget/widget.dart';
 
@@ -80,7 +81,7 @@ class _UserScreenState extends State<UserScreen> {
               child: CustomButton(
                 title: "Edit profile",
                 button: () {
-                  Navigator.pushNamed(context, "/edit_profile");
+                  Navigator.pushNamed(context, UserEditScreen.routeName);
                 },
               ),
             ),

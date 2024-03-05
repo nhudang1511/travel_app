@@ -2,6 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_nhu_nguyen/config/shared_preferences.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/login/verify_email.dart';
 import '../../../config/app_path.dart';
 import '../../../config/validater.dart';
@@ -107,6 +108,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           title: 'Name',
                           textController: nameController,
                           validator: validateName,
+
                         ),
                         CustomCountryField(
                           countryController: countryController,
