@@ -80,7 +80,7 @@ class SignupCubit extends Cubit<SignupState> {
     emit(state.copyWith(status: SignupStatus.submitting));
     try {
       await _authRepository.sendEmailVerification();
-      emit(state.copyWith(status: SignupStatus.success));
+      emit(state.copyWith(status: SignupStatus.verify));
     }  catch (e) {
       print('Unknown error: $e');
       emit(state.copyWith(status: SignupStatus.error));

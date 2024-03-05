@@ -58,9 +58,7 @@ class AuthRepository {
         "phoneNumber": phone,
         "country": country
       });
-      await _firebaseAuth.currentUser?.sendEmailVerification();
       // print('new: $newUser');
-
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (_) {
@@ -73,30 +71,41 @@ class AuthRepository {
     required String password,
   }) async {
     try {
-     if(_firebaseAuth.currentUser!.emailVerified == true){
-       await _firebaseAuth.signInWithEmailAndPassword(
-         email: email,
-         password: password,
-       );
-       User? userData;
-       final querySnapshot = await FirebaseFirestore.instance
-           .collection('user')
-           .where('email', isEqualTo: email)
-           .limit(1)
-           .get();
+      final firebaseUser = _firebaseAuth.currentUser;
+      if (firebaseUser == null || !firebaseUser.emailVerified) {
+        throw const LogInWithEmailAndPasswordFailure("Email has not been verified.");
+      }
 
-       if (querySnapshot.docs.isNotEmpty) {
-         final userDoc = querySnapshot.docs.first;
-         userData = User(
-             id: userDoc.id,
-             email: userDoc['email'],
-             name: userDoc['name'],
-             country: userDoc['country'],
-             phone: userDoc['phoneNumber'],
-             password: password);
-         setSP(userData);
-       }
-     }
+      await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      // Đảm bảo rằng đăng nhập đã thành công trước khi thực hiện các code sau
+      if (_firebaseAuth.currentUser != null) {
+        User? userData;
+        final querySnapshot = await FirebaseFirestore.instance
+            .collection('user')
+            .where('email', isEqualTo: email)
+            .limit(1)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          final userDoc = querySnapshot.docs.first;
+          userData = User(
+              id: userDoc.id,
+              email: userDoc['email'],
+              name: userDoc['name'],
+              country: userDoc['country'],
+              phone: userDoc['phoneNumber'],
+              password: password);
+          setSP(userData);
+        } else {
+          throw const LogInWithEmailAndPasswordFailure();
+        }
+      } else {
+        throw const LogInWithEmailAndPasswordFailure("Sign in unsuccessful.");
+      }
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw LogInWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (_) {
@@ -104,8 +113,9 @@ class AuthRepository {
     }
   }
 
+
   Future setSP(User user) async {
-    SharedService.setUserId(user.id);
+    // SharedService.setUserId(user.id);
     SharedService.setEmail(user.email ?? '');
     SharedService.setName(user.name ?? '');
     SharedService.setPhone(user.phone ?? '');
@@ -215,7 +225,10 @@ class AuthRepository {
   Future<void> sendEmailVerification() async {
     try {
       await _firebaseAuth.currentUser?.sendEmailVerification();
-
+      while (_firebaseAuth.currentUser!.emailVerified == false) {
+        await Future.delayed(const Duration(seconds: 10)); // Đợi 1 giây trước khi kiểm tra lại
+        await _firebaseAuth.currentUser?.reload(); // Tải lại thông tin người dùng từ Firebase Auth
+      }
     } catch (_) {
       throw const LogInWithEmailAndPasswordFailure();
     }

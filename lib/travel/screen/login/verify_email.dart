@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/cubits/cubit.dart';
@@ -18,6 +20,7 @@ class VerifyEmailScreen extends StatefulWidget {
 
 class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
   late SignupCubit _signupCubit;
+  late Timer _timer;
 
   @override
   void initState() {
@@ -31,7 +34,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
       body: BlocListener<SignupCubit, SignupState>(
         listener: (context, state) {
           print(state.status);
-          if (state.status == SignupStatus.success) {
+          if (state.status == SignupStatus.verify) {
             Navigator.pushNamedAndRemoveUntil(
                 context, LoginScreen.routeName, (route) => false);
           }
@@ -53,18 +56,18 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                   'We have just send email verification link on your email. '
                   'Please check email and click on that link to verify '
                   'your Email address. \nIf not auto redirected after '
-                  'verification, click on the Resend Email button',
+                  'verification, click on the Resend Email',
                   style: Theme.of(context)
                       .textTheme
                       .headlineSmall
                       ?.copyWith(color: Colors.black),
                 ),
                 CustomButton(
-                  title: 'Resend Email',
+                  title: 'Contiune',
                   button: () {
-                    //_signupCubit.sendEmailVerification();
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, LoginScreen.routeName, (route) => false);
+                    _signupCubit.sendEmailVerification();
+                    // Navigator.pushNamedAndRemoveUntil(
+                    //     context, LoginScreen.routeName, (route) => false);
                   },
                 ),
 

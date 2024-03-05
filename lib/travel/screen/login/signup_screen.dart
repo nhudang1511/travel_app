@@ -61,6 +61,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       body: BlocListener<SignupCubit, SignupState>(
         listener: (context, state) {
           if (state.status == SignupStatus.success) {
+            _signupCubit.sendEmailVerification();
             Navigator.pushNamed(context, VerifyEmailScreen.routeName);
           }
           else if(state.status == SignupStatus.error){
