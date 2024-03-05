@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/model/place_model.dart';
+import 'package:flutter_nhu_nguyen/travel/screen/places/place_detail_screen.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../../../config/app_path.dart';
 import '../../../config/shared_preferences.dart';
@@ -109,15 +110,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: (context, state) {
                     if (state is PlaceLoaded) {
                       places = state.places;
+                      // print('Places[index] value ${places[0].image}');
                     }
+
                     return MasonryGridView.builder(
                         padding: const EdgeInsets.all(5),
                         itemCount: places.length < 5 ? places.length : 4,
                         gridDelegate:
                             const SliverSimpleGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2),
-                        itemBuilder: (context, index) =>
-                            Padding(
+                        itemBuilder: (context, index) => Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 13, vertical: 16),
                               child: ClipRRect(
@@ -125,24 +127,40 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Stack(
                                   alignment: Alignment.topRight,
                                   children: [
-                                    Image.network(
-                                      places[index].image ??
-                                          'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg',
-                                      width: double.infinity,
-                                      fit: BoxFit.fitWidth,
+                                    GestureDetector(
+                                      onTap: () => {
+                                        Navigator.pushNamed(context,
+                                            PlaceDetailsScreen.routeName,
+                                            arguments: places[index])
+                                      },
+                                      child: Image.network(
+                                        places[index].image ??
+                                            'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg',
+                                        width: double.infinity,
+                                        fit: BoxFit.fitWidth,
+                                      ),
                                     ),
                                     Padding(
                                         padding: const EdgeInsets.all(10),
                                         child: placesLiked.any((element) =>
-                                                element.image == places[index].image)
+                                                element.image ==
+                                                places[index].image)
                                             ? IconButton(
                                                 onPressed: () {
                                                   setState(() {
-                                                    placesLiked.removeWhere((element) => element.image == places[index].image);
+                                                    placesLiked.removeWhere(
+                                                        (element) =>
+                                                            element.image ==
+                                                            places[index]
+                                                                .image);
                                                   });
                                                   List<String> placesString =
-                                                  placesLiked.map((e) => jsonEncode(e.toDocument())).toList();
-                                                  SharedService.setLikedPlaces(placesString);
+                                                      placesLiked
+                                                          .map((e) => jsonEncode(
+                                                              e.toDocument()))
+                                                          .toList();
+                                                  SharedService.setLikedPlaces(
+                                                      placesString);
                                                 },
                                                 icon: const Icon(
                                                   Icons.favorite,
@@ -151,17 +169,23 @@ class _HomeScreenState extends State<HomeScreen> {
                                               )
                                             : IconButton(
                                                 onPressed: () {
-                                                 setState(() {
-                                                   placesLiked.add(PlaceModel(
-                                                       id: places[index].id,
-                                                       name: places[index].name,
-                                                       image:
-                                                       places[index].image,
-                                                       rating:
-                                                       places[index].rating));
-                                                 });
-                                                 List<String> placesString = placesLiked.map((e) => jsonEncode(e.toDocument())).toList();
-                                                 SharedService.setLikedPlaces(placesString);
+                                                  setState(() {
+                                                    placesLiked.add(PlaceModel(
+                                                        id: places[index].id,
+                                                        name:
+                                                            places[index].name,
+                                                        image:
+                                                            places[index].image,
+                                                        rating: places[index]
+                                                            .rating));
+                                                  });
+                                                  List<String> placesString =
+                                                      placesLiked
+                                                          .map((e) => jsonEncode(
+                                                              e.toDocument()))
+                                                          .toList();
+                                                  SharedService.setLikedPlaces(
+                                                      placesString);
                                                 },
                                                 icon: const Icon(
                                                   Icons.favorite,

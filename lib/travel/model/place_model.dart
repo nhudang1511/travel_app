@@ -4,22 +4,20 @@ class PlaceModel extends CustomModel {
   final String? image;
   final String? name;
   final num? rating;
+  final String? desc;
 
   PlaceModel(
-      {required String id,
-      this.image,
-      this.name,
-      this.rating})
+      {required String id, this.image, this.name, this.rating, this.desc})
       : super(id: id);
 
   @override
   PlaceModel fromDocument(Map<String, dynamic> doc, String id) {
     return PlaceModel(
-      id: id,
-      image: doc['image'] as String?,
-      name: doc['name'] as String?,
-      rating: doc['rating'] as num?,
-    );
+        id: id,
+        image: doc['image'] as String?,
+        name: doc['name'] as String?,
+        rating: doc['rating'] as num?,
+        desc: doc['desc'] as String?);
   }
 
   @override
@@ -29,6 +27,7 @@ class PlaceModel extends CustomModel {
       'image': image,
       'name': name,
       'rating': rating,
+      'desc': desc
     };
   }
 }

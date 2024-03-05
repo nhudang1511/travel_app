@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_nhu_nguyen/travel/screen/places/place_detail_screen.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../../../config/shared_preferences.dart';
 import '../../model/place_model.dart';
@@ -57,12 +58,19 @@ class _AllPlacesScreenState extends State<AllPlacesScreen> {
                     (context, index) => Stack(
                       fit: StackFit.expand,
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            widget.places[index].image ??
-                                'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg',
-                            fit: BoxFit.cover,
+                        GestureDetector(
+                          onTap: () => {
+                            Navigator.pushNamed(
+                                context, PlaceDetailsScreen.routeName,
+                                arguments: widget.places[index])
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              widget.places[index].image ??
+                                  'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg',
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                         Positioned(
@@ -96,7 +104,8 @@ class _AllPlacesScreenState extends State<AllPlacesScreen> {
                                             id: widget.places[index].id,
                                             name: widget.places[index].name,
                                             image: widget.places[index].image,
-                                            rating: widget.places[index].rating));
+                                            rating:
+                                                widget.places[index].rating));
                                       });
                                       List<String> placesString = placesLiked
                                           .map(

@@ -60,7 +60,6 @@ class AuthRepository {
       });
       await _firebaseAuth.currentUser?.sendEmailVerification();
       // print('new: $newUser');
-
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (_) {
@@ -73,30 +72,28 @@ class AuthRepository {
     required String password,
   }) async {
     try {
-     if(_firebaseAuth.currentUser!.emailVerified == true){
-       await _firebaseAuth.signInWithEmailAndPassword(
-         email: email,
-         password: password,
-       );
-       User? userData;
-       final querySnapshot = await FirebaseFirestore.instance
-           .collection('user')
-           .where('email', isEqualTo: email)
-           .limit(1)
-           .get();
+      await _firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      User? userData;
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('user')
+          .where('email', isEqualTo: email)
+          .limit(1)
+          .get();
 
-       if (querySnapshot.docs.isNotEmpty) {
-         final userDoc = querySnapshot.docs.first;
-         userData = User(
-             id: userDoc.id,
-             email: userDoc['email'],
-             name: userDoc['name'],
-             country: userDoc['country'],
-             phone: userDoc['phoneNumber'],
-             password: password);
-         setSP(userData);
-       }
-     }
+      if (querySnapshot.docs.isNotEmpty) {
+        final userDoc = querySnapshot.docs.first;
+        userData = User(
+            id: userDoc.id,
+            email: userDoc['email'],
+            name: userDoc['name'],
+            country: userDoc['country'],
+            phone: userDoc['phoneNumber'],
+            password: password);
+        setSP(userData);
+      }
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw LogInWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (_) {
@@ -183,7 +180,8 @@ class AuthRepository {
             loginResult.accessToken!.token);
 
     // Once signed in, return the UserCredential
-    final userCredential = await _firebaseAuth.signInWithCredential(facebookAuthCredential);
+    final userCredential =
+        await _firebaseAuth.signInWithCredential(facebookAuthCredential);
     final firebaseUser = userCredential.user;
     final querySnapshot = await FirebaseFirestore.instance
         .collection('user')
@@ -215,7 +213,6 @@ class AuthRepository {
   Future<void> sendEmailVerification() async {
     try {
       await _firebaseAuth.currentUser?.sendEmailVerification();
-
     } catch (_) {
       throw const LogInWithEmailAndPasswordFailure();
     }

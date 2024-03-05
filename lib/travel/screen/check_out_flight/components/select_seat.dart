@@ -52,12 +52,13 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
       }).toList();
     }).toList();
   }
+
   List<List<SeatState>>? businessClassSeats;
   List<List<SeatState>>? economyClassSeats;
   List<Seat> seats = List.empty(growable: true);
   List<String> seatStringList = SharedService.getListSeat();
   @override
-  void initState(){
+  void initState() {
     super.initState();
     businessClassSeats = _convertSeatData(widget.flight.seat?[0]);
     economyClassSeats = _convertSeatData(widget.flight.seat?[1]);
@@ -67,12 +68,13 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
           seatStringList.map((e) => Seat.fromDocument(json.decode(e))).toList();
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return CustomAppBarItem(
         title: 'Select Seat',
         isIcon: false,
-        showModalBottomSheet: () {  },
+        showModalBottomSheet: () {},
         child: Stack(
           children: [
             Positioned(
@@ -87,21 +89,31 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
                   ),
                 ),
                 child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
                           Image.asset(AppPath.iconSeat),
-                          const SizedBox(width: 10,),
+                          const SizedBox(
+                            width: 10,
+                          ),
                           Column(
                             children: [
-                              Text('Seat', style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                  color: const Color(0xFF636363)),),
-                              const SizedBox(height: 5,),
                               Text(
-                               seats.isNotEmpty ? seats[0].name ?? '' : '',
+                                'Seat',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(color: const Color(0xFF636363)),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                seats.isNotEmpty ? seats[0].name ?? '' : '',
                                 style: const TextStyle(
                                   color: Color(0xFF6155CC),
                                   fontSize: 24,
@@ -113,7 +125,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
                         ],
                       ),
                       Text(
-                        seats.isNotEmpty ? seats[0].type ?? '': '',
+                        seats.isNotEmpty ? seats[0].type ?? '' : '',
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                             color: Colors.black, fontWeight: FontWeight.w500),
                       ),
@@ -185,11 +197,10 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
                                   ?.copyWith(color: Colors.black),
                             ),
                             FlightSeat(
-                              cols: 5,
-                              rows: 3,
-                              currentSeatsState: businessClassSeats ?? [],
-                              type: "Business"
-                            ),
+                                cols: 5,
+                                rows: 3,
+                                currentSeatsState: businessClassSeats ?? [],
+                                type: "Business"),
                             const SizedBox(
                               height: 10,
                             ),
@@ -231,7 +242,8 @@ class FlightSeat extends StatefulWidget {
       {Key? key,
       required this.cols,
       required this.rows,
-      required this.currentSeatsState, required this.type})
+      required this.currentSeatsState,
+      required this.type})
       : super(key: key);
 
   @override
@@ -268,7 +280,7 @@ class _FlightSeatState extends State<FlightSeat> {
   @override
   Widget build(BuildContext context) {
     return SeatLayoutWidget(
-      type: widget.type,
+      // type: widget.type,
       onSeatStateChanged: (rowI, colI, seatState) {
         if (seatState == SeatState.selected) {
           selectedSeats.add(SeatNumber(rowI: rowI, colI: colI));

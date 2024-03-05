@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nhu_nguyen/travel/model/room_model.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/finish_checkout/finish_checkout_flight_screen.dart';
+import 'package:flutter_nhu_nguyen/travel/screen/places/place_detail_screen.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../travel/model/filght_model.dart';
 import '../travel/model/hotel_model.dart';
@@ -60,14 +61,19 @@ class AppRouter {
         final List<RoomModel> rooms = (settings.arguments as List<RoomModel>);
         return MaterialPageRoute<dynamic>(
             settings: settings,
-            builder: (context) => SelectRoomScreen(rooms: rooms,));
+            builder: (context) => SelectRoomScreen(
+                  rooms: rooms,
+                ));
       case CheckOutStep.routeName:
         if (settings.arguments is Map<String, dynamic>) {
           final Map<String, dynamic> arguments =
-          settings.arguments as Map<String, dynamic>;
+              settings.arguments as Map<String, dynamic>;
           final int step = arguments['step'] as int;
           final RoomModel room = arguments['room'] as RoomModel;
-          return _route(CheckOutStep(step: step, roomModel: room,));
+          return _route(CheckOutStep(
+            step: step,
+            roomModel: room,
+          ));
         } else {
           return _route(const MainScreen());
         }
@@ -96,29 +102,35 @@ class AppRouter {
             builder: (context) => AllPlacesScreen(
                   places: places,
                 ));
+      case PlaceDetailsScreen.routeName:
+        final PlaceModel place = (settings.arguments as PlaceModel);
+        return MaterialPageRoute<dynamic>(
+            settings: settings,
+            builder: (context) => PlaceDetailsScreen(
+                  place: place,
+                ));
       case BookingFlightScreen.routeName:
         return _route(const BookingFlightScreen());
       case ResultFlightScreen.routeName:
         if (settings.arguments is Map<String, dynamic>) {
           final Map<String, dynamic> arguments =
-          settings.arguments as Map<String, dynamic>;
+              settings.arguments as Map<String, dynamic>;
           final String fromPlace = arguments['from_place'] as String;
           final String toPlace = arguments['to_place'] as String;
-          return _route(ResultFlightScreen(fromPlace: fromPlace, toPlace: toPlace));
+          return _route(
+              ResultFlightScreen(fromPlace: fromPlace, toPlace: toPlace));
         } else {
           return _route(const MainScreen());
         }
       case CheckOutScreenFlight.routeName:
-        final FlightModel flight =
-        (settings.arguments as FlightModel);
+        final FlightModel flight = (settings.arguments as FlightModel);
         return MaterialPageRoute<dynamic>(
             settings: settings,
             builder: (context) => CheckOutScreenFlight(
-              flight: flight,
-            ));
+                  flight: flight,
+                ));
       case SelectSeatScreen.routeName:
-        final FlightModel flight =
-        (settings.arguments as FlightModel);
+        final FlightModel flight = (settings.arguments as FlightModel);
         return MaterialPageRoute<dynamic>(
             settings: settings,
             builder: (context) => SelectSeatScreen(flight: flight));
@@ -129,7 +141,7 @@ class AppRouter {
       case CheckOutStepFlight.routeName:
         if (settings.arguments is Map<String, dynamic>) {
           final Map<String, dynamic> arguments =
-          settings.arguments as Map<String, dynamic>;
+              settings.arguments as Map<String, dynamic>;
           final int step = arguments['step'] as int;
           final FlightModel flight = arguments['flight'] as FlightModel;
           return _route(CheckOutStepFlight(step: step, flightModel: flight));
@@ -137,8 +149,7 @@ class AppRouter {
           return _route(const MainScreen());
         }
       case BookingItem.routeName:
-        final String bookingId =
-        (settings.arguments as String);
+        final String bookingId = (settings.arguments as String);
         return MaterialPageRoute<dynamic>(
             settings: settings,
             builder: (context) => BookingItem(bookingId: bookingId));
