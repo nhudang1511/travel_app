@@ -7,6 +7,7 @@ import '../../config/app_path.dart';
 import '../../config/image_helper.dart';
 import '../bloc/place/place_bloc.dart';
 import '../model/place_model.dart';
+import '../screen/places/place_detail_screen.dart';
 
 class CustomHomeAppBar extends StatefulWidget implements PreferredSizeWidget {
   const CustomHomeAppBar({
@@ -291,7 +292,9 @@ class CustomDelegate extends SearchDelegate<String> {
                   listToShow[index].name ?? 'null',
                   style: const TextStyle(
                       color: Colors.black)),
-              onTap: ()=>Navigator.pushNamed(context, BookingFlightScreen.routeName),
+              onTap: ()=>Navigator.pushNamed(context,
+                  PlaceDetailsScreen.routeName,
+                  arguments: listToShow[index]),
             ),
           );
         },
