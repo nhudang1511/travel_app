@@ -7,12 +7,14 @@ class CustomTextField extends StatefulWidget {
     required this.textController,
     this.validator,
     this.isPassword = false,
+    this.readOnly = false,
   });
 
   final String title;
   final TextEditingController textController;
   final String? Function(String?)? validator;
   final bool isPassword;
+  final bool readOnly;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -77,6 +79,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         obscureText: widget.isPassword && _passwordVisible == false,
         controller: widget.textController,
         focusNode: _focusNode,
+        readOnly: widget.readOnly,
       ),
     );
   }

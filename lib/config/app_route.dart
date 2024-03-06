@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nhu_nguyen/travel/model/room_model.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/finish_checkout/finish_checkout_flight_screen.dart';
+import 'package:flutter_nhu_nguyen/travel/screen/user/user_edit_screen.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../travel/model/filght_model.dart';
 import '../travel/model/hotel_model.dart';
@@ -15,6 +16,8 @@ class AppRouter {
       // Kiểm tra name của RouteSettings.
       case MainScreen.routeName:
         return _route(const MainScreen());
+      case UserEditScreen.routeName:
+        return _route(const UserEditScreen());
       case OnBoardingPage.routeName:
         return _route(const OnBoardingPage());
       case LoginScreen.routeName:
@@ -144,6 +147,7 @@ class AppRouter {
             builder: (context) => BookingItem(bookingId: bookingId));
       default:
         return _route(const MainScreen());
+
     }
   }
 

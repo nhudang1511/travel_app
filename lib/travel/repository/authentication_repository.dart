@@ -58,7 +58,9 @@ class AuthRepository {
         "phoneNumber": phone,
         "country": country
       });
+      await _firebaseAuth.currentUser?.sendEmailVerification();
       // print('new: $newUser');
+
     } on firebase_auth.FirebaseAuthException catch (e) {
       throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
     } catch (_) {
