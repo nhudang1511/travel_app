@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nhu_nguyen/travel/model/room_model.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/finish_checkout/finish_checkout_flight_screen.dart';
+import 'package:flutter_nhu_nguyen/travel/screen/places/place_detail_screen.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/user/user_edit_screen.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../travel/model/filght_model.dart';
@@ -99,6 +100,13 @@ class AppRouter {
             builder: (context) => AllPlacesScreen(
                   places: places,
                 ));
+      case PlaceDetailsScreen.routeName:
+        final PlaceModel place = (settings.arguments as PlaceModel);
+        return MaterialPageRoute<dynamic>(
+            settings: settings,
+            builder: (context) => PlaceDetailsScreen(
+                  place: place,
+                ));
       case BookingFlightScreen.routeName:
         return _route(const BookingFlightScreen());
       case ResultFlightScreen.routeName:
@@ -147,7 +155,6 @@ class AppRouter {
             builder: (context) => BookingItem(bookingId: bookingId));
       default:
         return _route(const MainScreen());
-
     }
   }
 
