@@ -268,7 +268,7 @@ class _FlightSeatState extends State<FlightSeat> {
   @override
   Widget build(BuildContext context) {
     return SeatLayoutWidget(
-      type: widget.type,
+      key: widget.key,
       onSeatStateChanged: (rowI, colI, seatState) {
         if (seatState == SeatState.selected) {
           selectedSeats.add(SeatNumber(rowI: rowI, colI: colI));

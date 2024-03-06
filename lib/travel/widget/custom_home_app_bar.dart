@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/repository/place_repository.dart';
+import 'package:flutter_nhu_nguyen/travel/screen/flight/booking_flight_screen.dart';
 
 import '../../config/app_path.dart';
 import '../../config/image_helper.dart';
@@ -32,6 +33,8 @@ class _CustomHomeAppBarState extends State<CustomHomeAppBar> {
     super.initState();
     _placeBloc = PlaceBloc(PlaceRepository());
   }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -160,9 +163,25 @@ class _CustomHomeAppBarState extends State<CustomHomeAppBar> {
                                 borderRadius: BorderRadius.circular(8)),
                             hintText: 'Search your destination',
                             hintStyle: Theme.of(context).textTheme.bodyLarge),
-                        onChanged: (value) {
-                          _placeBloc.add(SearchPlace(name: value));
-                        },
+                        // onChanged: (value) {
+                        //   _placeBloc.add(SearchPlace(name: value));
+                        // },
+                        // onChanged: (value) {
+                        //   showSearch<String>(
+                        //   context: context,
+                        //   delegate: CustomDelegate(_placeBloc as PlaceLoaded),
+                        // );
+                        // },
+                        readOnly: true,
+                        onTap: () {
+                          final state = BlocProvider.of<PlaceBloc>(context).state;
+                          if (state is PlaceLoaded) {
+                              showSearch<String>(
+                                context: context,
+                                delegate: CustomDelegate(state),
+                              );
+                            }
+                        }
                       ),
                     ),
                   ),
@@ -210,5 +229,73 @@ class _CustomHomeAppBarState extends State<CustomHomeAppBar> {
         ),
       ),
     );
+  }
+}
+
+
+class CustomDelegate extends SearchDelegate<String> {
+  final PlaceLoaded state;
+
+  CustomDelegate(this.state);
+
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    final ThemeData theme = Theme.of(context).copyWith(
+      textTheme: const TextTheme(
+        titleLarge: TextStyle(
+          color: Colors.black,
+          fontSize: 18.0,
+        ),
+      ),
+    );
+    return theme;
+  }
+  
+
+  @override
+  List<Widget> buildActions(BuildContext context) => [IconButton(icon: const Icon(Icons.clear), onPressed: () => query = '')];
+
+  @override
+  Widget buildLeading(BuildContext context) => IconButton(icon: const Icon(Icons.chevron_left), onPressed: () => close(context, ''));
+
+  @override
+  Widget buildResults(BuildContext context) => Container();
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+
+    List<PlaceModel> places =state.places;
+    var listToShow;
+    if (query.isNotEmpty) {
+      listToShow = places.where((places) {return places.name!.toLowerCase().contains(query.toLowerCase());}).toList();
+    } else {
+      listToShow = places;
+    }
+    return ListView.builder(
+        itemCount: listToShow.length,
+        scrollDirection: Axis.vertical,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 55,vertical: 5),
+            child: ListTile(
+              shape: RoundedRectangleBorder(side: BorderSide(color: Colors.black26),borderRadius: BorderRadius.circular(5)),
+
+              leading: Image.network(
+                listToShow[index].image ??
+                    'https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg',
+                width: 70,
+                height: 70,
+                fit: BoxFit.fitHeight,
+              ),
+              title: Text(
+                  listToShow[index].name ?? 'null',
+                  style: const TextStyle(
+                      color: Colors.black)),
+              onTap: ()=>Navigator.pushNamed(context, BookingFlightScreen.routeName),
+            ),
+          );
+        },
+        
+      );
   }
 }
