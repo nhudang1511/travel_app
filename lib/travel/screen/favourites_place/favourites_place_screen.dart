@@ -21,7 +21,7 @@ class _FavouritesPlaceScreenState extends State<FavouritesPlaceScreen> {
   void initState(){
     super.initState();
     if(placesLikedString.isNotEmpty){
-      placesLiked = placesLikedString.map((e) => PlaceModel(id:"").fromDocument(json.decode(e), "")).toList();
+      placesLiked = placesLikedString.map((e) => PlaceModel().fromDocument(json.decode(e))).toList();
     }
   }
   @override

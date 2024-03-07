@@ -12,8 +12,8 @@ class RoomRepository {
       var querySnapshot = await _firebaseFirestore.collection('room').get();
       return querySnapshot.docs.map((doc) {
         var data = doc.data();
-        var id = doc.id;
-        return RoomModel(id: id).fromDocument(data, id);
+        data['id'] = doc.id;
+        return RoomModel().fromDocument(data);
       }).toList();
     } catch (e) {
       log(e.toString());
@@ -29,8 +29,8 @@ class RoomRepository {
           .get();
       return querySnapshot.docs.map((doc) {
         var data = doc.data();
-        var id = doc.id;
-        return RoomModel(id: id).fromDocument(data, id);
+        data['id'] = doc.id;
+        return RoomModel().fromDocument(data);
       }).toList();
     } catch (e) {
       log(e.toString());
@@ -47,8 +47,8 @@ class RoomRepository {
           .get();
       List<RoomModel> rooms = querySnapshot.docs.map((doc) {
         var data = doc.data();
-        var id = doc.id;
-        return RoomModel(id: id).fromDocument(data, id);
+        data['id'] = doc.id;
+        return RoomModel().fromDocument(data);
       }).toList();
       rooms = rooms.where((element) => element.total! >= room && element.maxGuest! * room >= guest).toList();
       return rooms;

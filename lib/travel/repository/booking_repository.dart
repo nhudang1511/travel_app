@@ -16,15 +16,15 @@ class BookingRepository {
         .doc(booking.id) // Specify the document ID
         .get();
     var data = querySnapshot.data() as Map<String, dynamic>;
-    return BookingModel(id: booking.id).fromDocument(data, booking.id);
+    return BookingModel().fromDocument(data);
   }
   Future<List<BookingModel>> getAllBooking() async {
     try {
       var querySnapshot = await _firebaseFirestore.collection('booking').get();
       return querySnapshot.docs.map((doc) {
         var data = doc.data();
-        var id = doc.id;
-        return BookingModel(id: id).fromDocument(data, id);
+        data['id'] = doc.id;
+        return BookingModel().fromDocument(data);
       }).toList();
     } catch (e) {
       log(e.toString());

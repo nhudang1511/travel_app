@@ -1,16 +1,17 @@
 import 'package:flutter_nhu_nguyen/travel/model/custom_model.dart';
 
 class Promo extends CustomModel{
+  final String? id;
   final String? code;
   final String? endow;
   final String? image;
   final num? price;
 
-  Promo({required String id, this.code, this.endow, this.image, this.price}): super(id: id);
+  Promo({this.id, this.code, this.endow, this.image, this.price});
   @override
-  Promo fromDocument(Map<String, dynamic> doc, String id) {
+  Promo fromDocument(Map<String, dynamic> doc) {
     return Promo(
-      id: id,
+      id: doc['id'],
       code: doc['code'] as String?,
       endow: doc['endow'] as String?,
       image: doc['image'] as String?,

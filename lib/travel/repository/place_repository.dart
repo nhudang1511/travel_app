@@ -10,10 +10,10 @@ class PlaceRepository {
     try {
       var querySnapshot = await _firebaseFirestore.collection('place').get();
       return querySnapshot.docs.map((doc) {
-        print('Places got form FB ${doc.data}');
+        //print('Places got form FB ${doc.data}');
         var data = doc.data();
-        var id = doc.id;
-        return PlaceModel(id: id).fromDocument(data, id);
+        data['id'] = doc.id;
+        return PlaceModel().fromDocument(data);
       }).toList();
     } catch (e) {
       log(e.toString());
@@ -29,12 +29,14 @@ class PlaceRepository {
           .get();
       return querySnapshot.docs.map((doc) {
         var data = doc.data();
-        var id = doc.id;
-        return PlaceModel(id: id).fromDocument(data, id);
+        data['id'] = doc.id;
+        return PlaceModel().fromDocument(data);
       }).toList();
     } catch (e) {
       log(e.toString());
       rethrow;
     }
   }
+
+
 }

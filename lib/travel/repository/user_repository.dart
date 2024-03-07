@@ -15,7 +15,7 @@ class UserRepository {
           .doc(uId) // Specify the document ID
           .get();
       var data = querySnapshot.data() as Map<String, dynamic>;
-      return User(id: uId).fromDocument(data, uId);
+      return User().fromDocument(data);
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -27,8 +27,8 @@ class UserRepository {
       var querySnapshot = await _firebaseFirestore.collection('user').get();
       return querySnapshot.docs.map((doc) {
         var data = doc.data();
-        var id = doc.id;
-        return User(id: id).fromDocument(data, id);
+        data['id'] = doc.id;
+        return User().fromDocument(data);
       }).toList();
     } catch (e) {
       log(e.toString());
@@ -38,15 +38,15 @@ class UserRepository {
 
   Future<void> editUserById(User user) async {
     try {
-      await _firebaseFirestore.collection("user").doc(user?.id).update({
+      await _firebaseFirestore.collection("user").doc(user.id).update({
         "name": user.name,
         "phoneNumber": user.phone,
         "country": user.country
       });
 
-      final querySnapshot = await _firebaseFirestore.collection("user").doc(user?.id).get();
+      final querySnapshot = await _firebaseFirestore.collection("user").doc(user.id).get();
       var data = querySnapshot.data() as Map<String, dynamic>;
-      var newUser = User(id: user.id).fromDocument(data, user.id);
+      var newUser = User(id: user.id).fromDocument(data);
       print(newUser.name);
       setSP(newUser);
     } catch (e) {
@@ -56,7 +56,7 @@ class UserRepository {
   }
 
   Future setSP(User user) async {
-    SharedService.setUserId(user.id);
+    SharedService.setUserId(user.id ?? '');
     SharedService.setEmail(user.email ?? '');
     SharedService.setName(user.name ?? '');
     SharedService.setPhone(user.phone ?? '');

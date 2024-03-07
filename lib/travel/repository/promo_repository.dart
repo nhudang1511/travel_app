@@ -14,7 +14,7 @@ class PromoRepository {
           .doc(id) // Specify the document ID
           .get();
       var data = querySnapshot.data() as Map<String, dynamic>;
-      return Promo(id: id).fromDocument(data, id);
+      return Promo().fromDocument(data);
     } catch (e) {
       log(e.toString());
       rethrow;

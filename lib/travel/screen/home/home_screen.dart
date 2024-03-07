@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _placeBloc = PlaceBloc(PlaceRepository())..add(LoadPlace());
     if (placesList.isNotEmpty) {
       placesLiked = placesList
-          .map((e) => PlaceModel(id: "").fromDocument(json.decode(e), ""))
+          .map((e) => PlaceModel().fromDocument(json.decode(e)))
           .toList();
     }
   }

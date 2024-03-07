@@ -3,6 +3,7 @@ import 'card_model.dart';
 import 'custom_model.dart';
 
 class BookingModel extends CustomModel {
+  final String? id;
   final String? email;
   final String? hotel;
   final String? room;
@@ -15,7 +16,7 @@ class BookingModel extends CustomModel {
   final DateTime? createdAt;
 
   BookingModel({
-    required String id,
+    this.id,
     this.email,
     this.hotel,
     this.room,
@@ -26,12 +27,12 @@ class BookingModel extends CustomModel {
     this.dateStart,
     this.dateEnd,
     this.createdAt,
-  }) : super(id: id);
+  });
 
   @override
-  BookingModel fromDocument(Map<String, dynamic> doc, String id) {
+  BookingModel fromDocument(Map<String, dynamic> doc) {
     return BookingModel(
-      id: id,
+      id: doc['id'],
       email: doc['email'] as String?,
       hotel: doc['hotel'] as String?,
       room: doc['room'] as String?,

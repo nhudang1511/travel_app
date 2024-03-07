@@ -17,8 +17,8 @@ class HotelRepository {
       var querySnapshot = await _firebaseFirestore.collection('hotel').get();
       return querySnapshot.docs.map((doc) {
         var data = doc.data();
-        var id = doc.id;
-        return HotelModel(id: id).fromDocument(data, id);
+        data['id'] = doc.id;
+        return HotelModel().fromDocument(data);
       }).toList();
     } catch (e) {
       log(e.toString());
@@ -33,8 +33,8 @@ class HotelRepository {
       var querySnapshot = await _firebaseFirestore.collection('hotel').get();
       List<HotelModel> hotels = querySnapshot.docs.map((doc) {
         var data = doc.data();
-        var id = doc.id;
-        return HotelModel(id: id).fromDocument(data, id);
+        data['id'] = doc.id;
+        return HotelModel().fromDocument(data);
       }).toList();
       if (destination != 'All') {
         hotels = hotels
@@ -67,8 +67,8 @@ class HotelRepository {
           .get();
       return querySnapshot.docs.map((doc) {
         var data = doc.data();
-        var id = doc.id;
-        return HotelModel(id: id).fromDocument(data, id);
+        data['id'] = doc.id;
+        return HotelModel().fromDocument(data);
       }).toList();
     } catch (e) {
       log(e.toString());

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_nhu_nguyen/travel/model/custom_model.dart';
 
 class FlightModel extends CustomModel {
+  final String? id;
   final String? airline;
   final DateTime? arrive_time;
   final DateTime? departure_time;
@@ -10,7 +11,9 @@ class FlightModel extends CustomModel {
   final int? price;
   final List<dynamic>? seat;
   final String? to_place;
+
   FlightModel({
+    this.id,
     this.airline,
     this.arrive_time,
     this.departure_time,
@@ -19,21 +22,21 @@ class FlightModel extends CustomModel {
     this.price,
     this.seat,
     this.to_place,
-    required String id
-  }) : super(id: id);
+  });
 
   @override
-  FlightModel fromDocument(Map<String, dynamic> doc, String id) {
+  FlightModel fromDocument(Map<String, dynamic> doc) {
     return FlightModel(
-        airline: doc['airline'] as String,
-        arrive_time: (doc['arrive_time'] as Timestamp).toDate(),
-        departure_time: (doc['departure_time'] as Timestamp).toDate(),
-        from_place: doc['from_place'] as String,
-        no: doc['no'] as String,
-        price: doc['price'] as int,
-        seat: doc['seat'] as List<dynamic>,
-        to_place: doc['to_place'] as String,
-        id: id);
+      id: doc['id'],
+      airline: doc['airline'] as String,
+      arrive_time: (doc['arrive_time'] as Timestamp).toDate(),
+      departure_time: (doc['departure_time'] as Timestamp).toDate(),
+      from_place: doc['from_place'] as String,
+      no: doc['no'] as String,
+      price: doc['price'] as int,
+      seat: doc['seat'] as List<dynamic>,
+      to_place: doc['to_place'] as String,
+    );
   }
 
   @override
@@ -42,4 +45,3 @@ class FlightModel extends CustomModel {
     throw UnimplementedError();
   }
 }
-

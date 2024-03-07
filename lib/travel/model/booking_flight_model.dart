@@ -4,6 +4,7 @@ import 'card_model.dart';
 import 'custom_model.dart';
 
 class BookingFlightModel extends CustomModel {
+  final String? id;
   final String? email;
   final String? flight;
   final List<Guest>? guest;
@@ -15,7 +16,7 @@ class BookingFlightModel extends CustomModel {
   final List<Seat>? seat;
 
   BookingFlightModel({
-    required String id,
+    this.id,
     this.email,
     this.flight,
     this.guest,
@@ -25,12 +26,12 @@ class BookingFlightModel extends CustomModel {
     this.createdAt,
     this.price,
     this.seat
-  }) : super(id: id);
+  });
 
   @override
-  BookingFlightModel fromDocument(Map<String, dynamic> doc, String id) {
+  BookingFlightModel fromDocument(Map<String, dynamic> doc) {
     return BookingFlightModel(
-      id: id,
+      id: doc['id'],
       email: doc['email'] as String?,
       flight: doc['flight'] as String?,
       guest: (doc["guest"] as List<dynamic>?)?.map((guestMap) => Guest()).toList(),

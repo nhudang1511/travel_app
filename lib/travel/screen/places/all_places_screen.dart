@@ -25,7 +25,7 @@ class _AllPlacesScreenState extends State<AllPlacesScreen> {
     super.initState();
     if (placesList.isNotEmpty) {
       placesLiked = placesList
-          .map((e) => PlaceModel(id: "").fromDocument(json.decode(e), ""))
+          .map((e) => PlaceModel().fromDocument(json.decode(e)))
           .toList();
     }
   }

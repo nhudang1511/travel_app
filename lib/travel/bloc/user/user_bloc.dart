@@ -19,7 +19,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   void _onLoadUser(LoadUser event, Emitter<UserState> emit) async {
     await for (User? authUser in _authRepository.user) {
       if (authUser != null) {
-        User user = await _userRepository.getUserById(authUser.id);
+        User user = await _userRepository.getUserById(authUser.id ?? '');
         emit(UserLoaded(user: user));
       }
     }

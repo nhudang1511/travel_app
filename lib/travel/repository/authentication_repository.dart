@@ -117,7 +117,7 @@ class AuthRepository {
 
 
   Future setSP(User user) async {
-    SharedService.setUserId(user.id);
+    SharedService.setUserId(user.id ?? '');
     SharedService.setEmail(user.email ?? '');
     SharedService.setName(user.name ?? '');
     SharedService.setPhone(user.phone ?? '');

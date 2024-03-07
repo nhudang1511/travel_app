@@ -12,8 +12,8 @@ class FlightRepository {
       var querySnapshot = await _firebaseFirestore.collection('flight').get();
       return querySnapshot.docs.map((doc) {
         var data = doc.data();
-        var id = doc.id;
-        return FlightModel(id: id).fromDocument(data, id); // Use fromDocument
+        data['id'] = doc.id;
+        return FlightModel().fromDocument(data); // Use fromDocument
       }).toList();
     } catch (e) {
       log(e.toString());
@@ -30,8 +30,8 @@ class FlightRepository {
           .get();
       return querySnapshot.docs.map((doc) {
         var data = doc.data();
-        var id = doc.id;
-        return FlightModel(id: id).fromDocument(data, id); // Use fromDocument
+        data['id'] = doc.id;
+        return FlightModel().fromDocument(data); // Use fromDocument
       }).toList();
     } catch (e) {
       log(e.toString());

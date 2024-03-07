@@ -2,7 +2,7 @@ import 'package:flutter_nhu_nguyen/travel/model/custom_model.dart';
 
 class HotelModel extends CustomModel{
   HotelModel(
-      {required String id,
+      {this.id,
       this.hotelImage,
       this.hotelName,
       this.location,
@@ -10,8 +10,9 @@ class HotelModel extends CustomModel{
       this.numberOfReview,
       this.price,
       this.location_description,
-      this.information}) : super(id: id);
+      this.information}) ;
 
+  final String? id;
   final String? hotelImage;
   final String? hotelName;
   final String? location;
@@ -23,9 +24,9 @@ class HotelModel extends CustomModel{
 
 
   @override
-  HotelModel fromDocument(Map<String, dynamic> doc, String id) {
+  HotelModel fromDocument(Map<String, dynamic> doc) {
     return HotelModel(
-        id: id,
+        id: doc['id'],
         hotelImage: doc['image'] as String,
         hotelName: doc['name'] as String,
         location: doc['location'] as String,

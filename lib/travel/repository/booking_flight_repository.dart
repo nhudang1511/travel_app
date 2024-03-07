@@ -15,6 +15,6 @@ class BookingFlightRepository {
         .doc(booking.id) // Specify the document ID
         .get();
     var data = querySnapshot.data() as Map<String, dynamic>;
-    return BookingFlightModel(id: booking.id).fromDocument(data, booking.id);
+    return BookingFlightModel().fromDocument(data);
   }
 }

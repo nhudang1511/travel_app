@@ -31,7 +31,7 @@ class _DetailHotelScreenState extends State<DetailHotelScreen> {
     int guest = SharedService.getGuest() ?? 1;
     int room = SharedService.getRoom() ?? 1;
     _roomBloc = RoomBloc(RoomRepository())
-      ..add(LoadRoomByHotelIdGuestRoom(widget.hotelModel.id, guest, room));
+      ..add(LoadRoomByHotelIdGuestRoom(widget.hotelModel.id ?? '', guest, room));
   }
 
   @override

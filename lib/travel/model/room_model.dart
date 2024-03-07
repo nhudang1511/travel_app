@@ -1,6 +1,7 @@
 import 'package:flutter_nhu_nguyen/travel/model/custom_model.dart';
 
 class RoomModel extends CustomModel {
+  final String? id;
   final String? hotel;
   final String? image;
   final int? maxGuest;
@@ -11,7 +12,7 @@ class RoomModel extends CustomModel {
   final String? typePrice;
 
   RoomModel({
-    required String id,
+   this.id,
     this.hotel,
     this.image,
     this.maxGuest,
@@ -20,12 +21,12 @@ class RoomModel extends CustomModel {
     this.services,
     this.total,
     this.typePrice,
-  }) : super(id: id);
+  });
 
   @override
-  RoomModel fromDocument(Map<String, dynamic> doc,  String id) {
+  RoomModel fromDocument(Map<String, dynamic> doc) {
     return RoomModel(
-        id: id,
+        id: doc['id'],
         hotel: doc['hotel'] as String,
         image: doc['image'] as String,
         maxGuest: doc['max_guest'] as int,
