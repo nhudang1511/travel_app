@@ -75,4 +75,39 @@ class HotelRepository {
       rethrow;
     }
   }
+
+  Future<List<HotelModel>> getHotels(int limit, HotelModel hotelModel) async {
+    try {
+      DocumentSnapshot? documentSnapshot;
+
+      // Kiểm tra xem hotelModel có ID không
+      if (hotelModel.id != null) {
+        // Nếu có, thì lấy DocumentSnapshot tương ứng
+        documentSnapshot = await _firebaseFirestore
+            .collection('hotel')
+            .doc(hotelModel.id)
+            .get();
+      }
+
+      var query = _firebaseFirestore.collection('hotel').limit(limit);
+
+      // Nếu DocumentSnapshot tồn tại, thêm điều kiện startAfterDocument vào truy vấn
+      if (documentSnapshot != null && documentSnapshot.exists) {
+        query = query.startAfterDocument(documentSnapshot);
+      }
+
+      var querySnapshot = await query.get();
+
+      return querySnapshot.docs.map((doc) {
+        var data = doc.data();
+        data['id'] = doc.id;
+        return HotelModel().fromDocument(data);
+      }).toList();
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
+
 }

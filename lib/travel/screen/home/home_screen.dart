@@ -27,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<PlaceModel> placesLiked = [];
   List<String> placesList = SharedService.getLikedPlaces();
 
+
   @override
   void initState() {
     super.initState();

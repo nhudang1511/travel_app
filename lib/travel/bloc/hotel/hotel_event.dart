@@ -14,3 +14,8 @@ class SortHotel extends HotelEvent{
   final String sort;
   SortHotel(this.sort);
 }
+class LoadMore extends HotelEvent{
+  final int limit;
+  final HotelModel hotelModel;
+  LoadMore(this.limit, this.hotelModel);
+}

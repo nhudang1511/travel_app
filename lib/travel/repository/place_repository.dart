@@ -38,5 +38,22 @@ class PlaceRepository {
     }
   }
 
-
+  Future<List<PlaceModel>> getPlaces(
+    int limit
+  ) async {
+    try {
+      var querySnapshot = await _firebaseFirestore
+          .collection('place')
+          .limit(limit)
+          .get();
+      return querySnapshot.docs.map((doc) {
+        var data = doc.data();
+        data['id'] = doc.id;
+        return PlaceModel().fromDocument(data);
+      }).toList();
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
 }

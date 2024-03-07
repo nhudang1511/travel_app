@@ -14,11 +14,22 @@ class HotelBloc extends Bloc<HotelEvent, HotelState> {
     on<LoadHotels>(_onLoadHotel);
     on<LoadHotelByBooking>(_onLoadHotelByBooking);
     on<SortHotel>(_onSortHotel);
+    on<LoadMore>(_onLoadMore);
   }
 
   void _onLoadHotel(event, Emitter<HotelState> emit) async {
     try {
       List<HotelModel> hotels = await _hotelRepository.getAllHotel();
+      emit(HotelLoaded(hotels: hotels));
+    } catch (e) {
+      emit(HotelFailure());
+    }
+  }
+
+  void _onLoadMore(event, Emitter<HotelState> emit) async {
+    try {
+      List<HotelModel> hotels =
+          await _hotelRepository.getHotels(event.limit, event.hotelModel);
       emit(HotelLoaded(hotels: hotels));
     } catch (e) {
       emit(HotelFailure());
