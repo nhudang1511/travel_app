@@ -97,7 +97,7 @@ class _HotelScreenState extends State<HotelScreen> {
           if (state is HotelLoaded) {
             hotels = state.hotels;
           }
-          else{
+          else if(state is HotelLoading){
             return const Center(child: CircularProgressIndicator());
           }
           return CustomAppBarItem(

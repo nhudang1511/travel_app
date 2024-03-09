@@ -120,11 +120,10 @@ class _CustomAppBarItemState extends State<CustomAppBarItem> {
               backgroundColor: const Color(0xFFF2F2F2),
             ),
           ),
+          // widget.child,
           Container(
             margin: const EdgeInsets.only(top: 130, left: 10, right: 5),
-            child: SingleChildScrollView(
-              child: widget.child,
-            ),
+            child:  widget.child,
           ),
         ],
       ),

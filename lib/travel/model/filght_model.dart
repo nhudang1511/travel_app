@@ -39,6 +39,20 @@ class FlightModel extends CustomModel {
     );
   }
 
+  // factory FlightModel.fromSnapshot(Map doc) {
+  //   return FlightModel(
+  //     id: doc['id'],
+  //     airline: doc['airline'] as String,
+  //     arrive_time: (doc['arrive_time'] as Timestamp).toDate(),
+  //     departure_time: (doc['departure_time'] as Timestamp).toDate(),
+  //     from_place: doc['from_place'] as String,
+  //     no: doc['no'] as String,
+  //     price: doc['price'] as int,
+  //     seat: doc['seat'] as List<dynamic>,
+  //     to_place: doc['to_place'] as String,
+  //   );
+  // }
+
   @override
   Map<String, dynamic> toDocument() {
     // TODO: implement toDocument

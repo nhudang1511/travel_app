@@ -38,4 +38,21 @@ class FlightRepository {
       rethrow;
     }
   }
+
+  final CollectionReference _flightCollection = FirebaseFirestore.instance
+      .collection('flight');
+  Stream<QuerySnapshot> getFlight() {
+    return _flightCollection
+        .limit(3)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> getPostsPage(DocumentSnapshot lastDoc) {
+    return _flightCollection
+        .startAfterDocument(lastDoc)
+        .limit(3)
+        .snapshots();
+  }
+
+
 }

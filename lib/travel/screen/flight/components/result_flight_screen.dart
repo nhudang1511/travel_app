@@ -25,65 +25,86 @@ class ResultFlightScreen extends StatefulWidget {
 }
 
 class _ResultFlightScreenState extends State<ResultFlightScreen> {
-  late FlightBloc _flightBloc;
+  FlightBloc flightBloc = FlightBloc();
   List<FlightModel> flights = [];
+  ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    if (widget.fromPlace == "All" || widget.toPlace == "All") {
-      _flightBloc = FlightBloc(FlightRepository())..add(LoadFlight());
-    } else {
-      _flightBloc = FlightBloc(FlightRepository())
-        ..add(SearchFlight(
-          fromPlace: widget.fromPlace,
-          toPlace: widget.toPlace,
-        ));
+    // if (widget.fromPlace == "All" || widget.toPlace == "All") {
+    //   _flightBloc = FlightBloc(FlightRepository())..add(LoadFlight());
+    // } else {
+    //   _flightBloc = FlightBloc(FlightRepository())
+    //     ..add(SearchFlight(
+    //       fromPlace: widget.fromPlace,
+    //       toPlace: widget.toPlace,
+    //     ));
+    // }
+    flightBloc.add(FlightEventStart());
+    scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    // print('scroll');
+    if (scrollController.position.pixels ==
+        scrollController.position.maxScrollExtent &&
+        !scrollController.position.outOfRange) {
+      flightBloc.add(FlightEventFetchMore());
     }
   }
 
   @override
+  void dispose() {
+    flightBloc.close();
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => _flightBloc,
-      child: CustomAppBarItem(
-        title: '${widget.fromPlace} - \u{2708} - ${widget.toPlace}',
-        isIcon: true,
-        filterButton: const FilterFlight(),
-        showModalBottomSheet: () {},
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('3 Feb, 2021 \u{26AA} 1 Adult \u{26AA} Economy'),
-                Container(
-                  width: 20,
-                  height: 20,
-                  margin: const EdgeInsets.only(left: 10),
-                  decoration: ShapeDecoration(
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5))),
-                  child: const Icon(Icons.expand_more_outlined,
-                      color: Colors.black, size: 15),
-                )
-              ],
-            ),
-            BlocBuilder<FlightBloc, FlightState>(
-              builder: (context, state) {
-                if (state is FlightLoaded) {
-                  flights = state.flights;
+    return CustomAppBarItem(
+      title: '${widget.fromPlace} - \u{2708} - ${widget.toPlace}',
+      isIcon: true,
+      filterButton: const FilterFlight(),
+      showModalBottomSheet: () {},
+      child:  BlocBuilder<FlightBloc, FlightState>(
+        bloc: flightBloc,
+        builder: (context, state) {
+          if (state is FlightStateLoading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is FlightStateEmpty) {
+            return Center(
+              child: Text(
+                'No Posts',
+                style: Theme.of(context).textTheme.displayMedium,
+              ),
+            );
+          } else if (state is FlightStateLoadSuccess) {
+            return ListView.separated(
+              controller: scrollController,
+              itemCount: state.hasMoreFlight ? state.flight.length + 1 : state.flight.length,
+              itemBuilder: (context, i) {
+                if (i >= state.flight.length) {
+                  return Container(
+                    margin: const EdgeInsets.only(top: 15),
+                    height: 100,
+                    width: 30,
+                    child: const Center(child: CircularProgressIndicator()),
+                  );
                 }
-                return Column(
-                  children:
-                      flights.map((e) => ItemTicket(flightModel: e)).toList(),
-                );
+                return ItemTicket(flightModel: state.flight[i]);
               },
-            )
-          ],
-        ),
-      ),
+              separatorBuilder: (context, i) {
+                return const SizedBox();
+              },
+            );
+          }
+          return const SizedBox();
+        },
+      )
     );
   }
 }
