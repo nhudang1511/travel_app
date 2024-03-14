@@ -84,19 +84,21 @@ class _CheckOutStepFlightState extends State<CheckOutStepFlight> {
       title: 'Checkout',
       isIcon: false,
       showModalBottomSheet: () {},
-      child: Column(
-        children: [
-          Row(
-            children: steps
-                .map((e) => buildItemCheckOutStepFlight(
-                steps.indexOf(e) + 1,
-                e,
-                steps.indexOf(e) == steps.length - 1,
-                steps.indexOf(e) == widget.step))
-                .toList(),
-          ),
-          screens[widget.step]
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              children: steps
+                  .map((e) => buildItemCheckOutStepFlight(
+                  steps.indexOf(e) + 1,
+                  e,
+                  steps.indexOf(e) == steps.length - 1,
+                  steps.indexOf(e) == widget.step))
+                  .toList(),
+            ),
+            screens[widget.step]
+          ],
+        ),
       ),
     );
   }

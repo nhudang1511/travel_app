@@ -109,5 +109,16 @@ class HotelRepository {
     }
   }
 
+  final CollectionReference _hotelCollection = FirebaseFirestore.instance
+      .collection('hotel');
+  Stream<QuerySnapshot> getHotel() {
+    Query query = _hotelCollection.limit(3);
+    return query.snapshots();
+  }
+  Stream<QuerySnapshot> getHotelPage(DocumentSnapshot lastDoc) {
+    Query query = _hotelCollection.limit(3);
+    query = query.startAfterDocument(lastDoc);
+    return query.snapshots();
+  }
 
 }

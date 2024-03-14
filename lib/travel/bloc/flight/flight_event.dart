@@ -3,6 +3,9 @@ abstract class FlightEvent {
   const FlightEvent();
 }
 class FlightEventStart extends FlightEvent {
+  final String from;
+  final String to;
+  FlightEventStart(this.from, this.to);
 }
 
 class FlightEventLoad extends FlightEvent {
@@ -12,4 +15,7 @@ class FlightEventLoad extends FlightEvent {
 }
 
 class FlightEventFetchMore extends FlightEvent {
+  final String from;
+  final String to;
+  const FlightEventFetchMore(this.from, this.to);
 }

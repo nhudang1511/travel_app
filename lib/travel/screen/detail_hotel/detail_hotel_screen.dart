@@ -298,6 +298,7 @@ class _DetailHotelScreenState extends State<DetailHotelScreen> {
                                 CustomButton(
                                   title: 'Select Room',
                                   button: () {
+                                    print(widget.hotelModel.id);
                                     Navigator.pushNamed(
                                         context, SelectRoomScreen.routeName,
                                         arguments: rooms);

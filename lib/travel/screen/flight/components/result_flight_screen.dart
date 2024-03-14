@@ -2,8 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/bloc/bloc.dart';
-import 'package:flutter_nhu_nguyen/travel/repository/flight_repository.dart';
-import 'package:flutter_nhu_nguyen/travel/screen/check_out_flight/components/check_out_screen_flight.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import '../../../../config/app_path.dart';
 import '../../../model/filght_model.dart';
@@ -32,16 +30,12 @@ class _ResultFlightScreenState extends State<ResultFlightScreen> {
   @override
   void initState() {
     super.initState();
-    // if (widget.fromPlace == "All" || widget.toPlace == "All") {
-    //   _flightBloc = FlightBloc(FlightRepository())..add(LoadFlight());
-    // } else {
-    //   _flightBloc = FlightBloc(FlightRepository())
-    //     ..add(SearchFlight(
-    //       fromPlace: widget.fromPlace,
-    //       toPlace: widget.toPlace,
-    //     ));
-    // }
-    flightBloc.add(FlightEventStart());
+    if (widget.fromPlace == "All" || widget.toPlace == "All"){
+      flightBloc.add(FlightEventStart('', ''));
+    }
+    else{
+      flightBloc.add(FlightEventStart(widget.fromPlace, widget.toPlace));
+    }
     scrollController.addListener(_onScroll);
   }
 
@@ -50,7 +44,12 @@ class _ResultFlightScreenState extends State<ResultFlightScreen> {
     if (scrollController.position.pixels ==
         scrollController.position.maxScrollExtent &&
         !scrollController.position.outOfRange) {
-      flightBloc.add(FlightEventFetchMore());
+      if (widget.fromPlace == "All" || widget.toPlace == "All"){
+        flightBloc.add(const FlightEventFetchMore('', ''));
+      }
+      else{
+        flightBloc.add(FlightEventFetchMore(widget.fromPlace, widget.toPlace));
+      }
     }
   }
 

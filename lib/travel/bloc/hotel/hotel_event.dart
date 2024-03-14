@@ -19,3 +19,15 @@ class LoadMore extends HotelEvent{
   final HotelModel hotelModel;
   LoadMore(this.limit, this.hotelModel);
 }
+
+class HotelEventStart extends HotelEvent {
+}
+
+class HotelEventLoad extends HotelEvent {
+  final List<List<HotelModel>> flight;
+
+  HotelEventLoad(this.flight);
+}
+
+class HotelEventFetchMore extends HotelEvent {
+}

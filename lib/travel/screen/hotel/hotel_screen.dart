@@ -25,16 +25,33 @@ class HotelScreen extends StatefulWidget {
 }
 
 class _HotelScreenState extends State<HotelScreen> {
-  late HotelBloc _hotelBloc;
+  HotelBloc hotelBloc = HotelBloc(HotelRepository(RoomRepository()));
   List<HotelModel> hotels = [];
   double rating = 0.0;
+  ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _hotelBloc = HotelBloc(HotelRepository(RoomRepository()))
-      ..add(LoadHotelByBooking(
-          widget.maxGuest, widget.maxRoom, widget.destination));
+    // _hotelBloc = HotelBloc(HotelRepository(RoomRepository()))
+    //   ..add(LoadHotelByBooking(
+    //       widget.maxGuest, widget.maxRoom, widget.destination));
+    hotelBloc.add(HotelEventStart());
+    scrollController.addListener(_onScroll);
+  }
+  void _onScroll() {
+    if (scrollController.position.pixels ==
+        scrollController.position.maxScrollExtent &&
+        !scrollController.position.outOfRange) {
+      hotelBloc.add(HotelEventFetchMore());
+    }
+  }
+
+  @override
+  void dispose() {
+    hotelBloc.close();
+    scrollController.dispose();
+    super.dispose();
   }
 
   void _callModalBottomSheet() async {
@@ -90,66 +107,55 @@ class _HotelScreenState extends State<HotelScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => _hotelBloc,
-      child: BlocBuilder<HotelBloc, HotelState>(
-        builder: (context, state) {
-          if (state is HotelLoaded) {
-            hotels = state.hotels;
-          }
-          else if(state is HotelLoading){
-            return const Center(child: CircularProgressIndicator());
-          }
-          return CustomAppBarItem(
-            title: 'Hotels',
-            isIcon: true,
-            filterButton: const FilterHotel(),
-            showModalBottomSheet: _callModalBottomSheet,
-            child: hotels.isNotEmpty
-                ? Column(
-                    children: rating > 0
-                        ? hotels
-                            .where((element) => element.star! >= rating)
-                            .map(
-                              (e) => ItemHotelWidget(
-                                hotelModel: e,
-                                onTap: () {
-                                  Navigator.of(context).pushNamed(
-                                      DetailHotelScreen.routeName,
-                                      arguments: e);
-                                },
-                              ),
-                            )
-                            .toList()
-                        : hotels
-                            .map(
-                              (e) => ItemHotelWidget(
-                                hotelModel: e,
-                                onTap: () {
-                                  Navigator.of(context).pushNamed(
-                                      DetailHotelScreen.routeName,
-                                      arguments: e);
-                                },
-                              ),
-                            )
-                            .toList(),
-                  )
-                : Container(
-                    margin: EdgeInsets.symmetric(
-                        vertical: MediaQuery.of(context).size.height / 3),
-                    child: Center(
-                      child: Text(
-                        'There are no hotels that satisfy the conditions',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge
-                            ?.copyWith(color: Colors.black),
-                      ),
-                    ),
-                  ),
-          );
-        },
-      ),
+    return CustomAppBarItem(
+        title: 'Hotels',
+        isIcon: true,
+        filterButton: const FilterHotel(),
+        showModalBottomSheet: _callModalBottomSheet,
+        child:  BlocBuilder<HotelBloc, HotelState>(
+          bloc: hotelBloc,
+          builder: (context, state) {
+            if (state is HotelStateLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (state is HotelStateEmpty) {
+              return Center(
+                child: Text(
+                  'No Posts',
+                  style: Theme.of(context).textTheme.displayMedium,
+                ),
+              );
+            } else if (state is HotelStateLoadSuccess) {
+              return ListView.separated(
+                controller: scrollController,
+                itemCount: state.hasMoreHotel ? state.hotel.length + 1 : state.hotel.length,
+                itemBuilder: (context, i) {
+                  if (i >= state.hotel.length) {
+                    return Container(
+                      margin: const EdgeInsets.only(top: 15),
+                      height: 100,
+                      width: 30,
+                      child: const Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                  return ItemHotelWidget(
+                    hotelModel: state.hotel[i],
+                    onTap: () {
+                      Navigator.of(context).pushNamed(
+                          DetailHotelScreen.routeName,
+                          arguments: state.hotel[i]);
+                    },
+                  );
+                },
+                separatorBuilder: (context, i) {
+                  return const SizedBox();
+                },
+              );
+            }
+            return const SizedBox();
+          },
+        )
     );
   }
 }

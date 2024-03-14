@@ -111,6 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: (context, state) {
                     if (state is PlaceLoaded) {
                       places = state.places;
+                      places.sort((a, b) => (b.rating ?? 0).compareTo(a.rating ?? 0));
                       // print('Places[index] value ${places[0].image}');
                     }
 

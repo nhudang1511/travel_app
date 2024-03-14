@@ -32,7 +32,7 @@ class FlightBloc extends Bloc<FlightEvent, FlightState> {
     flights.clear();
     subscriptions.clear();
     subscriptions.add(
-        FlightRepository().getFlight().listen((event) {
+        FlightRepository().getFlight(event.from, event.to).listen((event) {
           handleStreamEvent(0, event);
         })
     );
@@ -52,7 +52,7 @@ class FlightBloc extends Bloc<FlightEvent, FlightState> {
     }
     final index = flights.length;
     subscriptions.add(
-        FlightRepository().getPostsPage(lastDoc!).listen((event) {
+        FlightRepository().getFlightPage(lastDoc!, event.from, event.to).listen((event) {
           handleStreamEvent(index, event);
         })
     );
@@ -87,7 +87,9 @@ class FlightBloc extends Bloc<FlightEvent, FlightState> {
     for (var doc in snap.docs) {
       var data = doc.data();
       if (data != null) {
-        final newItems = FlightModel().fromDocument(data as Map<String, dynamic>);
+        var data = doc.data() as Map<String, dynamic>;
+        data['id'] = doc.id;
+        final newItems = FlightModel().fromDocument(data);
         newList.add(newItems);
       }
     }
