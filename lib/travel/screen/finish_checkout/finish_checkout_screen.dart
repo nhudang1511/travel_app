@@ -151,7 +151,7 @@ class _FinishCheckoutScreenState extends State<FinishCheckoutScreen> {
                               height: 30,
                             ),
                             Text(
-                              'Date: $daysDifference (from: ${dateFormatter.format(bookingModel!.dateStart ?? DateTime.now())} - to ${dateFormatter.format(bookingModel!.dateEnd ?? DateTime.now())})',
+                              'Date: $daysDifference (from: ${dateFormatter.format(bookingModel?.dateStart ?? DateTime.now())} - to ${dateFormatter.format(bookingModel?.dateEnd ?? DateTime.now())})',
                               style: Theme.of(context)
                                   .textTheme
                                   .headlineSmall

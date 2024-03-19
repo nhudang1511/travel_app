@@ -82,7 +82,7 @@ class _CheckOutStepState extends State<CheckOutStep> {
       title: 'Checkout',
       isIcon: false,
       showModalBottomSheet: () {},
-      child: Column(
+      child: SingleChildScrollView(child: Column(
         children: [
           Row(
             children: steps
@@ -95,7 +95,7 @@ class _CheckOutStepState extends State<CheckOutStep> {
           ),
           screens[widget.step]
         ],
-      ),
+      ),)
     );
   }
 }
