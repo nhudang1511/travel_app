@@ -24,7 +24,7 @@ class CustomCardField extends StatefulWidget {
 class _CustomCardFieldState extends State<CustomCardField> {
   final FocusNode _focusNode = FocusNode();
   String? errorText;
-  CardType cardType = CardType.MasterCard;
+  CardType cardType = CardType.Others;
 
   @override
   void initState() {
@@ -53,10 +53,14 @@ class _CustomCardFieldState extends State<CustomCardField> {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child:  TextFormField(
+        onChanged: (value) => {
+          _getCardTypeFrmNumber(),
+          getCardIcon(cardType)
+        },
         inputFormatters: [
           FilteringTextInputFormatter.digitsOnly,    // allow only  digits
           CardNumberInputFormatter(),                // custom class to format entered data from textField
-          LengthLimitingTextInputFormatter(16)       // restrict user to enter max 16 characters
+          LengthLimitingTextInputFormatter(22)       // restrict user to enter max 16 characters
         ],
         keyboardType: TextInputType.number,
         controller: widget.cardController,
@@ -113,6 +117,12 @@ class CardNumberInputFormatter extends TextInputFormatter {
 }
 
 String getCardIcon (CardType? cardType){
+  // var masterCardRegExp = RegExp(r'^5[1-5][0-9]{14}$');
+  // var visaCardRegExp = RegExp(r'^4[0-9]{12}(?:[0-9]{3})?$');
+  // var verveCardRegExp = RegExp(r'^((506(0|1))|(507(8|9))|(6500))[0-9]{12}$');
+
+  // CardType getCardType(Car)
+
   String imgPath = "";
   switch (cardType) {
     case CardType.MasterCard:
