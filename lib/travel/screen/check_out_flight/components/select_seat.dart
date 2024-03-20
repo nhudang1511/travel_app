@@ -185,8 +185,8 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
                       size: const Size(240, 650),
                     ),
                     Positioned(
-                        top: MediaQuery.of(context).size.height / 4 + 35,
-                        left: 15,
+                        top: MediaQuery.of(context).size.height / 4 +10,
+                        left: 20,
                         child: Column(
                           children: [
                             Text(
@@ -213,7 +213,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
                             ),
                             FlightSeat(
                               cols: 7,
-                              rows: 4,
+                              rows: 5,
                               currentSeatsState: economyClassSeats ?? [],
                               type: "Economy",
                             )
@@ -224,7 +224,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
               ],
             ),
             Positioned(
-                bottom: -15,
+                bottom: -20,
                 width: MediaQuery.of(context).size.width - 30,
                 child: CustomButton(
                   title: 'Processed',

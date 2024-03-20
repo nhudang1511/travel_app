@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_nhu_nguyen/travel/model/booking_model.dart';
 import 'package:flutter_nhu_nguyen/travel/model/room_model.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/finish_checkout/finish_checkout_flight_screen.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/places/place_detail_screen.dart';
@@ -148,11 +149,9 @@ class AppRouter {
           return _route(const MainScreen());
         }
       case BookingItem.routeName:
-        final String bookingId =
-        (settings.arguments as String);
-        return MaterialPageRoute<dynamic>(
-            settings: settings,
-            builder: (context) => BookingItem(bookingId: bookingId));
+        final BookingModel booking =
+        (settings.arguments as BookingModel);
+        return _route( BookingItem(booking: booking,));
       default:
         return _route(const MainScreen());
     }

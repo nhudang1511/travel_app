@@ -2,13 +2,11 @@ import 'package:coupon_uikit/coupon_uikit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_nhu_nguyen/config/app_path.dart';
 import 'package:flutter_nhu_nguyen/travel/bloc/bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/model/booking_model.dart';
 import 'package:flutter_nhu_nguyen/travel/repository/booking_repository.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
-
 import '../../model/hotel_model.dart';
 import '../../model/room_model.dart';
 import '../../repository/hotel_repository.dart';
@@ -79,9 +77,8 @@ class _BriefcaseScreenState extends State<BriefcaseScreen> {
                                             onPressed: () {
                                               Navigator.pushNamed(context,
                                                   BookingItem.routeName,
-                                                  arguments:
-                                                      bookings[index].id);
-                                              print(bookings[index].id);
+                                                  arguments: bookings[index]);
+                                              // print(bookings[index].id);
                                             },
                                             icon: const Icon(Icons.home_filled))
                                       ],
@@ -111,17 +108,16 @@ class _BriefcaseScreenState extends State<BriefcaseScreen> {
 }
 
 class BookingItem extends StatefulWidget {
-  const BookingItem({super.key, required this.bookingId});
+  const BookingItem({super.key, required this.booking});
 
   static const String routeName = '/item_booking';
 
   @override
   State<BookingItem> createState() => _BookingItemState();
-  final String bookingId;
+  final BookingModel booking;
 }
 
 class _BookingItemState extends State<BookingItem> {
-  List<BookingModel>? bookingModel;
   String? hotelName;
   String? roomName;
   final dateFormatter = DateFormat('dd MMM yyyy');
@@ -134,117 +130,125 @@ class _BookingItemState extends State<BookingItem> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BookingBloc, BookingState>(
-      builder: (context, state) {
-        if (state is BookingLoaded) {
-          bookingModel = state.bookingModel;
-          if (bookingModel?.first.dateStart != null &&
-              bookingModel?.first.dateEnd != null) {
-            Duration? duration = bookingModel?.first.dateEnd
-                ?.difference(bookingModel?.first.dateStart ?? DateTime.now());
-            daysDifference = duration?.inDays;
-          }
-        }
-        return Scaffold(
-          body: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xff8F67E8), Color(0xff6357CC)],
-              ),
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xff8F67E8), Color(0xff6357CC)],
+          ),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 100),
+        child: CouponCard(
+          curveAxis: Axis.horizontal,
+          backgroundColor: Colors.white,
+          height: MediaQuery.of(context).size.height - 20,
+          firstChild: Center(
+            child: Text(
+              'Completing\n booking hotels',
+              style: Theme.of(context)
+                  .textTheme
+                  .displayMedium
+                  ?.copyWith(color: Colors.black),
+              textAlign: TextAlign.center,
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 100),
-            child: CouponCard(
-              curveAxis: Axis.horizontal,
-              backgroundColor: Colors.white,
-              height: MediaQuery.of(context).size.height - 20,
-              firstChild: Center(
-                child: Text(
-                  'Completing\n booking hotels',
-                  style: Theme.of(context)
-                      .textTheme
-                      .displayMedium
-                      ?.copyWith(color: Colors.black),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              secondChild: Container(
-                width: double.maxFinite,
-                decoration: const BoxDecoration(
-                    border: DashedBorder(
-                  dashLength: 15,
-                  top: BorderSide(color: Color(0xFFE5E5E5)),
-                )),
-                child: Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  child: MultiBlocProvider(
-                    providers: [
-                      BlocProvider(
-                          create: (context) =>
-                              HotelBloc(HotelRepository(RoomRepository()))
-                                ..add(LoadHotels())),
-                      BlocProvider(
-                          create: (context) =>
-                              RoomBloc(RoomRepository())..add(LoadRoom()))
-                    ],
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          ),
+          secondChild: Container(
+            width: double.maxFinite,
+            decoration: const BoxDecoration(
+                border: DashedBorder(
+              dashLength: 15,
+              top: BorderSide(color: Color(0xFFE5E5E5)),
+            )),
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              child: MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                      create: (context) =>
+                          HotelBloc(HotelRepository(RoomRepository()))
+                            ..add(LoadHotels())),
+                  BlocProvider(
+                      create: (context) =>
+                          RoomBloc(RoomRepository())..add(LoadRoom()))
+                ],
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Details Booking',
+                      style: Theme.of(context)
+                          .textTheme
+                          .displaySmall
+                          ?.copyWith(color: Colors.black),
+                      textAlign: TextAlign.center,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        BlocBuilder<HotelBloc, HotelState>(
+                          builder: (context, state) {
+                            if (state is HotelLoaded) {
+                              List<HotelModel> hotels = state.hotels
+                                  .where((element) =>
+                                      element.id == widget.booking.hotel)
+                                  .toList();
+                              hotelName = hotels.first.hotelName ?? 'null';
+                            }
+                            return Text(
+                              'Hotel: $hotelName',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineSmall
+                                  ?.copyWith(color: Colors.black),
+                            );
+                          },
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        BlocBuilder<RoomBloc, RoomState>(
+                          builder: (context, state) {
+                            if (state is RoomLoaded) {
+                              List<RoomModel> rooms = state.rooms
+                                  .where((element) =>
+                                      element.id == widget.booking.room)
+                                  .toList();
+                              roomName = rooms.first.name ?? 'null';
+                            }
+                            return Text(
+                              'Room: $roomName',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineSmall
+                                  ?.copyWith(color: Colors.black),
+                            );
+                          },
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
                         Text(
-                          'Details Booking',
+                          'Email: ${widget.booking.email}',
                           style: Theme.of(context)
                               .textTheme
-                              .displaySmall
+                              .headlineSmall
                               ?.copyWith(color: Colors.black),
-                          textAlign: TextAlign.center,
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Hotel: ${bookingModel?.first.hotel}',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineSmall
-                                  ?.copyWith(color: Colors.black),
-                            ),
-                            const SizedBox(
-                              height: 30,
-                            ),
-                            Text(
-                              'Room: ${bookingModel?.first.room}',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineSmall
-                                  ?.copyWith(color: Colors.black),
-                            ),
-                            const SizedBox(
-                              height: 30,
-                            ),
-                            Text(
-                              'Email: ${bookingModel?.first.email}',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineSmall
-                                  ?.copyWith(color: Colors.black),
-                            ),
-                          ],
-                        ),
-                        CustomButton(
-                            title: 'Home',
-                            button: () {
-                              Navigator.pushNamedAndRemoveUntil(context,
-                                  MainScreen.routeName, (route) => false);
-                            })
                       ],
                     ),
-                  ),
+                    CustomButton(
+                        title: 'Home',
+                        button: () {
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, MainScreen.routeName, (route) => false);
+                        })
+                  ],
                 ),
               ),
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

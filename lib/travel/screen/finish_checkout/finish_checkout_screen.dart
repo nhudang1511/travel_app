@@ -112,16 +112,16 @@ class _FinishCheckoutScreenState extends State<FinishCheckoutScreen> {
                                           element.id == bookingModel?.hotel)
                                       .toList();
                                   hotelName = hotels.first.hotelName ?? 'null';
+                                  return Text(
+                                    'Hotel: $hotelName',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall
+                                        ?.copyWith(color: Colors.black),
+                                  );
                                 } else {
                                   return const CircularProgressIndicator();
                                 }
-                                return Text(
-                                  'Hotel: $hotelName',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineSmall
-                                      ?.copyWith(color: Colors.black),
-                                );
                               },
                             ),
                             const SizedBox(
@@ -135,16 +135,16 @@ class _FinishCheckoutScreenState extends State<FinishCheckoutScreen> {
                                           element.id == bookingModel?.room)
                                       .toList();
                                   roomName = rooms.first.name ?? 'null';
+                                  return Text(
+                                    'Room: $roomName',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall
+                                        ?.copyWith(color: Colors.black),
+                                  );
                                 } else {
                                   return const CircularProgressIndicator();
                                 }
-                                return Text(
-                                  'Room: $roomName',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineSmall
-                                      ?.copyWith(color: Colors.black),
-                                );
                               },
                             ),
                             const SizedBox(
