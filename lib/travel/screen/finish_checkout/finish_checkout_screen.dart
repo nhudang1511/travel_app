@@ -176,6 +176,94 @@ class _FinishCheckoutScreenState extends State<FinishCheckoutScreen> {
                                   MainScreen.routeName, (route) => false);
                             })
                       ],
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Details Booking',
+                            style: Theme.of(context)
+                                .textTheme
+                                .displaySmall
+                                ?.copyWith(color: Colors.black),
+                            textAlign: TextAlign.center,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              BlocBuilder<HotelBloc, HotelState>(
+                                builder: (context, state) {
+                                  if (state is HotelLoaded) {
+                                    List<HotelModel> hotels = state.hotels
+                                        .where((element) =>
+                                            element.id == bookingModel?.hotel)
+                                        .toList();
+                                    hotelName = hotels.first.hotelName ?? 'null';
+                                  } else {
+                                    return const CircularProgressIndicator();
+                                  }
+                                  return Text(
+                                    'Hotel: $hotelName',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall
+                                        ?.copyWith(color: Colors.black),
+                                  );
+                                },
+                              ),
+                              const SizedBox(
+                                height: 30,
+                              ),
+                              BlocBuilder<RoomBloc, RoomState>(
+                                builder: (context, state) {
+                                  if (state is RoomLoaded) {
+                                    List<RoomModel> rooms = state.rooms
+                                        .where((element) =>
+                                            element.id == bookingModel?.room)
+                                        .toList();
+                                    roomName = rooms.first.name ?? 'null';
+                                  } else {
+                                    return const CircularProgressIndicator();
+                                  }
+                                  return Text(
+                                    'Room: $roomName',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall
+                                        ?.copyWith(color: Colors.black),
+                                  );
+                                },
+                              ),
+                              const SizedBox(
+                                height: 30,
+                              ),
+                              // Text(
+                              //   'Date: $daysDifference (from: ${dateFormatter.format(bookingModel!.dateStart ?? DateTime.now())} - to ${dateFormatter.format(bookingModel!.dateEnd ?? DateTime.now())})',
+                              //   style: Theme.of(context)
+                              //       .textTheme
+                              //       .headlineSmall
+                              //       ?.copyWith(color: Colors.black),
+                              // ),
+                              const SizedBox(
+                                height: 30,
+                              ),
+                              Text(
+                                'Email: ${bookingModel?.email}',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineSmall
+                                    ?.copyWith(color: Colors.black),
+                              ),
+                            ],
+                          ),
+                          CustomButton(
+                              title: 'Home',
+                              button: () {
+                                Navigator.pushNamedAndRemoveUntil(context,
+                                    MainScreen.routeName, (route) => false);
+                              })
+                        ],
+                      ),
                     ),
                   ),
                 ),
