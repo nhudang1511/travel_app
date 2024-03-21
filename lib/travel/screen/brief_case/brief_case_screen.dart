@@ -30,16 +30,24 @@ class _BriefcaseScreenState extends State<BriefcaseScreen> {
   late RoomModel room;
   final dateFormatter = DateFormat('dd MMM yyyy');
   String? email;
+  late HotelBloc _hotelBloc;
+  late RoomBloc _roomBloc;
 
   @override
   void initState() {
     _bookingBloc = BookingBloc(BookingRepository())..add(LoadBooking());
+    _hotelBloc = HotelBloc(HotelRepository(RoomRepository()))..add(LoadHotels());
+    _roomBloc = RoomBloc(RoomRepository())..add(LoadRoom());
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => _bookingBloc,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => _bookingBloc),
+        BlocProvider(create: (_) => _hotelBloc),
+        BlocProvider(create: (_)=> _roomBloc)
+      ],
       child: Scaffold(
           backgroundColor: Theme.of(context).colorScheme.background,
           appBar: const CustomAppBar(
@@ -70,89 +78,88 @@ class _BriefcaseScreenState extends State<BriefcaseScreen> {
                         itemBuilder: (context, index) => Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 13, vertical: 16),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16.0),
-                                  color: Colors.white,
-                                ),
-                                margin: const EdgeInsets.only(bottom: 24.0),
-                                child: Row(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      child: Stack(
-                                        alignment: Alignment.topRight,
+                              child: GestureDetector(
+                                onTap: (){
+                                  Navigator.pushNamed(context,
+                                      BookingItem.routeName,
+                                      arguments:
+                                      bookings[index]);
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16.0),
+                                    color: Colors.white,
+                                  ),
+                                  margin: const EdgeInsets.only(bottom: 24.0),
+                                  child: Row(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(8.0),
+                                        child: const Stack(
+                                          alignment: Alignment.topRight,
+                                          children: [
+                                            Icon(Icons.home_filled, size: 25),
+                                          ],
+                                        ),
+                                      ),
+                                      Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
-                                          IconButton(
-                                              onPressed: () {
-                                                Navigator.pushNamed(context,
-                                                    BookingItem.routeName,
-                                                    arguments:
-                                                        bookings[index]);
-                                                print(bookings[index]);
-                                              },
-                                              icon: const Icon(Icons.home_filled, size: 25),
+                                          Container(
+                                            padding: const EdgeInsets.only(left: 0),
+                                            child: Text(
+                                                bookings[index].createdAt != null
+                                                    ? 'Booking ${dateFormatter.format(bookings[index].createdAt!)}'
+                                                    : 'Booking',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleLarge
+                                                    ?.copyWith(color: Colors.black)),
+                                          ),
+                                          BlocBuilder<HotelBloc, HotelState>(
+                                            builder: (context, state) {
+                                              if (state is HotelLoaded) {
+                                                hotelList = state.hotels
+                                                    .where((element) => element.id == bookings[index].hotel)
+                                                    .first;
+                                              }
+                                              return Container(
+                                                padding: const EdgeInsets.only(left: 0),
+                                                child: Text(
+                                                    bookings[index].hotel != null
+                                                        ? 'Hotel:\n${hotelList.hotelName}'
+                                                        : 'Hotel: null',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .titleLarge
+                                                        ?.copyWith(color: Colors.black)),
+                                              );
+                                            },
+                                          ),
+                                          BlocBuilder<RoomBloc, RoomState>(
+                                            builder: (context, state) {
+                                              if (state is RoomLoaded) {
+                                                room = state.rooms
+                                                    .where((element) => element.id == bookings[index].room)
+                                                    .first;
+                                              }
+                                              return Container(
+                                                padding: const EdgeInsets.only(left: 0),
+                                                child: Text(
+                                                    bookings[index].room != null
+                                                        ? 'Room: ${room.name}'
+                                                        : 'Room: null',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .titleLarge
+                                                        ?.copyWith(color: Colors.black)),
+                                              );
+                                            },
                                           )
                                         ],
                                       ),
-                                    ),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.only(left: 0),
-                                          child: Text(
-                                              bookings[index].createdAt != null
-                                                  ? 'Booking ${dateFormatter.format(bookings[index].createdAt!)}'
-                                                  : 'Booking',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleLarge
-                                                  ?.copyWith(color: Colors.black)),
-                                        ),
-                                        BlocBuilder<HotelBloc, HotelState>(
-                                          builder: (context, state) {
-                                            if (state is HotelLoaded) {
-                                              hotelList = state.hotels
-                                                  .where((element) => element.id == bookings[index].hotel)
-                                                  .first;
-                                            }
-                                            return Container(
-                                              padding: const EdgeInsets.only(left: 0),
-                                              child: Text(
-                                                  bookings[index].hotel != null
-                                                      ? 'Hotel:\n${hotelList.hotelName}'
-                                                      : 'Hotel: null',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleLarge
-                                                      ?.copyWith(color: Colors.black)),
-                                            );
-                                          },
-                                        ),
-                                        BlocBuilder<RoomBloc, RoomState>(
-                                          builder: (context, state) {
-                                            if (state is RoomLoaded) {
-                                              room = state.rooms
-                                                  .where((element) => element.id == bookings[index].room)
-                                                  .first;
-                                            }
-                                            return Container(
-                                              padding: const EdgeInsets.only(left: 0),
-                                              child: Text(
-                                                  bookings[index].room != null
-                                                      ? 'Room: ${room.name}'
-                                                      : 'Room: null',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleLarge
-                                                      ?.copyWith(color: Colors.black)),
-                                            );
-                                          },
-                                        )
-                                      ],
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ));
