@@ -73,11 +73,6 @@ class AuthRepository {
     required String password,
   }) async {
     try {
-      final firebaseUser = _firebaseAuth.currentUser;
-      if (firebaseUser == null || !firebaseUser.emailVerified) {
-        throw const LogInWithEmailAndPasswordFailure("Email has not been verified.");
-      }
-
       await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
