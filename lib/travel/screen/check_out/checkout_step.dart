@@ -98,20 +98,6 @@ class _CheckOutStepState extends State<CheckOutStep> {
           ],
         ),
       ),
-      child: SingleChildScrollView(child: Column(
-        children: [
-          Row(
-            children: steps
-                .map((e) => buildItemCheckOutStep(
-                steps.indexOf(e) + 1,
-                e,
-                steps.indexOf(e) == steps.length - 1,
-                steps.indexOf(e) == widget.step))
-                .toList(),
-          ),
-          screens[widget.step]
-        ],
-      ),)
     );
   }
 }

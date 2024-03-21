@@ -28,7 +28,7 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   CardModel? card;
-  String typePayment = "miniMarket";
+  String typePayment = "COD";
   String? cardString = SharedService.getCard();
 
   @override
@@ -91,9 +91,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
         ),
         buildItemOptionsPayment(AppPath.iconMarket, 'Mini Market', () {
           setState(() {
-            typePayment = "miniMarket";
+            typePayment = "COD";
           });
-        }, typePayment == "miniMarket"),
+        }, typePayment == "COD"),
         const SizedBox(
           height: 24.0,
         ),
@@ -155,10 +155,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
         const SizedBox(
           height: 24.0,
         ),
-        buildItemOptionsPayment(AppPath.iconBank, 'Bank Transfer', () {
+        buildItemOptionsPayment(
+            AppPath.iconBank, 'Bank Transfer', () {
           setState(() {
             typePayment = "bankTransfer";
           });
+          
         }, typePayment == "bankTransfer"),
         const SizedBox(
           height: 24.0,
