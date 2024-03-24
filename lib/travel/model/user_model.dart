@@ -4,6 +4,7 @@ class User extends CustomModel {
   final String? name;
   final String? country;
   final String? phone;
+  final String? avatar;
   final String? email;
   final String? password;
 
@@ -12,8 +13,10 @@ class User extends CustomModel {
       this.name,
       this.country,
       this.phone,
+      this.avatar,
       this.email,
-      this.password});
+      this.password}
+      );
 
   @override
   User fromDocument(Map<String, dynamic> doc) {
@@ -22,6 +25,7 @@ class User extends CustomModel {
       phone: doc['phoneNumber'] as String?,
       name: doc['name'] as String?,
       country: doc['country'] as String?,
+      avatar: doc['avatar'] as String?,
       email: doc['email'] as String?,
     );
   }
@@ -32,6 +36,7 @@ class User extends CustomModel {
     phone: json['phoneNumber'] as String?,
     name: json['name'] as String?,
     country: json['country'] as String?,
+    avatar: json['avatar'] as String?,
     email: json['email'] as String?,
   );
   @override
@@ -41,7 +46,8 @@ class User extends CustomModel {
       'password': password,
       'email': email,
       'phone': phone,
-      'country': country
+      'country': country,
+      'avatar': avatar
     };
   }
 }
