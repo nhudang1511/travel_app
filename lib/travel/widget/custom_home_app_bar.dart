@@ -37,8 +37,6 @@ class _CustomHomeAppBarState extends State<CustomHomeAppBar> {
     _placeBloc = PlaceBloc(PlaceRepository());
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -77,16 +75,19 @@ class _CustomHomeAppBarState extends State<CustomHomeAppBar> {
                         ),
                       ),
                     ),
-                    ( avatar != null) ?
+                    ( avatar != "") ?
                     Positioned(
-                      left: 10.43,
-                      top: 5,
+                      left: 0,
+                      top: 0,
                       child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
+                        width: 45,
+                        height: 45,
+                        decoration: ShapeDecoration(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                           image: DecorationImage(
-                            image: AssetImage(AppPath.profile),
+                            image: NetworkImage(avatar!),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -96,8 +97,8 @@ class _CustomHomeAppBarState extends State<CustomHomeAppBar> {
                       left: 10.43,
                       top: 5,
                       child: Container(
-                        width: 45,
-                        height: 45,
+                        width: 25.14,
+                        height: 40,
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             image: AssetImage(AppPath.profile),

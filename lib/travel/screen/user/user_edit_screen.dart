@@ -122,7 +122,7 @@ class _UserEditScreenState extends State<UserEditScreen> {
                           .of(context)
                           .colorScheme
                           .primary,
-                      child: ( avatar != null) ?
+                      child: ( avatar != "") ?
                       CircleAvatar(
                         backgroundImage: NetworkImage(avatar!),
                         radius: 50,

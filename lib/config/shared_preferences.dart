@@ -69,7 +69,6 @@ class SharedService {
   }
 
   static void setAvatar(String avatar){
-    //String base64String = base64Encode(avatar!);
     _pref.setString("avatar", avatar);
   }
   static String? getAvatar(){
