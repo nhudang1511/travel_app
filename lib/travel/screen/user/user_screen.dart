@@ -19,6 +19,7 @@ class _UserScreenState extends State<UserScreen> {
   String? name = SharedService.getName();
   String? phone = SharedService.getPhone();
   String? country = SharedService.getCountry();
+  String? avatar = SharedService.getAvatar();
 
   @override
   void initState() {
@@ -46,7 +47,11 @@ class _UserScreenState extends State<UserScreen> {
                       .of(context)
                       .colorScheme
                       .primary,
-                  child: const CircleAvatar(
+                  child: (avatar != null) ?
+                  CircleAvatar(
+                    backgroundImage: NetworkImage(avatar!),
+                    radius: 50,
+                  ) : const CircleAvatar(
                     backgroundColor: Colors.white,
                     radius: 50,
                     child: ClipOval(

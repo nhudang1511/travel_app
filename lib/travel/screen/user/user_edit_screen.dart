@@ -10,11 +10,11 @@ import 'package:flutter_nhu_nguyen/config/validater.dart';
 import 'package:flutter_nhu_nguyen/travel/bloc/auth/auth_bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/bloc/user/user_bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/model/user_model.dart';
-import 'package:flutter_nhu_nguyen/travel/repository/authentication_repository.dart';
-import 'package:flutter_nhu_nguyen/travel/repository/user_repository.dart';
+//import 'package:flutter_nhu_nguyen/travel/repository/authentication_repository.dart';
+//import 'package:flutter_nhu_nguyen/travel/repository/user_repository.dart';
 import 'package:flutter_nhu_nguyen/travel/widget/custom_button.dart';
 import 'package:flutter_nhu_nguyen/travel/widget/custom_country_field.dart';
-import 'package:flutter_nhu_nguyen/travel/widget/custom_inkwell.dart';
+//import 'package:flutter_nhu_nguyen/travel/widget/custom_inkwell.dart';
 import 'package:flutter_nhu_nguyen/travel/widget/custom_phone_field.dart';
 import 'package:flutter_nhu_nguyen/travel/widget/custom_text_field.dart';
 import 'package:image_picker/image_picker.dart';
@@ -32,12 +32,14 @@ class _UserEditScreenState extends State<UserEditScreen> {
   late UserBloc _userBloc;
   late AuthBloc _authBloc;
   Uint8List? _images;
+  //Uint8List? _images = SharedService.getAvatar();
 
   String? email = SharedService.getEmail();
   String? name = SharedService.getName();
   String? phone = SharedService.getPhone();
   String? country = SharedService.getCountry();
   String? password = SharedService.getPassword();
+  String? avatar = SharedService.getAvatar();
 
   // Set edit controller for fiels
   late final TextEditingController nameController;
@@ -100,6 +102,7 @@ class _UserEditScreenState extends State<UserEditScreen> {
             Column(
               children: [
                 Stack(
+
                   children: [
                     _images != null ?
                         CircleAvatar(
@@ -119,7 +122,12 @@ class _UserEditScreenState extends State<UserEditScreen> {
                           .of(context)
                           .colorScheme
                           .primary,
-                      child: const CircleAvatar(
+                      child: ( avatar != null) ?
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(avatar!),
+                        radius: 50,
+                      ) :
+                      const CircleAvatar(
                         backgroundColor: Colors.white,
                         radius: 50,
                         child: ClipOval(

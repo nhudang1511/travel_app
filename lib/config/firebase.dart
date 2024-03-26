@@ -15,15 +15,16 @@ class StoreData {
     String downloadUrl = await snapshot.ref.getDownloadURL();
     return downloadUrl;
   }
-  //
-  // Future<String> saveData({ required String name, required String bio, required Uint8List file}) async {
-  //   String resp = "Some Errors Occured...";
-  //   try {
-  //     String imageUrl = await uploadImageToStorage("profileImage", file);
-  //     resp = imageUrl;
-  //   } catch (err) {
-  //     resp = err.toString();
-  //   }
-  //   return resp;
-  // }
+
+  Future<Uint8List?> getImageFromFirebase(String? imageUrl) async {
+    //Tải ảnh từ Firebase về dưới dạng Uint8List
+    try {
+      Reference ref = _storage.ref().child("https://firebasestorage.googleapis.com/v0/b/travoapps-b31c4.appspot.com/o/profileImage%2F1071110835?alt=media&token=2bca6aed-9203-428b-aa0e-188028698d20");
+      final data = await ref.getData();
+      return data;
+    } catch(error) {
+      print(error);
+      return Uint8List(0);
+    }
+  }
 }
