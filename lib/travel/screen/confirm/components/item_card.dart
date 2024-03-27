@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nhu_nguyen/config/app_path.dart';
 import 'package:flutter_nhu_nguyen/config/image_helper.dart';
+import 'package:flutter_nhu_nguyen/config/shared_preferences.dart';
 
 import '../../screen.dart';
 
-class ItemCard extends StatelessWidget {
+class ItemCard extends StatefulWidget {
   const ItemCard({super.key});
+
+  @override
+  State<ItemCard> createState() => _ItemCardState();
+}
+
+class _ItemCardState extends State<ItemCard> {
+  String? paymentMethod;
+
+
+  @override
+  void initState() {
+    super.initState();
+    paymentMethod = SharedService.getTypePayment();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,43 +36,22 @@ class ItemCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                ImageHelper.loadFromAsset(AppPath.iconCard),
-                const SizedBox(width: 10,),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Credit / Debit Card',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge
-                          ?.copyWith(color: const Color(0xFF313131)),
-                    ),
-                    Text(
-                      'Master Card',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall
-                          ?.copyWith(color: Colors.black),
-                    )
-                  ],
+                ImageHelper.loadFromAsset(paymentMethod == 'card'
+                    ? AppPath.iconCard
+                    : AppPath.iconBank),
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  paymentMethod ?? 'null',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge
+                      ?.copyWith(color: Colors.black),
                 ),
               ],
             ),
-            GestureDetector(
-              onTap: (){
-                Navigator.of(context).pushNamed(CardScreen.routeName);
-              },
-              child: Text(
-                'Change',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge
-                    ?.copyWith(color: const Color(0xFF6155CC)),
-              ),
-            ),
           ],
-        )
-    );
+        ));
   }
 }

@@ -64,6 +64,9 @@ dependencies:
   awesome_dialog: ^3.2.0
   flutter_credit_card: ^4.0.1
   flutter_facebook_auth: ^6.0.4
+  flutter_paypal_checkout: ^1.0.1
+  http_auth: ^1.0.4
+  webview_flutter: ^3.0.4
 
   book_my_seat:
     git:

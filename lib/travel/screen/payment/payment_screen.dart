@@ -7,6 +7,7 @@ import 'package:flutter_nhu_nguyen/travel/model/custom_model.dart';
 import 'package:flutter_nhu_nguyen/travel/model/filght_model.dart';
 import 'package:flutter_nhu_nguyen/travel/model/room_model.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/card/card_screen.dart';
+import 'package:flutter_paypal_checkout/flutter_paypal_checkout.dart';
 import '../../../config/app_path.dart';
 import '../../../config/image_helper.dart';
 import '../../../config/shared_preferences.dart';
@@ -28,7 +29,7 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   CardModel? card;
-  String typePayment = "COD";
+  String typePayment = "bankTransfer";
   String? cardString = SharedService.getCard();
 
   @override
@@ -89,79 +90,23 @@ class _PaymentScreenState extends State<PaymentScreen> {
         const SizedBox(
           height: 24.0,
         ),
-        buildItemOptionsPayment(AppPath.iconMarket, 'Mini Market', () {
+        buildItemOptionsPayment(
+            AppPath.iconCard, 'Card', () {
           setState(() {
-            typePayment = "COD";
+            typePayment = "card";
           });
-        }, typePayment == "COD"),
-        const SizedBox(
-          height: 24.0,
-        ),
-        GestureDetector(
-          onTap: (){
-            setState(() {
-              typePayment = "card";
-            });
-          },
-          child: BuildItemOption(
-              icon: AppPath.iconCredit,
-              title: 'Credit / Debit Card',
-              value: 'Add Card',
-              isChoose: typePayment == "card",
-              child: card != null
-                  ? GestureDetector(
-                      onTap: () {
-                        AwesomeDialog(
-                          context: context,
-                          dialogType: DialogType.warning,
-                          headerAnimationLoop: false,
-                          animType: AnimType.bottomSlide,
-                          title: 'Warning',
-                          titleTextStyle: const TextStyle(color: Colors.black),
-                          descTextStyle: const TextStyle(color: Colors.black),
-                          desc: 'Are you sure to remove this card',
-                          buttonsTextStyle: const TextStyle(color: Colors.black),
-                          showCloseIcon: true,
-                          btnOkOnPress: () {
-                            setState(() {
-                              card = null;
-                            });
-                          },
-                        ).show();
-                      },
-                      child: CreditCardWidget(
-                        cardNumber: card?.number ?? "",
-                        expiryDate: card?.expDate ?? "",
-                        cardHolderName: card?.name ?? "",
-                        cvvCode: card?.cvv ?? "",
-                        showBackView: true,
-                        //true when you want to show cvv(back) view
-                        onCreditCardWidgetChange: (CreditCardBrand
-                            brand) {}, // Callback for anytime credit card brand is changed
-                      ),
-                    )
-                  : const SizedBox(),
-              onTap: () async {
-                final result =
-                    await Navigator.of(context).pushNamed(CardScreen.routeName);
-                if (result != null) {
-                  setState(() {
-                    card = result as CardModel?;
-                    SharedService.setCard(jsonEncode(card?.toDocument()));
-                  });
-                }
-              }),
-        ),
+
+        }, typePayment == "card"),
         const SizedBox(
           height: 24.0,
         ),
         buildItemOptionsPayment(
             AppPath.iconBank, 'Bank Transfer', () {
           setState(() {
-            typePayment = "bankTransfer";
+            typePayment = "Bank Transfer";
           });
           
-        }, typePayment == "bankTransfer"),
+        }, typePayment == "Bank Transfer"),
         const SizedBox(
           height: 24.0,
         ),

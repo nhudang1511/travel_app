@@ -8,6 +8,7 @@ import '../../../config/validater.dart';
 import '../../bloc/bloc.dart';
 import '../../widget/widget.dart';
 import 'components/card_number_item.dart';
+import 'package:flutter_paypal_checkout/flutter_paypal_checkout.dart';
 
 class CardScreen extends StatefulWidget {
   const CardScreen({super.key});
@@ -42,15 +43,15 @@ class _CardScreenState extends State<CardScreen> {
     _cardBloc = CardBloc();
   }
 
+  void chooseCountry(CountryCode code) {
+    setState(() {
+      countryCode = code;
+      countryController.text = code.name;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    void chooseCountry(CountryCode code) {
-      setState(() {
-        countryCode = code;
-        countryController.text = code.name;
-      });
-    }
-
     return Scaffold(
       backgroundColor: Theme
           .of(context)
