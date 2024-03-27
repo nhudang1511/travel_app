@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_nhu_nguyen/config/shared_preferences.dart';
 import 'package:flutter_nhu_nguyen/travel/repository/place_repository.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/flight/booking_flight_screen.dart';
 
@@ -28,14 +29,13 @@ class CustomHomeAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _CustomHomeAppBarState extends State<CustomHomeAppBar> {
   late PlaceBloc _placeBloc;
+  String? avatar = SharedService.getAvatar();
 
   @override
   void initState() {
     super.initState();
     _placeBloc = PlaceBloc(PlaceRepository());
   }
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +75,24 @@ class _CustomHomeAppBarState extends State<CustomHomeAppBar> {
                         ),
                       ),
                     ),
+                    ( avatar != "") ?
+                    Positioned(
+                      left: 0,
+                      top: 0,
+                      child: Container(
+                        width: 45,
+                        height: 45,
+                        decoration: ShapeDecoration(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          image: DecorationImage(
+                            image: NetworkImage(avatar!),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ) :
                     Positioned(
                       left: 10.43,
                       top: 5,

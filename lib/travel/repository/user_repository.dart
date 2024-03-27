@@ -1,6 +1,8 @@
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_nhu_nguyen/config/firebase.dart';
 import 'package:flutter_nhu_nguyen/config/shared_preferences.dart';
 
 import '../model/user_model.dart';
@@ -41,13 +43,14 @@ class UserRepository {
       await _firebaseFirestore.collection("user").doc(user.id).update({
         "name": user.name,
         "phoneNumber": user.phone,
-        "country": user.country
+        "country": user.country,
+        "avatar": user.avatar
       });
 
       final querySnapshot = await _firebaseFirestore.collection("user").doc(user.id).get();
       var data = querySnapshot.data() as Map<String, dynamic>;
       var newUser = User(id: user.id).fromDocument(data);
-      print(newUser.name);
+
       setSP(newUser);
     } catch (e) {
       log(e.toString());
@@ -56,11 +59,13 @@ class UserRepository {
   }
 
   Future setSP(User user) async {
+    //Uint8List? _avatar;
     SharedService.setUserId(user.id ?? '');
     SharedService.setEmail(user.email ?? '');
     SharedService.setName(user.name ?? '');
     SharedService.setPhone(user.phone ?? '');
     SharedService.setPassword(user.password ?? '');
     SharedService.setCountry(user.country ?? '');
+    SharedService.setAvatar(user.avatar ?? '');
   }
 }

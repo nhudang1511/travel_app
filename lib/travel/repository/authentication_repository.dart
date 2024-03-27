@@ -118,6 +118,7 @@ class AuthRepository {
     SharedService.setPhone(user.phone ?? '');
     SharedService.setPassword(user.password ?? '');
     SharedService.setCountry(user.country ?? '');
+    SharedService.setAvatar(user.avatar ?? '');
   }
 
   Future<bool> forgotPassword(String email) async {

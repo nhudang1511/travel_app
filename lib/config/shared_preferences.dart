@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedService {
@@ -63,6 +66,13 @@ class SharedService {
 
   static void setCountry(String country){
     _pref.setString("country", country);
+  }
+
+  static void setAvatar(String avatar){
+    _pref.setString("avatar", avatar);
+  }
+  static String? getAvatar(){
+    return _pref.getString("avatar");
   }
   static List<String> getLikedPlaces(){
     return _pref.getStringList("likedPlaces") ?? [];
