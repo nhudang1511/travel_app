@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nhu_nguyen/config/bloc_observe.dart';
 import 'package:flutter_nhu_nguyen/travel/bloc/booking_flight/booking_flight_bloc.dart';
+import 'package:flutter_nhu_nguyen/travel/bloc/rating/rating_bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/repository/booking_flight_repository.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/splash/splash_screen.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +46,8 @@ class MyApp extends StatelessWidget {
           ),
         ),
         BlocProvider(create: (_)=>BookingBloc(BookingRepository())),
-        BlocProvider(create: (_)=>BookingFlightBloc(BookingFlightRepository()))
+        BlocProvider(create: (_)=>BookingFlightBloc(BookingFlightRepository())),
+        // BlocProvider(create: (_)=>RatingBloc(RatingRepository()))
       ],
       child: MaterialApp(
         title: 'Introduction screen',

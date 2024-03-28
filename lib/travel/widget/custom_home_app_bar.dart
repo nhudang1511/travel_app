@@ -266,6 +266,19 @@ class CustomDelegate extends SearchDelegate<String> {
           fontSize: 18.0,
         ),
       ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Color(0xff8F67E8),
+      )
+        // Container(
+        //   decoration: const BoxDecoration(
+        //     gradient: LinearGradient(
+        //       colors: [Color(0xff8F67E8), Color(0xff6357CC)],
+        //     ),
+        //     borderRadius: BorderRadius.only(
+        //       bottomLeft: Radius.circular(35),
+        //     ),
+        //   ),
+        // ),
     );
     return theme;
   }

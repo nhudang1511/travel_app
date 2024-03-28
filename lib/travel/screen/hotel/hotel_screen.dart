@@ -61,6 +61,7 @@ class _HotelScreenState extends State<HotelScreen> {
         builder: (context) => const FilterHotel());
     // print("Testing Value: $value");
     String sortValue = result['sort'];
+
     if (result['rating'] != null) {
       setState(() {
         rating = result['rating'];
