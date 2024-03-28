@@ -77,4 +77,6 @@ class AppPath{
 
   static String seats = 'assets/images/seats.png';
   static String email = 'assets/logo/email.jpg';
+
+  static String qr = 'assets/images/qr.jpg';
 }

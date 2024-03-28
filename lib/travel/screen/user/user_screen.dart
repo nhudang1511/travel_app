@@ -47,7 +47,7 @@ class _UserScreenState extends State<UserScreen> {
                       .of(context)
                       .colorScheme
                       .primary,
-                  child: (avatar != "") ?
+                  child: (avatar != "" && avatar != null) ?
                   CircleAvatar(
                     backgroundImage: NetworkImage(avatar!),
                     radius: 50,

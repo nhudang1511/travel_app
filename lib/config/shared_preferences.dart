@@ -72,6 +72,7 @@ class SharedService {
     _pref.setString("avatar", avatar);
   }
   static String? getAvatar(){
+    print(_pref.getString("avatar"));
     return _pref.getString("avatar");
   }
   static List<String> getLikedPlaces(){

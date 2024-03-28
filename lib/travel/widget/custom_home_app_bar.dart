@@ -75,7 +75,7 @@ class _CustomHomeAppBarState extends State<CustomHomeAppBar> {
                         ),
                       ),
                     ),
-                    ( avatar != "") ?
+                    ( avatar != "" && avatar != null) ?
                     Positioned(
                       left: 0,
                       top: 0,

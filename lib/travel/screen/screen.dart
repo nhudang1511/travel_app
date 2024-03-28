@@ -27,3 +27,4 @@ export 'finish_checkout/finish_checkout_screen.dart';
 export 'check_out/checkout_step.dart';
 export 'check_out_flight/checkout_step_flight.dart';
 export 'login/verify_email.dart';
+export 'confirm/components/bank_transfer_screen.dart';

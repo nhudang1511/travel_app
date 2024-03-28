@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/bloc/bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/model/room_model.dart';
+import 'package:flutter_nhu_nguyen/travel/screen/confirm/components/bank_transfer_screen.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/confirm/components/item_card.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/confirm/components/item_confirm_room.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/confirm/components/item_total.dart';
@@ -113,7 +114,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
       ));
     }
     else if(SharedService.getTypePayment() == 'Bank Transfer'){
-      //Navigator.pushNamed(context, Ban);
+      Navigator.pushNamed(context, BankTransferScreen.routeName);
     }
   }
 

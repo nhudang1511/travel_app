@@ -162,6 +162,8 @@ class AppRouter {
         final BookingModel booking =
         (settings.arguments as BookingModel);
         return _route( BookingItem(booking: booking,));
+      case BankTransferScreen.routeName:
+        return _route(const BankTransferScreen());
       default:
         return _route(const MainScreen());
     }
