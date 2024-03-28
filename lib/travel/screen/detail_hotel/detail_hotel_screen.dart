@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nhu_nguyen/config/shared_preferences.dart';
 import 'package:flutter_nhu_nguyen/travel/repository/repository.dart';
+import 'package:flutter_nhu_nguyen/travel/screen/reviews/reviews_screen.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/room/select_room.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -31,7 +32,8 @@ class _DetailHotelScreenState extends State<DetailHotelScreen> {
     int guest = SharedService.getGuest() ?? 1;
     int room = SharedService.getRoom() ?? 1;
     _roomBloc = RoomBloc(RoomRepository())
-      ..add(LoadRoomByHotelIdGuestRoom(widget.hotelModel.id ?? '', guest, room));
+      ..add(
+          LoadRoomByHotelIdGuestRoom(widget.hotelModel.id ?? '', guest, room));
   }
 
   @override
@@ -208,14 +210,29 @@ class _DetailHotelScreenState extends State<DetailHotelScreen> {
                                               color: const Color(0xFF838383)),
                                     ),
                                     const Spacer(),
-                                    Text(
-                                      'See All',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge
-                                          ?.copyWith(
-                                              color: const Color(0xff6155CC)),
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).pushNamed(
+                                            ReviewsScreen.routeName,
+                                            arguments:  widget.hotelModel,
+                                             );
+                                      },
+                                      child: Text('See All',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headlineSmall
+                                              ?.copyWith(
+                                                  color:
+                                                      const Color(0xFF6155CC))),
                                     ),
+                                    // Text(
+                                    //   'See All',
+                                    //   style: Theme.of(context)
+                                    //       .textTheme
+                                    //       .titleLarge
+                                    //       ?.copyWith(
+                                    //           color: const Color(0xff6155CC)),
+                                    // ),
                                   ],
                                 ),
                                 const DashLineWidget(),

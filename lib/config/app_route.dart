@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nhu_nguyen/travel/model/room_model.dart';
+import 'package:flutter_nhu_nguyen/travel/screen/reviews/reviews_screen.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/finish_checkout/finish_checkout_flight_screen.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/places/place_detail_screen.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/user/user_edit_screen.dart';
@@ -54,6 +55,15 @@ class AppRouter {
             hotelModel: hotelModel,
           ),
         );
+      case ReviewsScreen.routeName:
+        final HotelModel hotelModel = (settings.arguments as HotelModel);
+        return MaterialPageRoute<dynamic>(
+          settings: settings,
+          builder: (context) => ReviewsScreen(
+            hotelModel: hotelModel,
+          ),
+        );
+        //return _route(const ReviewsScreen());
       case SortScreen.routeName:
         return _route(const SortScreen());
       case FacilitiesScreen.routeName:
