@@ -113,7 +113,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
       ));
     }
     else if(SharedService.getTypePayment() == 'Bank Transfer'){
-      Navigator.pushNamed(context, Ban);
+      //Navigator.pushNamed(context, Ban);
     }
   }
 

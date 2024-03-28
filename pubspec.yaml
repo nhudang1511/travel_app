@@ -70,6 +70,7 @@ dependencies:
   http_auth: ^1.0.4
   webview_flutter: ^3.0.4
 
+
   book_my_seat:
     git:
       url: https://github.com/nhudang1511/book_my_seat.git
