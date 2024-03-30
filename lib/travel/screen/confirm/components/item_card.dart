@@ -36,7 +36,7 @@ class _ItemCardState extends State<ItemCard> {
           children: [
             Row(
               children: [
-                ImageHelper.loadFromAsset(paymentMethod == 'card'
+                ImageHelper.loadFromAsset(paymentMethod == 'Card'
                     ? AppPath.iconCard
                     : AppPath.iconBank),
                 const SizedBox(

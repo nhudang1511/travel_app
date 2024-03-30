@@ -161,6 +161,12 @@ class SharedService {
   static void setListSeat(List<String> seats){
     _pref.setStringList("seats", seats);
   }
+  static void setBookingId(String bookingId){
+    _pref.setString("bookingId", bookingId);
+  }
+  static String? getBookingId(){
+    return _pref.getString("bookingId");
+  }
 
 }
 void sharedServiceClear(){
@@ -173,4 +179,5 @@ void sharedServiceClear(){
   SharedService.clear("card");
   SharedService.clear("promo");
   SharedService.clear('days');
+  SharedService.clear("bookingId");
 }

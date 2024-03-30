@@ -29,7 +29,7 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   CardModel? card;
-  String typePayment = "bankTransfer";
+  String typePayment = "Bank Transfer";
   String? cardString = SharedService.getCard();
 
   @override
@@ -93,10 +93,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
         buildItemOptionsPayment(
             AppPath.iconCard, 'Card', () {
           setState(() {
-            typePayment = "card";
+            typePayment = "Card";
           });
 
-        }, typePayment == "card"),
+        }, typePayment == "Card"),
         const SizedBox(
           height: 24.0,
         ),

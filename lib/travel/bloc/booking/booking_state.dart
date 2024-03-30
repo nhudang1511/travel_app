@@ -19,4 +19,10 @@ class BookingLoaded extends BookingState {
   BookingLoaded({required this.bookingModel});
 }
 
+class BookingLoadedById extends BookingState {
+  final BookingModel bookingModel;
+
+  BookingLoadedById({required this.bookingModel});
+}
+
 class BookingFailure extends BookingState {}

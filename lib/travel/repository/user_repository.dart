@@ -1,8 +1,5 @@
 import 'dart:developer';
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_nhu_nguyen/config/firebase.dart';
 import 'package:flutter_nhu_nguyen/config/shared_preferences.dart';
 
 import '../model/user_model.dart';

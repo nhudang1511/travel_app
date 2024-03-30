@@ -38,7 +38,7 @@ class _FinishCheckoutScreenState extends State<FinishCheckoutScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<BookingBloc, BookingState>(
       builder: (context, state) {
-        if (state is BookingAdded) {
+        if (state is BookingLoadedById) {
           bookingModel = state.bookingModel;
           //print(bookingModel?.id);
           if (bookingModel?.dateStart != null &&

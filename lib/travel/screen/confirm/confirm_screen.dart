@@ -90,17 +90,21 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
           note: "Contact us for any questions on your order.",
           onSuccess: (Map params) async {
             print("onSuccess: $params");
-            _bookingBloc.add(AddBooking(
-                email: SharedService.getEmail(),
-                hotel: widget.roomModel.hotel,
-                room: widget.roomModel.id,
-                guest: guests,
-                typePayment: SharedService.getTypePayment() ?? "",
-                card: card,
-                promoCode: promoString,
-                dateStart: dateFormat.parse(SharedService.getStartDate() ?? ""),
-                dateEnd: dateFormat.parse(SharedService.getEndDate() ?? ""),
-                createdAt: DateTime.now()));
+            _bookingBloc.add(
+              AddBooking(
+                  email: SharedService.getEmail(),
+                  hotel: widget.roomModel.hotel,
+                  room: widget.roomModel.id,
+                  guest: guests,
+                  typePayment: SharedService.getTypePayment() ?? "",
+                  card: card,
+                  promoCode: promoString,
+                  dateStart:
+                      dateFormat.parse(SharedService.getStartDate() ?? ""),
+                  dateEnd: dateFormat.parse(SharedService.getEndDate() ?? ""),
+                  status: true,
+                  createdAt: DateTime.now()),
+            );
             sharedServiceClear();
           },
           onError: (error) {
@@ -113,8 +117,26 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
         ),
       ));
     }
-    else if(SharedService.getTypePayment() == 'Bank Transfer'){
-      Navigator.pushNamed(context, BankTransferScreen.routeName);
+    else if (SharedService.getTypePayment() == 'Bank Transfer') {
+     if( SharedService.getBookingId() == null){
+       await Navigator.pushNamed(context, BankTransferScreen.routeName);
+       _bookingBloc.add(AddBooking(
+           email: SharedService.getEmail(),
+           hotel: widget.roomModel.hotel,
+           room: widget.roomModel.id,
+           guest: guests,
+           typePayment: SharedService.getTypePayment() ?? "",
+           card: card,
+           promoCode: promoString,
+           dateStart: dateFormat.parse(SharedService.getStartDate() ?? ""),
+           dateEnd: dateFormat.parse(SharedService.getEndDate() ?? ""),
+           status: false,
+           createdAt: DateTime.now()));
+     }
+     else{
+       _bookingBloc.add(
+           LoadBookingById(id: SharedService.getBookingId()!));
+     }
     }
   }
 
@@ -129,18 +151,49 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
     if (cardString != null) {
       card = CardModel.fromDocument(json.decode(cardString!));
     }
-
-    // print('guest len: ${guests.length}');
-    // print('card len: ${card?.name}');
-    // print("promo ${promo.price}");
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<BookingBloc, BookingState>(
       listener: (context, state) {
-        if(state is BookingAdded){
-          Navigator.pushNamed(context, FinishCheckoutScreen.routeName,);
+        print('id ${SharedService.getBookingId()}');
+        if (state is BookingAdded) {
+          if (state.bookingModel.id != null) {
+            SharedService.setBookingId(state.bookingModel.id!);
+          }
+          if (state.bookingModel.status == true) {
+            _bookingBloc.add(
+                LoadBookingById(id: SharedService.getBookingId()!));
+            Navigator.pushNamed(context, FinishCheckoutScreen.routeName);
+            sharedServiceClear();
+          } else {
+            Future.delayed(const Duration(seconds: 3), () {
+              AwesomeDialog(
+                  context: context,
+                  dialogType: DialogType.warning,
+                  headerAnimationLoop: false,
+                  animType: AnimType.bottomSlide,
+                  title: 'Warning',
+                  titleTextStyle: const TextStyle(color: Colors.black),
+                  descTextStyle: const TextStyle(color: Colors.black),
+                  desc:
+                      'Please wait a few minutes for admin to confirm the transfer',
+                  buttonsTextStyle: const TextStyle(color: Colors.black),
+                  showCloseIcon: true,
+                  btnOkOnPress: () {
+                    if (SharedService.getBookingId() != null) {
+                      _bookingBloc.add(
+                          LoadBookingById(id: SharedService.getBookingId()!));
+                    }
+                  }).show();
+            });
+          }
+        } else if (state is BookingLoadedById) {
+          if (state.bookingModel.status == true) {
+            Navigator.pushNamed(context, FinishCheckoutScreen.routeName);
+            sharedServiceClear();
+          }
         }
       },
       child: Column(

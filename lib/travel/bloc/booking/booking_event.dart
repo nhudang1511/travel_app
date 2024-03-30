@@ -15,9 +15,14 @@ class AddBooking extends BookingEvent {
   final DateTime? dateStart;
   final DateTime? dateEnd;
   final DateTime? createdAt;
+  final bool? status;
 
   AddBooking({this.email, this.hotel, this.room, this.guest, required this.typePayment,
-    this.card, this.promoCode, this.dateStart, this.dateEnd, this.createdAt});
+    this.card, this.promoCode, this.dateStart, this.dateEnd, this.createdAt, this.status});
 }
 class LoadBooking extends BookingEvent{
+}
+class LoadBookingById extends BookingEvent{
+  final String id;
+  LoadBookingById({required this.id});
 }

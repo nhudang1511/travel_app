@@ -14,6 +14,7 @@ class BookingModel extends CustomModel {
   final DateTime? dateStart;
   final DateTime? dateEnd;
   final DateTime? createdAt;
+  final bool? status;
 
   BookingModel({
     this.id,
@@ -21,12 +22,13 @@ class BookingModel extends CustomModel {
     this.hotel,
     this.room,
     this.guest,
-    this.typePayment = "miniMarket",
+    this.typePayment = "Bank Transfer",
     this.card,
     this.promoCode,
     this.dateStart,
     this.dateEnd,
     this.createdAt,
+    this.status
   });
 
   @override
@@ -47,6 +49,7 @@ class BookingModel extends CustomModel {
       dateStart: doc['dateStart'] != null ? DateTime.parse(doc['dateStart']) : null,
       dateEnd: doc['dateEnd'] != null ? DateTime.parse(doc['dateEnd']) : null,
       createdAt: doc['createdAt'] != null ? DateTime.parse(doc['createdAt']) : null,
+      status: doc['status'] as bool?
     );
   }
 
@@ -64,6 +67,7 @@ class BookingModel extends CustomModel {
       'dateStart': dateStart?.toIso8601String(),
       'dateEnd': dateEnd?.toIso8601String(),
       'createdAt': createdAt?.toIso8601String(),
+      'status': status
     };
   }
 }

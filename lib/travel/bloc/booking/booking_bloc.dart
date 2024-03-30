@@ -15,6 +15,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
   BookingBloc(this._bookingRepository) : super(BookingLoading()) {
     on<AddBooking>(_onAddBooking);
     on<LoadBooking>(_onLoadBooking);
+    on<LoadBookingById>(_onLoadBookingById);
   }
 
   void _onAddBooking(event, Emitter<BookingState> emit) async {
@@ -30,6 +31,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
           card: event.card,
           promoCode: event.promoCode,
           createdAt: event.createdAt,
+          status: event.status,
           id: '');
       final bookingModel =
           await _bookingRepository.createBooking(booking.toDocument());
@@ -43,6 +45,15 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       List<BookingModel> bookingModel = await _bookingRepository.getAllBooking();
 
       emit(BookingLoaded(bookingModel: bookingModel));
+    } catch (e) {
+      emit(BookingFailure());
+    }
+  }
+  void _onLoadBookingById(event, Emitter<BookingState> emit) async {
+    try {
+      BookingModel bookingModel = await _bookingRepository.getBookingById(event.id);
+
+      emit(BookingLoadedById(bookingModel: bookingModel));
     } catch (e) {
       emit(BookingFailure());
     }
