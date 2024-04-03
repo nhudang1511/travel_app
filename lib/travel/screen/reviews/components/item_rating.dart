@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 class ItemRatingRoomWidget extends StatelessWidget {
   final List<int> rating;
   final int starRating = 5;
+  final int ratingTotal;
+  final int count;
 
   const ItemRatingRoomWidget({
     Key? key,
+    required this.ratingTotal,
     required this.rating,
+    required this.count,
   }) : super(key: key);
 
   @override
@@ -23,26 +27,26 @@ class ItemRatingRoomWidget extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Expanded(
+              Expanded(
                 flex: 2,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 16.0,
                     ),
-                    Text('4.8',
-                        style: TextStyle(
+                    Text((count != 0 ? ratingTotal ~/ count : 0).toString(),
+                        style: const TextStyle(
                             fontSize: 46,
                             color: Colors.amber,
                             fontWeight: FontWeight.bold)),
-                    SizedBox(
+                    const SizedBox(
                       height: 16.0,
                     ),
-                    Text('of 5',
+                    const Text('of 5',
                         style: TextStyle(fontSize: 14, color: Colors.black)),
-                    Text('(30 Reviews)',
-                        style: TextStyle(fontSize: 14, color: Colors.black)),
+                    Text('($count Reviews)',
+                        style: const TextStyle(fontSize: 14, color: Colors.black)),
                   ],
                 ),
               ),
