@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -72,7 +70,7 @@ class SharedService {
     _pref.setString("avatar", avatar);
   }
   static String? getAvatar(){
-    print(_pref.getString("avatar"));
+   // print(_pref.getString("avatar"));
     return _pref.getString("avatar");
   }
   static List<String> getLikedPlaces(){
@@ -167,6 +165,12 @@ class SharedService {
   static String? getBookingId(){
     return _pref.getString("bookingId");
   }
+  static void setBookingFlightId(String bookingId){
+    _pref.setString("bookingFlightId", bookingId);
+  }
+  static String? getBookingFlightId(){
+    return _pref.getString("bookingFlightId");
+  }
 
 }
 void sharedServiceClear(){
@@ -180,4 +184,5 @@ void sharedServiceClear(){
   SharedService.clear("promo");
   SharedService.clear('days');
   SharedService.clear("bookingId");
+  SharedService.clear("bookingFlightId");
 }

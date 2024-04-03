@@ -64,6 +64,8 @@ class AppRouter {
             hotelModel: hotelModel,
           ),
         );
+      case NotificationScreen.routeName:
+        return _route(const NotificationScreen());
         //return _route(const ReviewsScreen());
       case SortScreen.routeName:
         return _route(const SortScreen());

@@ -40,7 +40,7 @@ class _ConfirmFlightScreenState extends State<ConfirmFlightScreen> {
   void initState() {
     super.initState();
     _bookingFlightBloc = BlocProvider.of<BookingFlightBloc>(context);
-    print(widget.flightModel.airline);
+    //print(widget.flightModel.airline);
     if (contactList.isNotEmpty) {
       guests =
           contactList.map((e) => Guest.fromDocument(json.decode(e))).toList();
@@ -84,7 +84,7 @@ class _ConfirmFlightScreenState extends State<ConfirmFlightScreen> {
               buttonsTextStyle: const TextStyle(color: Colors.black),
               showCloseIcon: true,
               btnOkOnPress: () {
-                _bookingFlightBloc.add(AddBooking(
+                _bookingFlightBloc.add(AddBookingFlight(
                     price: 100,
                     flight: widget.flightModel.airline,
                     card: card,
@@ -93,6 +93,7 @@ class _ConfirmFlightScreenState extends State<ConfirmFlightScreen> {
                     guest: guests,
                     promoCode: promoString,
                     seat: seats,
+                    status: true,
                     typePayment: SharedService.getTypePayment() ?? ""));
                 sharedServiceClear();
                 SharedService.clear("seats");

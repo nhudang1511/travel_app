@@ -14,6 +14,7 @@ class BookingFlightModel extends CustomModel {
   final DateTime? createdAt;
   final int? price;
   final List<Seat>? seat;
+  final bool? status;
 
   BookingFlightModel({
     this.id,
@@ -25,7 +26,8 @@ class BookingFlightModel extends CustomModel {
     this.promoCode,
     this.createdAt,
     this.price,
-    this.seat
+    this.seat,
+    this.status
   });
 
   @override
@@ -43,6 +45,7 @@ class BookingFlightModel extends CustomModel {
       createdAt: doc['createdAt'] != null ? DateTime.parse(doc['createdAt']) : null,
       price: doc['price'] as int,
       seat: (doc["seat"] as List<dynamic>?)?.map((seatMap) => Seat()).toList(),
+      status: doc['status'] as bool
     );
   }
 
@@ -58,7 +61,8 @@ class BookingFlightModel extends CustomModel {
       'createdAt': createdAt?.toIso8601String(),
       'price': price,
       'seat': seat?.map((e) => e.toDocument()).toList(),
-      'flight': flight
+      'flight': flight,
+      'status': status
     };
   }
 }

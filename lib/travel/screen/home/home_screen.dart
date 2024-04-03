@@ -1,13 +1,17 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/model/place_model.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/places/place_detail_screen.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:overlay_support/overlay_support.dart';
 import '../../../config/app_path.dart';
 import '../../../config/shared_preferences.dart';
-import '../../bloc/place/place_bloc.dart';
+import '../../bloc/bloc.dart';
+import '../../model/notification_model.dart';
 import '../../repository/repository.dart';
 import '../../widget/widget.dart';
 import '../screen.dart';
@@ -26,7 +30,80 @@ class _HomeScreenState extends State<HomeScreen> {
   List<PlaceModel> places = [];
   List<PlaceModel> placesLiked = [];
   List<String> placesList = SharedService.getLikedPlaces();
+  final firebaseMessaging = FirebaseMessaging.instance;
 
+  NotificationModel? _notificationInfo;
+  late int _totalNotifications;
+  late NotificationBloc _notificationBloc;
+
+  Future<void> initNotifications() async {
+    NotificationSettings settings = await firebaseMessaging.requestPermission(
+      alert: true,
+      badge: true,
+      provisional: false,
+      sound: true,
+    );
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+      // TODO: handle the received notifications
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+        //print('title: ${message.notification?.title}');
+        //print('body: ${message.notification?.body}');
+        print(message.sentTime);
+        NotificationModel notification = NotificationModel(
+            title: message.notification?.title,
+            body: message.notification?.body,
+            dateTime: Timestamp.fromDate(message.sentTime ?? DateTime.now()),
+            userId: SharedService.getUserId());
+        setState(() {
+          _notificationInfo = notification;
+          _totalNotifications++;
+        });
+        if (_notificationInfo != null) {
+          // For displaying the notification as an overlay
+          print('total: $_totalNotifications');
+          showSimpleNotification(
+            Text(_notificationInfo!.title!),
+            //leading: NotificationBadge(totalNotifications: _totalNotifications),
+            subtitle: Text(_notificationInfo!.body!),
+            background: Colors.cyan.shade700,
+            duration: const Duration(seconds: 10),
+          );
+          _notificationBloc
+              .add(AddNotification(notification: _notificationInfo!));
+        }
+      });
+      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+        NotificationModel notification = NotificationModel(
+            title: message.notification?.title,
+            body: message.notification?.body,
+            dateTime: Timestamp.fromDate(message.sentTime ?? DateTime.now()),
+            userId: SharedService.getUserId());
+        setState(() {
+          _notificationInfo = notification;
+          _totalNotifications++;
+        });
+        if (_notificationInfo != null) {
+          // For displaying the notification as an overlay
+          print('total: $_totalNotifications');
+          showSimpleNotification(
+            Text(_notificationInfo!.title!),
+            //leading: NotificationBadge(totalNotifications: _totalNotifications),
+            subtitle: Text(_notificationInfo!.body!),
+            background: Colors.greenAccent,
+            duration: const Duration(seconds: 10),
+          );
+          _notificationBloc
+              .add(AddNotification(notification: _notificationInfo!));
+        }
+      });
+      //FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    } else {
+      print('User declined or has not accepted permission');
+    }
+    // final token = await firebaseMessaging.getToken();
+    // print('token: $token');
+  }
 
   @override
   void initState() {
@@ -37,6 +114,9 @@ class _HomeScreenState extends State<HomeScreen> {
           .map((e) => PlaceModel().fromDocument(json.decode(e)))
           .toList();
     }
+    _notificationBloc = BlocProvider.of<NotificationBloc>(context);
+    _totalNotifications = 0;
+    initNotifications();
   }
 
   @override
@@ -44,9 +124,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return BlocProvider(
       create: (context) => _placeBloc,
       child: Scaffold(
-        appBar: const CustomHomeAppBar(
+        appBar: CustomHomeAppBar(
           titlePage: 'Home Screen',
           subTitlePage: 'Where are you going next?',
+          totalNotification: _totalNotifications
         ),
         backgroundColor: Theme.of(context).colorScheme.background,
         body: SingleChildScrollView(
@@ -111,7 +192,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: (context, state) {
                     if (state is PlaceLoaded) {
                       places = state.places;
-                      places.sort((a, b) => (b.rating ?? 0).compareTo(a.rating ?? 0));
+                      places.sort(
+                          (a, b) => (b.rating ?? 0).compareTo(a.rating ?? 0));
                       // print('Places[index] value ${places[0].image}');
                     }
 

@@ -132,6 +132,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
            dateEnd: dateFormat.parse(SharedService.getEndDate() ?? ""),
            status: false,
            createdAt: DateTime.now()));
+       sharedServiceClear();
      }
      else{
        _bookingBloc.add(
@@ -157,7 +158,6 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
   Widget build(BuildContext context) {
     return BlocListener<BookingBloc, BookingState>(
       listener: (context, state) {
-        print('id ${SharedService.getBookingId()}');
         if (state is BookingAdded) {
           if (state.bookingModel.id != null) {
             SharedService.setBookingId(state.bookingModel.id!);
@@ -166,7 +166,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
             _bookingBloc.add(
                 LoadBookingById(id: SharedService.getBookingId()!));
             Navigator.pushNamed(context, FinishCheckoutScreen.routeName);
-            sharedServiceClear();
+
           } else {
             Future.delayed(const Duration(seconds: 3), () {
               AwesomeDialog(

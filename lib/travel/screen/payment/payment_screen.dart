@@ -14,7 +14,6 @@ import '../../../config/shared_preferences.dart';
 import '../../model/card_model.dart';
 import '../../widget/widget.dart';
 import '../check_out/checkout_step.dart';
-import '../check_out/components/item_options.dart';
 import '../check_out_flight/checkout_step_flight.dart';
 
 class PaymentScreen extends StatefulWidget {

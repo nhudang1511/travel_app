@@ -4,19 +4,19 @@ abstract class BookingFlightState {
   const BookingFlightState();
 }
 
-class BookingLoading extends BookingFlightState {}
+class BookingFlightLoading extends BookingFlightState {}
 
-class BookingAdded extends BookingFlightState {
+class BookingFlightAdded extends BookingFlightState {
   final BookingFlightModel bookingFlightModel;
 
-  BookingAdded({required this.bookingFlightModel});
+  BookingFlightAdded({required this.bookingFlightModel});
 }
 
 
-class BookingLoaded extends BookingFlightState {
+class BookingFlightLoaded extends BookingFlightState {
   final BookingFlightModel bookingFlightModel;
 
-  BookingLoaded({required this.bookingFlightModel});
+  BookingFlightLoaded({required this.bookingFlightModel});
 }
 
-class BookingFailure extends BookingFlightState {}
+class BookingFlightFailure extends BookingFlightState {}

@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nhu_nguyen/config/shared_preferences.dart';
 import 'package:flutter_nhu_nguyen/travel/repository/place_repository.dart';
-import 'package:flutter_nhu_nguyen/travel/screen/flight/booking_flight_screen.dart';
-
 import '../../config/app_path.dart';
 import '../../config/image_helper.dart';
 import '../bloc/place/place_bloc.dart';
 import '../model/place_model.dart';
 import '../screen/places/place_detail_screen.dart';
+import '../screen/screen.dart';
 
 class CustomHomeAppBar extends StatefulWidget implements PreferredSizeWidget {
   const CustomHomeAppBar({
     super.key,
     required this.titlePage,
-    required this.subTitlePage,
+    required this.subTitlePage, required this.totalNotification,
   });
 
   final String titlePage;
   final String subTitlePage;
+  final int totalNotification;
 
   @override
   State<CustomHomeAppBar> createState() => _CustomHomeAppBarState();
@@ -57,8 +57,20 @@ class _CustomHomeAppBarState extends State<CustomHomeAppBar> {
               ),
             ),
             actions: [
-              IconButton(
-                  onPressed: () {}, icon: const Icon(Icons.notifications)),
+              InkWell(
+                onTap: (){
+                  Navigator.pushNamed(context, NotificationScreen.routeName);
+                },
+                child:  widget.totalNotification != 0 ? Container(
+                  margin: const EdgeInsets.only(top: 80, right: 10),
+                  child: Badge(
+                    label: Text(widget.totalNotification.toString()),
+                      child: const Icon(Icons.notifications)
+                  )
+                ) : Container(
+                    margin: const EdgeInsets.only(right: 10),
+                    child: const Icon(Icons.notifications)),
+              ),
               Container(
                 margin: const EdgeInsets.only(top: 70, right: 10),
                 width: 45,
@@ -297,7 +309,7 @@ class CustomDelegate extends SearchDelegate<String> {
   Widget buildSuggestions(BuildContext context) {
 
     List<PlaceModel> places =state.places;
-    var listToShow;
+    List<PlaceModel> listToShow;
     if (query.isNotEmpty) {
       listToShow = places.where((places) {return places.name!.toLowerCase().contains(query.toLowerCase());}).toList();
     } else {
@@ -308,9 +320,9 @@ class CustomDelegate extends SearchDelegate<String> {
         scrollDirection: Axis.vertical,
         itemBuilder: (context, index) {
           return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 55,vertical: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 55,vertical: 5),
             child: ListTile(
-              shape: RoundedRectangleBorder(side: BorderSide(color: Colors.black26),borderRadius: BorderRadius.circular(5)),
+              shape: RoundedRectangleBorder(side: const BorderSide(color: Colors.black26),borderRadius: BorderRadius.circular(5)),
 
               leading: Image.network(
                 listToShow[index].image ??

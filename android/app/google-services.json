@@ -12,7 +12,12 @@
           "package_name": "com.aci.travoapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "957890556594-aog7u1pl9gf0mjo0kqcrem8n1p9lah65.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCBlH2F4HdwO705LYAcIL72pOx7W0tI7g0"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "957890556594-aog7u1pl9gf0mjo0kqcrem8n1p9lah65.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "957890556594-65i88vu11mj2shimu49e7h9he9arfqi1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flutterNhuNguyen.RunnerTests"
+              }
+            }
+          ]
         }
       }
     }

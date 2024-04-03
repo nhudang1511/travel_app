@@ -4,7 +4,7 @@ abstract class BookingFlightEvent {
   const BookingFlightEvent();
 }
 
-class AddBooking extends BookingFlightEvent {
+class AddBookingFlight extends BookingFlightEvent {
   final String? email;
   final String? flight;
   final List<Guest>? guest;
@@ -14,8 +14,9 @@ class AddBooking extends BookingFlightEvent {
   final DateTime? createdAt;
   final int? price;
   final List<Seat>? seat;
+  final bool? status;
 
-  const AddBooking(
+  const AddBookingFlight(
       {this.email,
       this.flight,
       this.guest,
@@ -24,5 +25,12 @@ class AddBooking extends BookingFlightEvent {
       this.promoCode,
       this.createdAt,
       this.price,
-      this.seat});
+      this.seat,
+        this.status
+      });
+}
+
+class LoadBookingFlightById extends BookingFlightEvent{
+  final String id;
+  LoadBookingFlightById({required this.id});
 }

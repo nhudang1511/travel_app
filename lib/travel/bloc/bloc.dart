@@ -6,3 +6,5 @@ export 'flight/flight_bloc.dart';
 export 'user/user_bloc.dart';
 export 'booking/booking_bloc.dart';
 export 'card/card_bloc.dart';
+export 'notification/notification_bloc.dart';
+export 'booking_flight/booking_flight_bloc.dart';

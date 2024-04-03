@@ -5,3 +5,5 @@ export 'room_repository.dart';
 export 'user_repository.dart';
 export 'booking_repository.dart';
 export 'rating_repository.dart';
+export 'notification_repository.dart';
+export 'booking_flight_repository.dart';
