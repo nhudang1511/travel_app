@@ -5,6 +5,7 @@ import 'package:flutter_nhu_nguyen/travel/screen/reviews/reviews_screen.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/finish_checkout/finish_checkout_flight_screen.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/places/place_detail_screen.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/user/user_edit_screen.dart';
+import 'package:flutter_nhu_nguyen/travel/screen/write_review/write_review_screen.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import '../travel/model/filght_model.dart';
 import '../travel/model/hotel_model.dart';
@@ -61,6 +62,15 @@ class AppRouter {
         return MaterialPageRoute<dynamic>(
           settings: settings,
           builder: (context) => ReviewsScreen(
+            hotelModel: hotelModel,
+          ),
+        );
+
+      case WriteReviewScreen.routeName:
+        final HotelModel hotelModel = (settings.arguments as HotelModel);
+        return MaterialPageRoute<dynamic>(
+          settings: settings,
+          builder: (context) => WriteReviewScreen(
             hotelModel: hotelModel,
           ),
         );

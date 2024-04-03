@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_nhu_nguyen/travel/model/rating_model.dart';
@@ -11,14 +10,35 @@ part 'rating_state.dart';
 class RatingBloc extends Bloc<RatingEvent, RatingState> {
   final RatingRepository _ratingRepository;
   RatingBloc(this._ratingRepository) : super(RatingLoading()) {
+    on<AddRating>(_onAddRating);
     on<LoadRating>(_onRatingLoaded);
+  }
+
+  void _onAddRating(event, Emitter<RatingState> emit) async{
+    try {
+      final rating = RatingModel(
+        id: '',
+        comment: event.comment,
+        hotel: event.hotel,
+        photos: event.photos,
+        ratedTime: event.ratedTime,
+        rates: event.rates,
+        user: event.user
+      );
+      final ratingModel = await _ratingRepository.createRating(rating.toDocument());
+      emit(RatingAdded(ratingModel: ratingModel));
+    } catch (e) {
+      emit(RatingFailure());
+    }
   }
 
   void _onRatingLoaded(event, Emitter<RatingState> emit) async {
     try {
       List<int> ratingCount= List.filled(5, 0);
       List<RatingModel> ratingModel = await _ratingRepository.getRatingByHotel(event.hotelId);
+      int ratingTotal = 0;
       ratingModel.forEach((rating) {
+        ratingTotal+= rating.rates!;
         switch(rating.rates) {
           case 1: 
             ratingCount[0]++;
@@ -42,7 +62,7 @@ class RatingBloc extends Bloc<RatingEvent, RatingState> {
       if(ratingModel.isEmpty){
         emit(RatingEmpty());
       }else{
-        emit(RatingLoaded(ratings: ratingModel, ratingCount: ratingCount));
+        emit(RatingLoaded(ratings: ratingModel, ratingCount: ratingCount, ratingTotal: ratingTotal));
       }
     } catch (e) {
       emit(RatingFailure());

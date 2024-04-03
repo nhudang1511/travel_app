@@ -11,3 +11,14 @@ class LoadRating extends RatingEvent{
 
   const LoadRating(this.hotelId);
 }
+
+class AddRating extends RatingEvent{
+  final String? comment;
+  final String? hotel;
+  final List<String>? photos;
+  final Timestamp? ratedTime;
+  final int? rates;
+  final String? user;
+
+  AddRating({this.comment, this.hotel, this.photos, this.ratedTime, this.rates, this.user});
+}

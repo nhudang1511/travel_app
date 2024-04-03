@@ -34,7 +34,7 @@ class RatingModel extends CustomModel{
       'comment': comment,
       'hotel': hotel,
       'photos': photos,
-      'ratedTime': ratedTime,
+      'rated_time': ratedTime,
       'rates': rates,
       'user': user
     };

@@ -6,6 +6,7 @@ import 'package:flutter_nhu_nguyen/config/app_path.dart';
 import 'package:flutter_nhu_nguyen/travel/bloc/bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/model/booking_model.dart';
 import 'package:flutter_nhu_nguyen/travel/repository/booking_repository.dart';
+import 'package:flutter_nhu_nguyen/travel/screen/write_review/write_review_screen.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 
@@ -36,7 +37,8 @@ class _BriefcaseScreenState extends State<BriefcaseScreen> {
   @override
   void initState() {
     _bookingBloc = BookingBloc(BookingRepository())..add(LoadBooking());
-    _hotelBloc = HotelBloc(HotelRepository(RoomRepository()))..add(LoadHotels());
+    _hotelBloc = HotelBloc(HotelRepository(RoomRepository()))
+      ..add(LoadHotels());
     _roomBloc = RoomBloc(RoomRepository())..add(LoadRoom());
   }
 
@@ -46,7 +48,7 @@ class _BriefcaseScreenState extends State<BriefcaseScreen> {
       providers: [
         BlocProvider(create: (_) => _bookingBloc),
         BlocProvider(create: (_) => _hotelBloc),
-        BlocProvider(create: (_)=> _roomBloc)
+        BlocProvider(create: (_) => _roomBloc)
       ],
       child: Scaffold(
           backgroundColor: Theme.of(context).colorScheme.background,
@@ -79,11 +81,10 @@ class _BriefcaseScreenState extends State<BriefcaseScreen> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 13, vertical: 16),
                               child: GestureDetector(
-                                onTap: (){
-                                  Navigator.pushNamed(context,
-                                      BookingItem.routeName,
-                                      arguments:
-                                      bookings[index]);
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, BookingItem.routeName,
+                                      arguments: bookings[index]);
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -94,7 +95,8 @@ class _BriefcaseScreenState extends State<BriefcaseScreen> {
                                   child: Row(
                                     children: [
                                       ClipRRect(
-                                        borderRadius: BorderRadius.circular(8.0),
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
                                         child: const Stack(
                                           alignment: Alignment.topRight,
                                           children: [
@@ -103,36 +105,46 @@ class _BriefcaseScreenState extends State<BriefcaseScreen> {
                                         ),
                                       ),
                                       Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         children: [
                                           Container(
-                                            padding: const EdgeInsets.only(left: 0),
+                                            padding:
+                                                const EdgeInsets.only(left: 0),
                                             child: Text(
-                                                bookings[index].createdAt != null
+                                                bookings[index].createdAt !=
+                                                        null
                                                     ? 'Booking ${dateFormatter.format(bookings[index].createdAt!)}'
                                                     : 'Booking',
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .titleLarge
-                                                    ?.copyWith(color: Colors.black)),
+                                                    ?.copyWith(
+                                                        color: Colors.black)),
                                           ),
                                           BlocBuilder<HotelBloc, HotelState>(
                                             builder: (context, state) {
                                               if (state is HotelLoaded) {
                                                 hotelList = state.hotels
-                                                    .where((element) => element.id == bookings[index].hotel)
+                                                    .where((element) =>
+                                                        element.id ==
+                                                        bookings[index].hotel)
                                                     .first;
                                               }
                                               return Container(
-                                                padding: const EdgeInsets.only(left: 0),
+                                                padding: const EdgeInsets.only(
+                                                    left: 0),
                                                 child: Text(
-                                                    bookings[index].hotel != null
+                                                    bookings[index].hotel !=
+                                                            null
                                                         ? 'Hotel:\n${hotelList.hotelName}'
                                                         : 'Hotel: null',
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .titleLarge
-                                                        ?.copyWith(color: Colors.black)),
+                                                        ?.copyWith(
+                                                            color:
+                                                                Colors.black)),
                                               );
                                             },
                                           ),
@@ -140,11 +152,14 @@ class _BriefcaseScreenState extends State<BriefcaseScreen> {
                                             builder: (context, state) {
                                               if (state is RoomLoaded) {
                                                 room = state.rooms
-                                                    .where((element) => element.id == bookings[index].room)
+                                                    .where((element) =>
+                                                        element.id ==
+                                                        bookings[index].room)
                                                     .first;
                                               }
                                               return Container(
-                                                padding: const EdgeInsets.only(left: 0),
+                                                padding: const EdgeInsets.only(
+                                                    left: 0),
                                                 child: Text(
                                                     bookings[index].room != null
                                                         ? 'Room: ${room.name}'
@@ -152,7 +167,9 @@ class _BriefcaseScreenState extends State<BriefcaseScreen> {
                                                     style: Theme.of(context)
                                                         .textTheme
                                                         .titleLarge
-                                                        ?.copyWith(color: Colors.black)),
+                                                        ?.copyWith(
+                                                            color:
+                                                                Colors.black)),
                                               );
                                             },
                                           )
@@ -184,6 +201,7 @@ class BookingItem extends StatefulWidget {
 
 class _BookingItemState extends State<BookingItem> {
   String? hotelName;
+  HotelModel? hotelModel;
   String? roomName;
   final dateFormatter = DateFormat('dd MMM yyyy');
   int? daysDifference;
@@ -301,12 +319,34 @@ class _BookingItemState extends State<BookingItem> {
                         ),
                       ],
                     ),
-                    CustomButton(
-                        title: 'Home',
-                        button: () {
-                          Navigator.pushNamedAndRemoveUntil(
-                              context, MainScreen.routeName, (route) => false);
-                        })
+                    Column(
+                      children: [
+                        BlocBuilder<HotelBloc, HotelState>(
+                          builder: (context, state) {
+                            if (state is HotelLoaded) {
+                              List<HotelModel> hotels = state.hotels
+                                  .where((element) =>
+                                      element.id == widget.booking.hotel)
+                                  .toList();
+                              hotelModel = hotels.first;
+                            }
+                            return CustomButton(
+                                title: 'Write Review',
+                                button: () {
+                                    Navigator.of(context).pushNamed(
+                                        WriteReviewScreen.routeName,
+                                        arguments: hotelModel);
+                                });
+                          },
+                        ),
+                        CustomButton(
+                            title: 'Home',
+                            button: () {
+                              Navigator.pushNamedAndRemoveUntil(context,
+                                  MainScreen.routeName, (route) => false);
+                            })
+                      ],
+                    ),
                   ],
                 ),
               ),

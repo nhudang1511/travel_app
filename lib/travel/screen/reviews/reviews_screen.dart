@@ -115,7 +115,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                       height: 24.0,
                     ),
                     // ItemConfirmRoomWidget(roomModel: widget.roomModel),
-                    ItemRatingRoomWidget(rating: [0,0,0,0,0]),
+                    ItemRatingRoomWidget(rating: [0,0,0,0,0], ratingTotal: 0,  count: 0),
                     SizedBox(
                       height: 24.0,
                     ),
@@ -131,7 +131,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                 return Column(
                   children: [
                     // ignore: prefer_const_constructors
-                    ItemRatingRoomWidget(rating: state.ratingCount),
+                    ItemRatingRoomWidget(rating: state.ratingCount, ratingTotal: state.ratingTotal, count: ratings.length),
                     Expanded(
                         child: ListView.separated(
                       // controller: scrollController,
@@ -148,7 +148,6 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                           );
                         }
                         return ItemReviewWidget(
-                          
                           ratingModel: ratings[i],
                         );
                       },

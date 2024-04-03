@@ -1,16 +1,39 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_nhu_nguyen/config/app_path.dart';
 import 'package:flutter_nhu_nguyen/travel/model/rating_model.dart';
+import 'package:readmore/readmore.dart';
 
 class ItemReviewWidget extends StatelessWidget {
   final RatingModel ratingModel;
-  const ItemReviewWidget({
+  ItemReviewWidget({
     Key? key,
     required this.ratingModel,
   }) : super(key: key);
 
+  DateTime currentTime = DateTime.now();
+  
+  
+  
+
   @override
   Widget build(BuildContext context) {
+    DateTime storedTime = DateTime.fromMillisecondsSinceEpoch(ratingModel.ratedTime!.millisecondsSinceEpoch);
+    Duration difference = currentTime.difference(storedTime); 
+    String differenceString = difference.toString(); 
+    
+    int seconds = difference.inSeconds.remainder(60);
+    int minutes = difference.inMinutes.remainder(60);
+    if(seconds>= 24){
+      differenceString = (seconds~/24).toString() + ' day ago';
+    }
+    if(seconds<24  && seconds>0){
+      differenceString = (seconds).toString() + ' seconds ago';
+    }
+    if(seconds==0){
+      differenceString = (minutes).toString() + ' minutes ago';
+    }
+
     return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24.0),
@@ -40,15 +63,15 @@ class ItemReviewWidget extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 20),
-                        const Column(
+                        Column(
                           children: [
-                            Text('James Christin',
+                            const Text('James Christin',
                                 style: TextStyle(
                                     fontSize: 20,
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold)),
-                            Text('24 minutes ago',
-                                style: TextStyle(
+                            Text(differenceString,
+                                style: const TextStyle(
                                     fontSize: 10, color: Colors.black))
                           ],
                         ),
@@ -72,51 +95,61 @@ class ItemReviewWidget extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            Text(ratingModel.comment ?? '',
-                style: const TextStyle(fontSize: 14, color: Colors.black)),
-            const SizedBox(height: 20),
 
-            // Image.network(
-            //           ratingModel.photos![0] ,
-            //           width: double.infinity,
-            //           fit: BoxFit.fitWidth,
-            //         ),
-            //  Padding(
-            //         padding: EdgeInsets.all(8.0),
-            //         child:
-            //       )
-            // Row(
-            //   children: [
-            //     for (var url in ratingModel.photos!)
-            //       Padding(
-            //           padding: EdgeInsets.all(8.0),
-            //           child: Container(
-            //             width: 50,
-            //             height: 40,
-            //             // decoration: BoxDecoration(
-            //             //   image: DecorationImage(image: NetworkImage(url))
-            //             // ),
-            //             // child:
-            //             // Image.network(
-            //             //   url,
-            //             //   // width: double.infinity, // Độ rộng của hình ảnh
-            //             //   //height: 100, // Độ cao của hình ảnh
-            //             //   fit: BoxFit.fitWidth, // Để hình ảnh lấp đầy kích thước đã cho
-            //             // ),
-            //           )),
-            //   ],
-            // )
+            // Text(ratingModel.comment ?? '',
+            //     style: const TextStyle(fontSize: 14, color: Colors.black)),
 
-            SizedBox(
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12.0),
+                color: Color.fromARGB(255, 226, 231, 234),
+              ),
+              width: 400,
+              constraints: const BoxConstraints(
+                minHeight: 70, // Độ rộng tối thiểu
+              ),
+              margin: const EdgeInsets.only(bottom: 14.0),
+              padding: const EdgeInsets.all(16.0),
+              child: ReadMoreText(
+                ratingModel.comment ?? '',
+                style: const TextStyle(fontSize: 14, color: Colors.black),
+                trimLength: 60,
+                trimExpandedText: 'Show less',
+                trimCollapsedText: 'Show more',
+                moreStyle: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold),
+                lessStyle: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            // const SizedBox(height: 20),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.black, // Màu của đường viền
+                  width: 0.2, // Độ dày của đường viền
+                  style: BorderStyle.solid,
+                ),
+              ),
               height: 100,
-              // width: 400,
+              width: 400,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 shrinkWrap: true,
                 itemCount: ratingModel.photos!.length,
                 itemBuilder: (context, index) {
-                  if(ratingModel.photos![index] == '')
-                  return Text('Not foud');
+                  if (ratingModel.photos![index] == '') {
+                    return const Center( 
+                      child:Text('No images',
+                        style:  TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold)) ,); 
+                  }
                   return Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Image.network(
