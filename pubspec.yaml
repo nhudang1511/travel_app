@@ -72,7 +72,7 @@ dependencies:
   webview_flutter: ^3.0.4
 
   #
-  readmore: ^2.0.0
+  readmore: ^3.0.0
   # fl_chart: 0.60.0 
 
 
