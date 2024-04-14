@@ -27,24 +27,27 @@ class HotelScreen extends StatefulWidget {
 class _HotelScreenState extends State<HotelScreen> {
   HotelBloc hotelBloc = HotelBloc(HotelRepository(RoomRepository()));
   List<HotelModel> hotels = [];
-  double rating = 0.0;
+  num rating = 0.0;
   ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    // _hotelBloc = HotelBloc(HotelRepository(RoomRepository()))
-    //   ..add(LoadHotelByBooking(
-    //       widget.maxGuest, widget.maxRoom, widget.destination));
-    hotelBloc.add(HotelEventStart());
-    scrollController.addListener(_onScroll);
+    hotelBloc = HotelBloc(HotelRepository(RoomRepository()))
+      ..add(LoadHotelByBooking(
+          widget.maxGuest, widget.maxRoom, widget.destination));
+    // hotelBloc.add(
+    //     HotelEventStart(widget.maxGuest, widget.maxRoom, widget.destination));
+    // scrollController.addListener(_onScroll);
   }
+
   void _onScroll() {
-    if (scrollController.position.pixels ==
-        scrollController.position.maxScrollExtent &&
-        !scrollController.position.outOfRange) {
-      hotelBloc.add(HotelEventFetchMore());
-    }
+    // if (scrollController.position.pixels ==
+    //         scrollController.position.maxScrollExtent &&
+    //     !scrollController.position.outOfRange) {
+    //   hotelBloc.add(HotelEventFetchMore(
+    //       widget.maxGuest, widget.maxRoom, widget.destination));
+    // }
   }
 
   @override
@@ -59,51 +62,38 @@ class _HotelScreenState extends State<HotelScreen> {
         backgroundColor: Colors.transparent,
         context: context,
         builder: (context) => const FilterHotel());
-    // print("Testing Value: $value");
-    String sortValue = result['sort'];
-
-    if (result['rating'] != null) {
-      setState(() {
-        rating = result['rating'];
-      });
-    }
-
-    print("Testing Sort Value: $sortValue");
-    print("Testing Rating: ${rating.toString()}");
-
-    // Tiếp tục xử lý dữ liệu theo cách bạn muốn
-    if (sortValue != 'All') {
-      sortHotels(sortValue);
-    }
-  }
-
-  void sortHotels(String value) {
-    setState(() {
-      hotels.sort((a, b) {
-        dynamic keyA, keyB;
-        switch (value) {
-          case 'total_review':
-            keyA = b.numberOfReview;
-            keyB = a.numberOfReview;
-            break;
-          case 'low_price':
-            keyA = a.price;
-            keyB = b.price;
-            break;
-          case 'high_price':
-            keyA = b.price;
-            keyB = a.price;
-          case 'rating':
-            keyA = b.star;
-            keyB = a.star;
-          default:
-            // Handle the default case or throw an exception
-            throw ArgumentError('Invalid sorting value: $value');
-        }
-
-        return keyA.compareTo(keyB);
-      });
-    });
+    // print("Testing Value: ${result['rating']}");
+    // print("Testing Value: ${result['budgetStart']}");
+    // if (result['rating'] != null) {
+    //   setState(() {
+    //     rating = result['rating'];
+    //   });
+    //   hotelBloc.add(RateHotel(rating));
+    // }
+    // // print("Testing Sort Value: $sortValue");
+    // //print("Testing Rating: ${rating.toString()}");
+    // // Tiếp tục xử lý dữ liệu theo cách bạn muốn
+    // if (result['budgetStart'] >= 0 && result['budgetEnd'] > 0) {
+    //   hotelBloc.add(SortHotelByBudget(
+    //       start: result['budgetStart'], end: result['budgetEnd']));
+    // }
+    // if(result['facilities'] != []){
+    //   hotelBloc.add(SortHotelByServices(services: result['facilities'] ));
+    // }
+    // if(result['property'] != ''){
+    //   hotelBloc.add(SortHotelByProperty(property: result['property'] ));
+    // }
+    // if (result['sort'] != 'All') {
+    //   //sortHotels(sortValue);
+    //   hotelBloc.add(SortHotel(result['sort']));
+    // }
+    hotelBloc.add(SortHotelBy(
+        sort: result['sort'],
+        rate: result['rating'],
+        start: result['budgetStart'],
+        end: result['budgetEnd'],
+        services: result['facilities'],
+        property: result['property']));
   }
 
   @override
@@ -113,39 +103,43 @@ class _HotelScreenState extends State<HotelScreen> {
         isIcon: true,
         filterButton: const FilterHotel(),
         showModalBottomSheet: _callModalBottomSheet,
-        child:  BlocBuilder<HotelBloc, HotelState>(
+        child: BlocBuilder<HotelBloc, HotelState>(
           bloc: hotelBloc,
           builder: (context, state) {
-            if (state is HotelStateLoading) {
+            //print(state);
+            if (state is HotelLoading) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (state is HotelStateEmpty) {
-              return Center(
-                child: Text(
-                  'No Posts',
-                  style: Theme.of(context).textTheme.displayMedium,
-                ),
-              );
-            } else if (state is HotelStateLoadSuccess) {
+              // } else if (state is HotelLoaded) {
+              //   return Center(
+              //     child: Text(
+              //       'No Posts',
+              //       style: Theme.of(context).textTheme.displayMedium,
+              //     ),
+              //   );
+            } else if (state is HotelLoaded) {
+              hotels = state.hotels;
               return ListView.separated(
-                controller: scrollController,
-                itemCount: state.hasMoreHotel ? state.hotel.length + 1 : state.hotel.length,
+                //controller: scrollController,
+                itemCount:
+                    //state.hasMoreHotel ? state.hotel.length + 1 :
+                    hotels.length,
                 itemBuilder: (context, i) {
-                  if (i >= state.hotel.length) {
-                    return Container(
-                      margin: const EdgeInsets.only(top: 15),
-                      height: 100,
-                      width: 30,
-                      child: const Center(child: CircularProgressIndicator()),
-                    );
-                  }
+                  // if (i >= state.hotel.length) {
+                  //   return Container(
+                  //     margin: const EdgeInsets.only(top: 15),
+                  //     height: 100,
+                  //     width: 30,
+                  //     child: const Center(child: CircularProgressIndicator()),
+                  //   );
+                  // }
                   return ItemHotelWidget(
-                    hotelModel: state.hotel[i],
+                    hotelModel: hotels[i],
                     onTap: () {
                       Navigator.of(context).pushNamed(
                           DetailHotelScreen.routeName,
-                          arguments: state.hotel[i]);
+                          arguments: hotels[i]);
                     },
                   );
                 },
@@ -156,7 +150,6 @@ class _HotelScreenState extends State<HotelScreen> {
             }
             return const SizedBox();
           },
-        )
-    );
+        ));
   }
 }

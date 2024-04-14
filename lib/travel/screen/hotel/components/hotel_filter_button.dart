@@ -9,14 +9,17 @@ class FilterHotel extends StatefulWidget {
 
   @override
   State<FilterHotel> createState() => _FilterHotelState();
-
 }
 
 class _FilterHotelState extends State<FilterHotel> {
-  final labels = ['\$0', '\$100', '\$200', '\$300', '\$400'];
-  RangeValues values = const RangeValues(0, 100);
+  final labels = ['\$0', '\$200', '\$400', '\$600', '\$800', '\$1000'];
+  RangeValues values = const RangeValues(0, 200);
   String sortValue = 'All';
-  double rating = 0;
+  num rating = 0;
+  List<String> facilities = [];
+  String property = '';
+  num budgetStart = 0;
+  num budgetEnd = 0;
 
   Widget buildLabel({
     required String label,
@@ -30,45 +33,32 @@ class _FilterHotelState extends State<FilterHotel> {
           fontWeight: FontWeight.bold,
         ).copyWith(color: color),
       );
+
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
         initialChildSize: 0.9,
         maxChildSize: 1,
-        builder: (BuildContext context,
-            ScrollController
-            scrollController) {
+        builder: (BuildContext context, ScrollController scrollController) {
           return Container(
-            padding:
-            const EdgeInsets.symmetric(
-                horizontal: 24.0),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
             decoration: const BoxDecoration(
               color: Color(0xFFF0F2F6),
-              borderRadius:
-              BorderRadius.only(
-                topLeft: Radius.circular(
-                    16.0 * 2),
-                topRight: Radius.circular(
-                    16.0 * 2),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(16.0 * 2),
+                topRight: Radius.circular(16.0 * 2),
               ),
             ),
             child: Column(
               children: [
                 Container(
-                  alignment:
-                  Alignment.center,
-                  margin:
-                  const EdgeInsets.only(
-                      top: 16.0),
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.only(top: 16.0),
                   child: Container(
                     height: 5,
                     width: 60,
-                    decoration:
-                    BoxDecoration(
-                      borderRadius:
-                      BorderRadius
-                          .circular(
-                          10.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
                       color: Colors.black,
                     ),
                   ),
@@ -78,19 +68,17 @@ class _FilterHotelState extends State<FilterHotel> {
                 ),
                 Expanded(
                   child: ListView(
-                    controller:
-                    scrollController,
-                    padding:
-                    EdgeInsets.zero,
+                    controller: scrollController,
+                    padding: EdgeInsets.zero,
                     children: [
                       Column(
-                        crossAxisAlignment:
-                        CrossAxisAlignment
-                            .start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             'Choose Your Filter',
-                            style: Theme.of(context).textTheme.displayMedium
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayMedium
                                 ?.copyWith(color: Colors.black),
                           ),
                           const SizedBox(
@@ -98,7 +86,9 @@ class _FilterHotelState extends State<FilterHotel> {
                           ),
                           Text(
                             'Budget',
-                            style: Theme.of(context).textTheme.headlineMedium
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineMedium
                                 ?.copyWith(color: Colors.black),
                           ),
                           const SizedBox(
@@ -108,33 +98,40 @@ class _FilterHotelState extends State<FilterHotel> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 18),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 18),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children:
-                                  Utils.modelBuilder(labels, (index, label) {
-                                    const selectedColor = Colors.black;
-                                    final unselectedColor = Colors.black
-                                        .withOpacity(0.3);
-                                    final isSelected =
-                                        index >= values.start &&
-                                            index <= values.end;
-                                    final color = isSelected
-                                        ? selectedColor
-                                        : unselectedColor;
-                                    return buildLabel(
-                                        label: label,
-                                        color: color);},
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: Utils.modelBuilder(
+                                    labels,
+                                    (index, label) {
+                                      const selectedColor = Colors.black;
+                                      final unselectedColor =
+                                          Colors.black.withOpacity(0.3);
+                                      final isSelected =
+                                          index >= values.start &&
+                                              index <= values.end;
+                                      final color = isSelected
+                                          ? selectedColor
+                                          : unselectedColor;
+                                      return buildLabel(
+                                          label: label, color: color);
+                                    },
                                   ),
                                 ),
                               ),
                               RangeSlider(
                                 values: values,
                                 min: 0,
-                                max: 400,
-                                divisions: 100,
-                                onChanged: (values) => setState(() =>
-                                    this.values = values),
+                                max: 1000,
+                                divisions: 200,
+                                onChanged: (values) =>
+                                    setState((){
+                                      this.values = values;
+                                      budgetStart = values.start;
+                                      budgetEnd = values.end;
+                                    }),
                               ),
                             ],
                           ),
@@ -143,7 +140,9 @@ class _FilterHotelState extends State<FilterHotel> {
                           ),
                           Text(
                             'Hotel Class',
-                            style: Theme.of(context).textTheme.headlineMedium
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineMedium
                                 ?.copyWith(color: Colors.black),
                           ),
                           const SizedBox(
@@ -155,14 +154,13 @@ class _FilterHotelState extends State<FilterHotel> {
                             direction: Axis.horizontal,
                             allowHalfRating: true,
                             itemCount: 5,
-                            itemPadding: const EdgeInsets.symmetric(
-                                horizontal: 5.0),
+                            itemPadding:
+                                const EdgeInsets.symmetric(horizontal: 5.0),
                             itemBuilder: (context, _) =>
-                            const Icon(Icons.star,
-                                color: Colors.amber),
+                                const Icon(Icons.star, color: Colors.amber),
                             onRatingUpdate: (rate) {
                               rating = rate;
-                              },
+                            },
                           ),
                           const SizedBox(
                             height: 16,
@@ -171,20 +169,26 @@ class _FilterHotelState extends State<FilterHotel> {
                             title: 'Facilities',
                             color: 0xFFFE9C5E,
                             image: AppPath.iconWifi,
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context,
-                                  FacilitiesScreen.routeName);
+                            onTap: () async {
+                              final result = await Navigator.pushNamed(
+                                  context, FacilitiesScreen.routeName);
+                              //print(result);
+                              if(result != null){
+                                facilities = result as List<String>;
+                              }
                             },
                           ),
                           ButtonFilter(
                             title: 'Property Type',
                             color: 0xFFF77777,
                             image: AppPath.iconSkyscraper,
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context,
-                                  PropertyScreen.routeName);
+                            onTap: () async {
+                              final result = await Navigator.pushNamed(
+                                  context, PropertyScreen.routeName);
+                              //print(result);
+                              if (result != null) {
+                                property = result as String;
+                              }
                             },
                           ),
                           ButtonFilter(
@@ -192,59 +196,47 @@ class _FilterHotelState extends State<FilterHotel> {
                             color: 0xFF3EC8BC,
                             image: AppPath.iconSort,
                             onTap: () async {
-                              final result = await Navigator.pushNamed(context, SortScreen.routeName);
-                              if (result != null ) {
+                              final result = await Navigator.pushNamed(
+                                  context, SortScreen.routeName);
+                              if (result != null) {
                                 sortValue = result as String;
-                                print("Sort value: $sortValue");
+                                //print("Sort value: $sortValue");
                               }
                             },
                           ),
                           CustomButton(
                               title: 'Apply',
                               button: () {
-                                final Map<String, dynamic> arguments = {'sort': sortValue, 'rating': rating};
+                                final Map<String, dynamic> arguments = {
+                                  'sort': sortValue,
+                                  'rating': rating,
+                                  'budgetStart': budgetStart,
+                                  'budgetEnd': budgetEnd,
+                                  'facilities': facilities,
+                                  'property': property
+                                };
                                 Navigator.pop(context, arguments);
-                                  }),
+                              }),
                           Container(
-                            width: MediaQuery
-                                .of(
-                                context)
-                                .size
-                                .width,
-                            margin:
-                            const EdgeInsets
-                                .only(
-                                bottom:
-                                20),
-                            decoration:
-                            ShapeDecoration(
-                              gradient:
-                              LinearGradient(
-                                begin: const Alignment(
-                                    0.71,
-                                    -0.71),
-                                end: const Alignment(
-                                    -0.71,
-                                    0.71),
+                            width: MediaQuery.of(context).size.width,
+                            margin: const EdgeInsets.only(bottom: 20),
+                            decoration: ShapeDecoration(
+                              gradient: LinearGradient(
+                                begin: const Alignment(0.71, -0.71),
+                                end: const Alignment(-0.71, 0.71),
                                 colors: [
-                                  const Color(
-                                      0xFF8862E4)
-                                      .withOpacity(
-                                      0.10),
-                                  const Color(
-                                      0xFF6657CF)
-                                      .withOpacity(
-                                      0.10)
+                                  const Color(0xFF8862E4).withOpacity(0.10),
+                                  const Color(0xFF6657CF).withOpacity(0.10)
                                 ],
                               ),
-                              shape:
-                              RoundedRectangleBorder(
-                                borderRadius:
-                                BorderRadius.circular(
-                                    25),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(25),
                               ),
                             ),
-                            child: CustomButton2(title: 'Reset', onTap: () {},),
+                            child: CustomButton2(
+                              title: 'Reset',
+                              onTap: () {},
+                            ),
                           )
                         ],
                       ),

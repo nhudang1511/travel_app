@@ -30,17 +30,19 @@ class _SelectRoomScreenState extends State<SelectRoomScreen> {
       title: 'Select Room',
       isIcon: false,
       showModalBottomSheet: () {},
-      child: Column(
-        children: widget.rooms
-            .map(
-              (e) => ItemRoomWidget(
-                  onTap: () {
-                    Navigator.of(context).pushNamed(CheckOutStep.routeName,
-                        arguments: {'step': 0, 'room': e});
-                  },
-                  roomModel: e),
-            )
-            .toList(),
+      child: SingleChildScrollView(
+        child: Column(
+          children: widget.rooms
+              .map(
+                (e) => ItemRoomWidget(
+                    onTap: () {
+                      Navigator.of(context).pushNamed(CheckOutStep.routeName,
+                          arguments: {'step': 0, 'room': e});
+                    },
+                    roomModel: e),
+              )
+              .toList(),
+        ),
       ),
     );
   }

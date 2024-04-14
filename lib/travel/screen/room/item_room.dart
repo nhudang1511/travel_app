@@ -42,13 +42,6 @@ class ItemRoomWidget extends StatelessWidget {
                         .displayMedium
                         ?.copyWith(color: Colors.black),
                   ),
-                  const SizedBox(
-                    height: 16.0,
-                  ),
-                  Text(
-                    roomModel.typePrice ?? "",
-                    style: const TextStyle(color: Colors.black),
-                  ),
                 ],
               ),
             ),

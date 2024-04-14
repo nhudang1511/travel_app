@@ -55,7 +55,7 @@ class _ItemUtilityHotelWidgetState extends State<ItemUtilityHotelWidget> {
         assetPath = AppPath.iconNonRefund;
       case "NON_SMOKING":
         assetPath = AppPath.iconNonSmoking;
-      case "RESTAURENT":
+      case "RESTAURANT":
         assetPath = AppPath.iconRestaurant;
       default:
         assetPath = AppPath.iconRestaurant;

@@ -69,18 +69,20 @@ class _CustomAppBarItemState extends State<CustomAppBarItem> {
                   ),
                   widget.isIcon
                       ? Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(
-                              16.0,
-                            ),
+                          decoration: const BoxDecoration(
+                            // borderRadius: BorderRadius.circular(
+                            //   16.0,
+                            // ),
                             color: Colors.white,
+                            shape: BoxShape.circle,
                           ),
                           padding: const EdgeInsets.all(10.0),
-                          child: InkWell(
-                            onTap: () {
+                          height: 50,
+                          child: IconButton(
+                            onPressed: (){
                               widget.showModalBottomSheet();
                             },
-                            child: const Icon(FontAwesomeIcons.bars,
+                            icon: const Icon(FontAwesomeIcons.bars,
                                 size: 16.0, color: Colors.black),
                           ),
                         )

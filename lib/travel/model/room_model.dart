@@ -9,7 +9,6 @@ class RoomModel extends CustomModel {
   final int? price;
   final List<String>? services;
   final int? total;
-  final String? typePrice;
 
   RoomModel({
    this.id,
@@ -20,7 +19,6 @@ class RoomModel extends CustomModel {
     this.price,
     this.services,
     this.total,
-    this.typePrice,
   });
 
   @override
@@ -35,8 +33,7 @@ class RoomModel extends CustomModel {
         services:  List.of(doc["services"])
             .map((i) => i as String)
             .toList(),
-        total: doc['total'] as int,
-        typePrice: doc['type_price'] as String);
+        total: doc['total'] as int);
   }
 
   @override

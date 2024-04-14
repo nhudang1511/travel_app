@@ -51,37 +51,20 @@ class _SortScreenState extends State<SortScreen> {
                 ),
                 CheckItem(
                   checkbox: _selectedItemIndex == 1,
-                  title: 'Lowest Price',
+                  title: 'Highest Price',
                   radius: 12,
                   onToggle: () {
                     _handleToggle(1);
-                    sortName = 'low_price';
+                    sortName = 'price';
                   },
                 ),
                 CheckItem(
                   checkbox: _selectedItemIndex == 2,
-                  title: 'Highest Price',
-                  radius: 12,
-                  onToggle: () {
-                    _handleToggle(2);
-                    sortName = 'high_price';
-                  },
-                ),
-                CheckItem(
-                  checkbox: _selectedItemIndex == 3,
                   title: 'Highest Rating',
                   radius: 12,
                   onToggle: () {
-                    _handleToggle(3);
+                    _handleToggle(2);
                     sortName = 'rating';
-                  },
-                ),
-                CheckItem(
-                  checkbox: _selectedItemIndex == 4,
-                  title: 'Nearest Distance',
-                  radius: 12,
-                  onToggle: () {
-                    _handleToggle(4);
                   },
                 ),
               ],

@@ -46,13 +46,6 @@ class ItemConfirmRoomWidget extends StatelessWidget {
                   const SizedBox(
                     height: 16.0,
                   ),
-                  Text(
-                    roomModel.typePrice ?? "",
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                  const SizedBox(
-                    height: 16.0,
-                  ),
                   const Row(
                     children: [
                       Icon(Icons.bed_rounded, color: Color(0xFFFE9C5E),),

@@ -13,11 +13,18 @@ class PropertyScreen extends StatefulWidget {
 }
 
 class _PropertyScreenState extends State<PropertyScreen> {
-  bool _selectAll =
-      false; // Add a new state to control "Select All" functionality
-
-  List<bool> _checkboxList = List.generate(7,
-      (index) => false); // Maintain a list of checkboxes for individual items
+  int _selectedItemIndex = -1;
+  String sortName = 'All';
+  void _handleToggle(int index) {
+    setState(() {
+      if (_selectedItemIndex == index) {
+        // If the same item is tapped again, deselect it
+        _selectedItemIndex = -1;
+      } else {
+        _selectedItemIndex = index;
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,96 +39,66 @@ class _PropertyScreenState extends State<PropertyScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                TextButton(
-                    onPressed: () {
-                      setState(() {
-                        _selectAll = !_selectAll;
-                        _checkboxList = List.generate(8, (index) => _selectAll);
-                      });
-                    },
-                    child: Text('Select All',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge
-                            ?.copyWith(color: const Color(0xFF6155CC)))),
-                const SizedBox(
-                  height: 20,
-                ),
                 CheckItem(
-                  checkbox: _checkboxList[0],
+                  checkbox: _selectedItemIndex == 0,
                   title: 'Hotels',
-                  radius: 4,
+                  radius: 12,
                   onToggle: () {
-                    setState(() {
-                      _checkboxList[0] = !_checkboxList[0];
-                    });
+                    _handleToggle(0);
+                    sortName = 'Hotels';
                   },
                 ),
                 CheckItem(
-                  checkbox: _checkboxList[1],
+                  checkbox: _selectedItemIndex == 1,
                   title: 'Resorts',
-                  radius: 4,
+                  radius: 12,
                   onToggle: () {
-                    setState(() {
-                      _checkboxList[1] = !_checkboxList[1];
-                    });
+                    _handleToggle(1);
+                    sortName = 'Resorts';
                   },
                 ),
                 CheckItem(
-                  checkbox: _checkboxList[2],
+                  checkbox: _selectedItemIndex == 2,
                   title: 'Villas',
-                  radius: 4,
+                  radius: 12,
                   onToggle: () {
-                    setState(() {
-                      _checkboxList[2] = !_checkboxList[2];
-                    });
+                    _handleToggle(2);
+                    sortName = 'Villas';
                   },
                 ),
                 CheckItem(
-                  checkbox: _checkboxList[3],
+                  checkbox: _selectedItemIndex == 3,
                   title: 'Guest Houses',
-                  radius: 4,
+                  radius: 12,
                   onToggle: () {
-                    setState(() {
-                      _checkboxList[3] = !_checkboxList[3];
-                    });
+                    _handleToggle(3);
+                    sortName = 'Guest Houses';
                   },
                 ),
                 CheckItem(
-                  checkbox: _checkboxList[4],
+                  checkbox: _selectedItemIndex == 4,
                   title: 'Homestays',
-                  radius: 4,
+                  radius: 12,
                   onToggle: () {
-                    setState(() {
-                      _checkboxList[4] = !_checkboxList[4];
-                    });
+                    _handleToggle(4);
+                    sortName = 'Homestays';
                   },
                 ),
                 CheckItem(
-                  checkbox: _checkboxList[5],
+                  checkbox: _selectedItemIndex == 5,
                   title: 'Apartments',
-                  radius: 4,
+                  radius: 12,
                   onToggle: () {
-                    setState(() {
-                      _checkboxList[5] = !_checkboxList[5];
-                    });
-                  },
-                ),
-                CheckItem(
-                  checkbox: _checkboxList[6],
-                  title: 'Others',
-                  radius: 4,
-                  onToggle: () {
-                    setState(() {
-                      _checkboxList[6] = !_checkboxList[6];
-                    });
+                    _handleToggle(5);
+                    sortName = 'Apartments';
                   },
                 ),
               ],
             ),
-            CustomButton(title: 'Done', button: () {})
+            CustomButton(title: 'Apply', button: () {
+              Navigator.pop(context, sortName);
+            })
           ],
         ),
       ),

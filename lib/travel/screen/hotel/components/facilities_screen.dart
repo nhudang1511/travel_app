@@ -12,6 +12,7 @@ class FacilitiesScreen extends StatefulWidget {
 }
 
 class _FacilitiesScreenState extends State<FacilitiesScreen> {
+  List<String> selectedFacilities = [];
   bool _selectAll =
       false; // Add a new state to control "Select All" functionality
 
@@ -27,113 +28,156 @@ class _FacilitiesScreenState extends State<FacilitiesScreen> {
       ),
       body: Container(
         margin: const EdgeInsets.symmetric(vertical: 30, horizontal: 40),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                TextButton(
-                    onPressed: () {
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _selectAll = !_selectAll;
+                          _checkboxList = List.generate(8, (index) => _selectAll);
+                          if (_selectAll) {
+                            selectedFacilities = [
+                              'FREE_WIFI',
+                              'NON_REFUNDABLE',
+                              'NON_SMOKING',
+                              'CURRENCY_EXCHANGE',
+                              'RESTAURANT',
+                              'CAR_RENTAL',
+                              '24_HOURS_FRONT_DESK',
+                              'SWIMMING_POOL'
+                            ];
+                          } else {
+                            selectedFacilities = [];
+                          }
+                        });
+                      },
+                      child: Text('Select All',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge
+                              ?.copyWith(color: const Color(0xFF6155CC)))),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  FacilitiesItem(
+                    checkbox: _checkboxList[0],
+                    title: 'FREE_WIFI',
+                    radius: 4,
+                    img: AppPath.iconWifi2,
+                    onToggle: () {
                       setState(() {
-                        _selectAll = !_selectAll;
-                        _checkboxList = List.generate(8, (index) => _selectAll);
+                        _checkboxList[0] = !_checkboxList[0];
+                        if (_checkboxList[0]) {
+                          selectedFacilities.add('FREE_WIFI');
+                        } else {
+                          selectedFacilities.remove('FREE_WIFI');
+                        }
                       });
                     },
-                    child: Text('Select All',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge
-                            ?.copyWith(color: const Color(0xFF6155CC)))),
-                const SizedBox(
-                  height: 20,
-                ),
-                FacilitiesItem(
-                  checkbox: _checkboxList[0],
-                  title: 'Wifi',
-                  radius: 4,
-                  img: AppPath.iconWifi2,
-                  onToggle: () {
+                  ),
+                  FacilitiesItem(
+                    checkbox: _checkboxList[1],
+                    title: 'NON_REFUNDABLE',
+                    radius: 4,
+                    img: AppPath.iconNonRefund,
+                    onToggle: () {
+                      setState(() {
+                        _checkboxList[1] = !_checkboxList[1];
+                        if (_checkboxList[1]) {
+                          selectedFacilities.add('NON_REFUNDABLE');
+                        } else {
+                          selectedFacilities.remove('NON_REFUNDABLE');
+                        }
+                      });
+                    },
+                  ),
+                  FacilitiesItem(
+                    checkbox: _checkboxList[2],
+                    title: 'NON_SMOKING',
+                    radius: 4,
+                    img: AppPath.iconNonSmoking, onToggle: () {
                     setState(() {
-                      _checkboxList[0] = !_checkboxList[0];
+                      _checkboxList[2] = !_checkboxList[2];
+                      if (_checkboxList[2]) {
+                        selectedFacilities.add('NON_SMOKING');
+                      } else {
+                        selectedFacilities.remove('NON_SMOKING');
+                      }
                     });
                   },
-                ),
-                FacilitiesItem(
-                  checkbox: _checkboxList[1],
-                  title: 'Digital TV',
-                  radius: 4,
-                  img: AppPath.iconTelevision,
-                  onToggle: () {
+                  ),
+                  FacilitiesItem(
+                    checkbox: _checkboxList[3],
+                    title: 'SWIMMING_POOL',
+                    radius: 4,
+                    img: AppPath.iconPool, onToggle: () {
                     setState(() {
-                      _checkboxList[1] = !_checkboxList[1];
+                      _checkboxList[3] = !_checkboxList[3];
+                      if (_checkboxList[3]) {
+                        selectedFacilities.add('SWIMMING_POOL');
+                      } else {
+                        selectedFacilities.remove('SWIMMING_POOL');
+                      }
                     });
                   },
-                ),
-                FacilitiesItem(
-                  checkbox: _checkboxList[2],
-                  title: 'Parking Area',
-                  radius: 4,
-                  img: AppPath.iconPark, onToggle: () {
-                  setState(() {
-                    _checkboxList[2] = !_checkboxList[2];
-                  });
-                },
-                ),
-                FacilitiesItem(
-                  checkbox: _checkboxList[3],
-                  title: 'Swimming Pool',
-                  radius: 4,
-                  img: AppPath.iconPool, onToggle: () {
-                  setState(() {
-                    _checkboxList[3] = !_checkboxList[3];
-                  });
-                },
-                ),
-                FacilitiesItem(
-                  checkbox: _checkboxList[4],
-                  title: 'Currency Exchange',
-                  radius: 4,
-                  img: AppPath.iconExchange, onToggle: () {
-                  setState(() {
-                    _checkboxList[4] = !_checkboxList[4];
-                  });
-                },
-                ),
-                FacilitiesItem(
-                  checkbox: _checkboxList[5],
-                  title: 'Restaurant',
-                  radius: 4,
-                  img: AppPath.iconFork, onToggle: () {
-                  setState(() {
-                    _checkboxList[5] = !_checkboxList[5];
-                  });
-                },
-                ),
-                FacilitiesItem(
-                  checkbox: _checkboxList[6],
-                  title: 'Car Rental',
-                  radius: 4,
-                  img: AppPath.iconCar, onToggle: () {
-                  setState(() {
-                    _checkboxList[6] = !_checkboxList[6];
-                  });
-                },
-                ),
-                FacilitiesItem(
-                  checkbox: _checkboxList[7],
-                  title: '24-hour Front Desk',
-                  radius: 4,
-                  img: AppPath.iconReception, onToggle: () {
-                  setState(() {
-                    _checkboxList[7] = !_checkboxList[7];
-                  });
-                },
-                ),
-              ],
-            ),
-            CustomButton(title: 'Done', button: () {})
-          ],
+                  ),
+                  FacilitiesItem(
+                    checkbox: _checkboxList[4],
+                    title: 'CURRENCY_EXCHANGE',
+                    radius: 4,
+                    img: AppPath.iconExchange, onToggle: () {
+                    setState(() {
+                      _checkboxList[4] = !_checkboxList[4];
+                      if (_checkboxList[4]) {
+                        selectedFacilities.add('CURRENCY_EXCHANGE');
+                      } else {
+                        selectedFacilities.remove('CURRENCY_EXCHANGE');
+                      }
+                    });
+                  },
+                  ),
+                  FacilitiesItem(
+                    checkbox: _checkboxList[5],
+                    title: 'RESTAURANT',
+                    radius: 4,
+                    img: AppPath.iconFork, onToggle: () {
+                    setState(() {
+                      _checkboxList[5] = !_checkboxList[5];
+                      if (_checkboxList[5]) {
+                        selectedFacilities.add('RESTAURANT');
+                      } else {
+                        selectedFacilities.remove('RESTAURANT');
+                      }
+                    });
+                  },
+                  ),
+                  FacilitiesItem(
+                    checkbox: _checkboxList[7],
+                    title: '24_HOURS_FRONT_DESK',
+                    radius: 4,
+                    img: AppPath.iconReception, onToggle: () {
+                    setState(() {
+                      _checkboxList[7] = !_checkboxList[7];
+                      if (_checkboxList[7]) {
+                        selectedFacilities.add('24_HOURS_FRONT_DESK');
+                      } else {
+                        selectedFacilities.remove('24_HOURS_FRONT_DESK');
+                      }
+                    });
+                  },
+                  ),
+                ],
+              ),
+              CustomButton(title: 'Done', button: () {
+                Navigator.pop(context, selectedFacilities);
+              })
+            ],
+          ),
         ),
       ),
     );
