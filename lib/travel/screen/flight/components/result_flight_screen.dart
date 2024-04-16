@@ -2,6 +2,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/bloc/bloc.dart';
+import 'package:flutter_nhu_nguyen/travel/repository/flight_repository.dart';
+import 'package:flutter_nhu_nguyen/travel/screen/flight/components/sort/filter_flight.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import '../../../../config/app_path.dart';
 import '../../../model/filght_model.dart';
@@ -9,6 +11,7 @@ import '../../../widget/widget.dart';
 import 'package:coupon_uikit/coupon_uikit.dart';
 
 import '../../screen.dart';
+
 
 class ResultFlightScreen extends StatefulWidget {
   const ResultFlightScreen(
@@ -23,87 +26,84 @@ class ResultFlightScreen extends StatefulWidget {
 }
 
 class _ResultFlightScreenState extends State<ResultFlightScreen> {
-  FlightBloc flightBloc = FlightBloc();
+  FlightBloc flightBloc = FlightBloc(FlightRepository());
   List<FlightModel> flights = [];
-  ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    if (widget.fromPlace == "All" || widget.toPlace == "All"){
-      flightBloc.add(FlightEventStart('', ''));
+    if (widget.fromPlace == "All" || widget.toPlace == "All") {
+      flightBloc.add(LoadFlight());
     }
-    else{
-      flightBloc.add(FlightEventStart(widget.fromPlace, widget.toPlace));
+    else {
+      flightBloc.add(
+          LoadFlightByDes(from: widget.fromPlace, to: widget.toPlace));
     }
-    scrollController.addListener(_onScroll);
-  }
-
-  void _onScroll() {
-    // print('scroll');
-    if (scrollController.position.pixels ==
-        scrollController.position.maxScrollExtent &&
-        !scrollController.position.outOfRange) {
-      if (widget.fromPlace == "All" || widget.toPlace == "All"){
-        flightBloc.add(const FlightEventFetchMore('', ''));
-      }
-      else{
-        flightBloc.add(FlightEventFetchMore(widget.fromPlace, widget.toPlace));
-      }
-    }
+    //scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
     flightBloc.close();
-    scrollController.dispose();
+    //scrollController.dispose();
     super.dispose();
+  }
+
+  void _callModalBottomSheet() async {
+    Map<String, dynamic> result = await showModalBottomSheet(
+        backgroundColor: Colors.transparent,
+        context: context,
+        builder: (context) => const FilterFlight());
+    flightBloc.add(SortFlightBy(
+        sort: result['sort'],
+        start: result['budgetStart'],
+        end: result['budgetEnd'],
+        services: result['facilities'],
+        transStart: result['transitStart'],
+        transEnd: result['transitEnd']
+    )
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return CustomAppBarItem(
-      title: '${widget.fromPlace} - \u{2708} - ${widget.toPlace}',
-      isIcon: true,
-      filterButton: const FilterFlight(),
-      showModalBottomSheet: () {},
-      child:  BlocBuilder<FlightBloc, FlightState>(
-        bloc: flightBloc,
-        builder: (context, state) {
-          if (state is FlightStateLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (state is FlightStateEmpty) {
-            return Center(
-              child: Text(
-                'No Posts',
-                style: Theme.of(context).textTheme.displayMedium,
-              ),
-            );
-          } else if (state is FlightStateLoadSuccess) {
-            return ListView.separated(
-              controller: scrollController,
-              itemCount: state.hasMoreFlight ? state.flight.length + 1 : state.flight.length,
-              itemBuilder: (context, i) {
-                if (i >= state.flight.length) {
-                  return Container(
-                    margin: const EdgeInsets.only(top: 15),
-                    height: 100,
-                    width: 30,
-                    child: const Center(child: CircularProgressIndicator()),
-                  );
-                }
-                return ItemTicket(flightModel: state.flight[i]);
-              },
-              separatorBuilder: (context, i) {
-                return const SizedBox();
-              },
-            );
-          }
-          return const SizedBox();
-        },
-      )
+        title: '${widget.fromPlace} - \u{2708} - ${widget.toPlace}',
+        isIcon: true,
+        filterButton: const FilterFlight(),
+        showModalBottomSheet: _callModalBottomSheet,
+        child: BlocBuilder<FlightBloc, FlightState>(
+          bloc: flightBloc,
+          builder: (context, state) {
+            if (state is FlightLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (state is FlightFailure) {
+              return Center(
+                child: Text(
+                  'No Posts',
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .displayMedium,
+                ),
+              );
+            } else if (state is FlightLoaded) {
+              flights = state.flights;
+              return ListView.separated(
+                itemCount: flights.length,
+                itemBuilder: (context, i) {
+                  return ItemTicket(flightModel: flights[i]);
+                },
+                separatorBuilder: (context, i) {
+                  return const SizedBox();
+                },
+              );
+            }
+            return const SizedBox();
+          },
+        )
     );
   }
 }
@@ -221,7 +221,8 @@ class ItemDetailTicket extends StatelessWidget {
         Text(
           title,
           textAlign: TextAlign.center,
-          style: Theme.of(context)
+          style: Theme
+              .of(context)
               .textTheme
               .bodyLarge
               ?.copyWith(color: const Color(0xFF636363)),
@@ -230,153 +231,13 @@ class ItemDetailTicket extends StatelessWidget {
         Text(
           content,
           textAlign: TextAlign.center,
-          style: Theme.of(context)
+          style: Theme
+              .of(context)
               .textTheme
               .headlineSmall
               ?.copyWith(color: Colors.black),
         ),
       ],
     );
-  }
-}
-
-class FilterFlight extends StatefulWidget {
-  const FilterFlight({super.key});
-
-  @override
-  State<FilterFlight> createState() => _FilterFlightState();
-}
-
-class _FilterFlightState extends State<FilterFlight> {
-  @override
-  Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-        initialChildSize: 0.9,
-        maxChildSize: 1,
-        builder: (BuildContext context, ScrollController scrollController) {
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            decoration: const BoxDecoration(
-              color: Color(0xFFF0F2F6),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16.0 * 2),
-                topRight: Radius.circular(16.0 * 2),
-              ),
-            ),
-            child: Column(
-              children: [
-                Container(
-                  alignment: Alignment.center,
-                  margin: const EdgeInsets.only(top: 16.0),
-                  child: Container(
-                    height: 5,
-                    width: 60,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 24.0,
-                ),
-                Expanded(
-                  child: ListView(
-                    controller: scrollController,
-                    padding: EdgeInsets.zero,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Choose Your Filter',
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium
-                                ?.copyWith(color: Colors.black),
-                          ),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          Text(
-                            'Transit',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineMedium
-                                ?.copyWith(color: Colors.black),
-                          ),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          Text(
-                            'Transit Duration',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineMedium
-                                ?.copyWith(color: Colors.black),
-                          ),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          Text(
-                            'Budget',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineMedium
-                                ?.copyWith(color: Colors.black),
-                          ),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          ButtonFilter(
-                            title: 'Facilities',
-                            color: 0xFFFE9C5E,
-                            image: AppPath.iconWifi,
-                            onTap: () {
-                              Navigator.pushNamed(context, '/facilities');
-                            },
-                          ),
-                          ButtonFilter(
-                            title: 'Sort By',
-                            color: 0xFF3EC8BC,
-                            image: AppPath.iconSort,
-                            onTap: () {
-                              Navigator.pushNamed(context, '/sort');
-                            },
-                          ),
-                          CustomButton(title: 'Apply', button: () {}),
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            margin: const EdgeInsets.only(bottom: 20),
-                            decoration: ShapeDecoration(
-                              gradient: LinearGradient(
-                                begin: const Alignment(0.71, -0.71),
-                                end: const Alignment(-0.71, 0.71),
-                                colors: [
-                                  const Color(0xFF8862E4).withOpacity(0.10),
-                                  const Color(0xFF6657CF).withOpacity(0.10)
-                                ],
-                              ),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                            ),
-                            child: CustomButton2(
-                              title: 'Reset',
-                              onTap: () {},
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
   }
 }

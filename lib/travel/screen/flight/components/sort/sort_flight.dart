@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 
-import '../../../widget/widget.dart';
-import '../../../widget/check_item.dart';
+import '../../../../widget/widget.dart';
+class SortFlightScreen extends StatefulWidget {
+  const SortFlightScreen({super.key});
 
-class SortScreen extends StatefulWidget {
-  const SortScreen({super.key});
-
-  static const String routeName = '/sort';
+  static const String routeName = '/sort_flight';
 
   @override
-  State<SortScreen> createState() => _SortScreenState();
+  State<SortFlightScreen> createState() => _SortFlightScreenState();
 }
 
-class _SortScreenState extends State<SortScreen> {
+class _SortFlightScreenState extends State<SortFlightScreen> {
   int _selectedItemIndex = -1;
   String sortName = 'All';
   void _handleToggle(int index) {
@@ -42,29 +40,56 @@ class _SortScreenState extends State<SortScreen> {
               children: [
                 CheckItem(
                   checkbox: _selectedItemIndex == 0,
-                  title: 'Highest popularity',
+                  title: 'Earliest Departure',
                   radius: 12,
                   onToggle: () {
                     _handleToggle(0);
-                    sortName = 'total_review';
+                    sortName = 'earliest_departure';
                   },
                 ),
                 CheckItem(
                   checkbox: _selectedItemIndex == 1,
-                  title: 'Highest Price',
+                  title: 'Latest Departure',
                   radius: 12,
                   onToggle: () {
                     _handleToggle(1);
-                    sortName = 'price';
+                    sortName = 'latest_departure';
                   },
                 ),
                 CheckItem(
                   checkbox: _selectedItemIndex == 2,
-                  title: 'Highest Rating',
+                  title: 'Earliest Arrive',
                   radius: 12,
                   onToggle: () {
                     _handleToggle(2);
-                    sortName = 'rating';
+                    sortName = 'earliest_arrive';
+                  },
+                ),
+                CheckItem(
+                  checkbox: _selectedItemIndex == 3,
+                  title: 'Latest Arrive',
+                  radius: 12,
+                  onToggle: () {
+                    _handleToggle(3);
+                    sortName = 'latest_arrive';
+                  },
+                ),
+                CheckItem(
+                  checkbox: _selectedItemIndex == 4,
+                  title: 'Shortest Duration',
+                  radius: 12,
+                  onToggle: () {
+                    _handleToggle(4);
+                    sortName = 'shortest_duration';
+                  },
+                ),
+                CheckItem(
+                  checkbox: _selectedItemIndex == 5,
+                  title: 'Lowest Price',
+                  radius: 12,
+                  onToggle: () {
+                    _handleToggle(5);
+                    sortName = 'lowest_price';
                   },
                 ),
               ],

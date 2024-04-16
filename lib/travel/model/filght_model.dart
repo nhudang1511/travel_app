@@ -11,6 +11,7 @@ class FlightModel extends CustomModel {
   final int? price;
   final List<dynamic>? seat;
   final String? to_place;
+  final List<dynamic>? facilities;
 
   FlightModel({
     this.id,
@@ -22,6 +23,7 @@ class FlightModel extends CustomModel {
     this.price,
     this.seat,
     this.to_place,
+    this.facilities
   });
 
   @override
@@ -36,6 +38,7 @@ class FlightModel extends CustomModel {
       price: doc['price'] as int,
       seat: doc['seat'] as List<dynamic>,
       to_place: doc['to_place'] as String,
+      facilities: doc['facilities'] as List<dynamic>
     );
   }
 

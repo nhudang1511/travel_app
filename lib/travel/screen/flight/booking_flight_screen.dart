@@ -7,6 +7,7 @@ import 'components/one_way_screen.dart';
 
 class BookingFlightScreen extends StatefulWidget {
   const BookingFlightScreen({super.key});
+
   static const String routeName = '/flight';
 
   @override

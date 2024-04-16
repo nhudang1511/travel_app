@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../widget/widget.dart';
-import 'check_item.dart';
+import '../../../widget/check_item.dart';
 
 class PropertyScreen extends StatefulWidget {
   const PropertyScreen({super.key});

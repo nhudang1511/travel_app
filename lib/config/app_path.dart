@@ -15,14 +15,14 @@ class AppPath{
   static String icFlight = 'assets/images/flight.png';
   static String icAll = 'assets/images/group.png';
 
-  static String iconWifi2 = 'assets/logo/wifi_2.png';
-  static String iconTelevision = 'assets/logo/television.png';
-  static String iconPark = 'assets/logo/parking.png';
-  static String iconPool = 'assets/logo/pool.png';
-  static String iconExchange = 'assets/logo/exchange.png';
-  static String iconFork = 'assets/logo/fork.png';
-  static String iconCar = 'assets/logo/car_rental.png';
-  static String iconReception = 'assets/logo/reception.png';
+  static String iconWifi2 = 'assets/facilities/wifi_2.png';
+  static String iconTelevision = 'assets/facilities/television.png';
+  static String iconPark = 'assets/facilities/parking.png';
+  static String iconPool = 'assets/facilities/pool.png';
+  static String iconExchange = 'assets/facilities/exchange.png';
+  static String iconFork = 'assets/facilities/fork.png';
+  static String iconCar = 'assets/facilities/car_rental.png';
+  static String iconReception = 'assets/facilities/reception.png';
 
   static String user =  'assets/logo/user.png';
   static String promo =  'assets/logo/promo.png';
@@ -35,6 +35,8 @@ class AppPath{
   static String iconNonRefund = 'assets/service_image/non_refundable.png';
   static String iconRestaurant = 'assets/service_image/restaurant.png';
   static String iconFree = 'assets/service_image/free.png';
+  static String iconBaggage = 'assets/facilities/luggage.png';
+  static String iconPower = 'assets/facilities/energy.png';
 
   static String iconMarket = 'assets/images/market.png';
   static String iconBank = 'assets/images/bank.png';

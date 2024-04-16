@@ -28,7 +28,6 @@ class _HotelScreenState extends State<HotelScreen> {
   HotelBloc hotelBloc = HotelBloc(HotelRepository(RoomRepository()));
   List<HotelModel> hotels = [];
   num rating = 0.0;
-  ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
@@ -41,19 +40,18 @@ class _HotelScreenState extends State<HotelScreen> {
     // scrollController.addListener(_onScroll);
   }
 
-  void _onScroll() {
-    // if (scrollController.position.pixels ==
-    //         scrollController.position.maxScrollExtent &&
-    //     !scrollController.position.outOfRange) {
-    //   hotelBloc.add(HotelEventFetchMore(
-    //       widget.maxGuest, widget.maxRoom, widget.destination));
-    // }
-  }
+  // void _onScroll() {
+  //   if (scrollController.position.pixels ==
+  //           scrollController.position.maxScrollExtent &&
+  //       !scrollController.position.outOfRange) {
+  //     hotelBloc.add(HotelEventFetchMore(
+  //         widget.maxGuest, widget.maxRoom, widget.destination));
+  //   }
+  // }
 
   @override
   void dispose() {
     hotelBloc.close();
-    scrollController.dispose();
     super.dispose();
   }
 
@@ -62,31 +60,6 @@ class _HotelScreenState extends State<HotelScreen> {
         backgroundColor: Colors.transparent,
         context: context,
         builder: (context) => const FilterHotel());
-    // print("Testing Value: ${result['rating']}");
-    // print("Testing Value: ${result['budgetStart']}");
-    // if (result['rating'] != null) {
-    //   setState(() {
-    //     rating = result['rating'];
-    //   });
-    //   hotelBloc.add(RateHotel(rating));
-    // }
-    // // print("Testing Sort Value: $sortValue");
-    // //print("Testing Rating: ${rating.toString()}");
-    // // Tiếp tục xử lý dữ liệu theo cách bạn muốn
-    // if (result['budgetStart'] >= 0 && result['budgetEnd'] > 0) {
-    //   hotelBloc.add(SortHotelByBudget(
-    //       start: result['budgetStart'], end: result['budgetEnd']));
-    // }
-    // if(result['facilities'] != []){
-    //   hotelBloc.add(SortHotelByServices(services: result['facilities'] ));
-    // }
-    // if(result['property'] != ''){
-    //   hotelBloc.add(SortHotelByProperty(property: result['property'] ));
-    // }
-    // if (result['sort'] != 'All') {
-    //   //sortHotels(sortValue);
-    //   hotelBloc.add(SortHotel(result['sort']));
-    // }
     hotelBloc.add(SortHotelBy(
         sort: result['sort'],
         rate: result['rating'],

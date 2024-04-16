@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_nhu_nguyen/travel/screen/hotel/components/hotel_components.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import '../../../../config/app_path.dart';
-import '../../../widget/widget.dart';
+import 'package:flutter_nhu_nguyen/travel/screen/flight/components/sort/facilities_flight_screen.dart';
+import 'package:flutter_nhu_nguyen/travel/screen/flight/components/sort/sort_flight.dart';
 
-class FilterHotel extends StatefulWidget {
-  const FilterHotel({super.key});
+import '../../../../../config/app_path.dart';
+import '../../../../widget/widget.dart';
+
+class FilterFlight extends StatefulWidget {
+  const FilterFlight({super.key});
 
   @override
-  State<FilterHotel> createState() => _FilterHotelState();
+  State<FilterFlight> createState() => _FilterFlightState();
 }
 
-class _FilterHotelState extends State<FilterHotel> {
+class _FilterFlightState extends State<FilterFlight> {
   final labels = ['\$0', '\$200', '\$400', '\$600', '\$800', '\$1000'];
   RangeValues values = const RangeValues(0, 200);
-  String sortValue = 'All';
-  num rating = 0;
-  List<String> facilities = [];
-  String property = '';
+
+  final labelsTransit = ['0d', '3d', '6d', '9d', '12d'];
+  RangeValues valuesTransit = const RangeValues(0, 3);
   num budgetStart = 0;
   num budgetEnd = 0;
+  num transitStart = 0;
+  num transitEnd = 0;
+  List<String> facilities = [];
+  String sortValue = 'All';
 
   Widget buildLabel({
     required String label,
@@ -85,6 +89,69 @@ class _FilterHotelState extends State<FilterHotel> {
                             height: 16,
                           ),
                           Text(
+                            'Transit',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineMedium
+                                ?.copyWith(color: Colors.black),
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          Text(
+                            'Transit Duration',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineMedium
+                                ?.copyWith(color: Colors.black),
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 18),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: Utils.modelBuilder(
+                                    labelsTransit,
+                                    (index, label) {
+                                      const selectedColor = Colors.black;
+                                      final unselectedColor =
+                                          Colors.black.withOpacity(0.3);
+                                      final isSelected =
+                                          index >= valuesTransit.start &&
+                                              index <= valuesTransit.end;
+                                      final color = isSelected
+                                          ? selectedColor
+                                          : unselectedColor;
+                                      return buildLabel(
+                                          label: label, color: color);
+                                    },
+                                  ),
+                                ),
+                              ),
+                              RangeSlider(
+                                values: valuesTransit,
+                                min: 0,
+                                max: 12,
+                                divisions: 4,
+                                onChanged: (values) => setState(() {
+                                  valuesTransit = values;
+                                  transitStart = values.start;
+                                  transitEnd = values.end;
+                                }),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 16,
+                          ),
+                          Text(
                             'Budget',
                             style: Theme.of(context)
                                 .textTheme
@@ -126,41 +193,13 @@ class _FilterHotelState extends State<FilterHotel> {
                                 min: 0,
                                 max: 1000,
                                 divisions: 6,
-                                onChanged: (values) =>
-                                    setState((){
-                                      this.values = values;
-                                      budgetStart = values.start;
-                                      budgetEnd = values.end;
-                                    }),
+                                onChanged: (values) => setState(() {
+                                  this.values = values;
+                                  budgetStart = values.start;
+                                  budgetEnd = values.end;
+                                }),
                               ),
                             ],
-                          ),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          Text(
-                            'Hotel Class',
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineMedium
-                                ?.copyWith(color: Colors.black),
-                          ),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                          RatingBar.builder(
-                            initialRating: 1,
-                            minRating: 0,
-                            direction: Axis.horizontal,
-                            allowHalfRating: true,
-                            itemCount: 5,
-                            itemPadding:
-                                const EdgeInsets.symmetric(horizontal: 5.0),
-                            itemBuilder: (context, _) =>
-                                const Icon(Icons.star, color: Colors.amber),
-                            onRatingUpdate: (rate) {
-                              rating = rate;
-                            },
                           ),
                           const SizedBox(
                             height: 16,
@@ -171,23 +210,9 @@ class _FilterHotelState extends State<FilterHotel> {
                             image: AppPath.iconWifi,
                             onTap: () async {
                               final result = await Navigator.pushNamed(
-                                  context, FacilitiesScreen.routeName);
-                              //print(result);
+                                  context, FacilitiesFlightScreen.routeName);
                               if(result != null){
                                 facilities = result as List<String>;
-                              }
-                            },
-                          ),
-                          ButtonFilter(
-                            title: 'Property Type',
-                            color: 0xFFF77777,
-                            image: AppPath.iconSkyscraper,
-                            onTap: () async {
-                              final result = await Navigator.pushNamed(
-                                  context, PropertyScreen.routeName);
-                              //print(result);
-                              if (result != null) {
-                                property = result as String;
                               }
                             },
                           ),
@@ -197,26 +222,23 @@ class _FilterHotelState extends State<FilterHotel> {
                             image: AppPath.iconSort,
                             onTap: () async {
                               final result = await Navigator.pushNamed(
-                                  context, SortScreen.routeName);
-                              if (result != null) {
+                                  context, SortFlightScreen.routeName);
+                              if(result != null){
                                 sortValue = result as String;
-                                //print("Sort value: $sortValue");
                               }
                             },
                           ),
-                          CustomButton(
-                              title: 'Apply',
-                              button: () {
-                                final Map<String, dynamic> arguments = {
-                                  'sort': sortValue,
-                                  'rating': rating,
-                                  'budgetStart': budgetStart,
-                                  'budgetEnd': budgetEnd,
-                                  'facilities': facilities,
-                                  'property': property
-                                };
-                                Navigator.pop(context, arguments);
-                              }),
+                          CustomButton(title: 'Apply', button: () {
+                            final Map<String, dynamic> arguments = {
+                              'sort': sortValue,
+                              'budgetStart': budgetStart,
+                              'budgetEnd': budgetEnd,
+                              'facilities': facilities,
+                              'transitStart': transitStart,
+                              'transitEnd': transitEnd
+                            };
+                            Navigator.pop(context, arguments);
+                          }),
                           Container(
                             width: MediaQuery.of(context).size.width,
                             margin: const EdgeInsets.only(bottom: 20),

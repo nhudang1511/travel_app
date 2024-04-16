@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_nhu_nguyen/travel/model/booking_model.dart';
 import 'package:flutter_nhu_nguyen/travel/model/room_model.dart';
+import 'package:flutter_nhu_nguyen/travel/screen/flight/components/sort/sort_flight.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/reviews/reviews_screen.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/finish_checkout/finish_checkout_flight_screen.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/places/place_detail_screen.dart';
@@ -176,6 +177,10 @@ class AppRouter {
         return _route( BookingItem(booking: booking,));
       case BankTransferScreen.routeName:
         return _route(const BankTransferScreen());
+      case FacilitiesFlightScreen.routeName:
+        return _route(const FacilitiesFlightScreen());
+      case SortFlightScreen.routeName:
+        return _route(const SortFlightScreen());
       default:
         return _route(const MainScreen());
     }

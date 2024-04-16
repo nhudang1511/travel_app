@@ -9,100 +9,45 @@ part 'flight_event.dart';
 part 'flight_state.dart';
 
 class FlightBloc extends Bloc<FlightEvent, FlightState> {
+  final FlightRepository _flightRepository;
 
-
-  FlightBloc() : super(FlightStateLoading()) {
-    on<FlightEventStart>(_onFlightEventStart);
-    on<FlightEventLoad>(_onFlightEventLoad);
-    on<FlightEventFetchMore>(_onFlightEventFetchMore);
+  FlightBloc(this._flightRepository) : super(FlightLoading()) {
+    on<LoadFlight>(_onLoadFlight);
+    on<LoadFlightByDes>(_onLoadFlightByDes);
+    on<SortFlightBy>(_onSortFlight);
   }
 
-  List<StreamSubscription> subscriptions = [];
-  List<List<FlightModel>> flights = [];
-  bool hasMoreFlight = true;
-  DocumentSnapshot? lastDoc;
-
-  void _onFlightEventStart(event, Emitter<FlightState> emit) async{
-    // Clean up our variables
-    hasMoreFlight = true;
-    lastDoc = null;
-    for (var sub in subscriptions) {
-      sub.cancel();
-    }
-    flights.clear();
-    subscriptions.clear();
-    subscriptions.add(
-        FlightRepository().getFlight(event.from, event.to).listen((event) {
-          handleStreamEvent(0, event);
-        })
-    );
-  }
-  void _onFlightEventLoad(event, Emitter<FlightState> emit) async{
-    final elements = flights.expand((i) => i).toList();
-
-    if (elements.isEmpty) {
-      emit(FlightStateEmpty());
-    } else {
-      emit(FlightStateLoadSuccess(elements, hasMoreFlight));
+  void _onLoadFlight(event, Emitter<FlightState> emit) async {
+    try {
+      List<FlightModel> flights = await _flightRepository.getAllFlight();
+      emit(FlightLoaded(flights: flights));
+    } catch (e) {
+      emit(FlightFailure());
     }
   }
-  void _onFlightEventFetchMore(event, Emitter<FlightState> emit) async{
-    if (lastDoc == null) {
-      throw Exception("Last doc is not set");
+
+  void _onLoadFlightByDes(event, Emitter<FlightState> emit) async {
+    try {
+      List<FlightModel> flights =
+          await _flightRepository.getAllFlightByDes(event.from, event.to);
+      emit(FlightLoaded(flights: flights));
+    } catch (e) {
+      emit(FlightFailure());
     }
-    final index = flights.length;
-    subscriptions.add(
-        FlightRepository().getFlightPage(lastDoc!, event.from, event.to).listen((event) {
-          handleStreamEvent(index, event);
-        })
-    );
-  }
-  @override
-  onChange(change) {
-    //print(change);
-    super.onChange(change);
   }
 
-  @override
-  Future<void> close() async {
-    for (var s in subscriptions) {
-      s.cancel();
+  void _onSortFlight(event, Emitter<FlightState> emit) async {
+    try {
+      List<FlightModel> flights = await _flightRepository.sortFlightBy(
+          event.sort,
+          event.start,
+          event.end,
+          event.services,
+          event.transStart,
+          event.transEnd);
+      emit(FlightLoaded(flights: flights));
+    } catch (e) {
+      emit(FlightFailure());
     }
-    super.close();
   }
-  handleStreamEvent(int index, QuerySnapshot snap) {
-    if (snap.docs.length < 3) {
-      hasMoreFlight = false;
-    }
-
-    // If the snapshot is empty, there's nothing for us to do
-    if (snap.docs.isEmpty) return;
-
-    if (index == flights.length) {
-      // Set the last document we pulled to use as a cursor
-      lastDoc = snap.docs[snap.docs.length - 1];
-    }
-    // Turn the QuerySnapshot into a List of flights
-    List<FlightModel> newList = [];
-    for (var doc in snap.docs) {
-      var data = doc.data();
-      if (data != null) {
-        var data = doc.data() as Map<String, dynamic>;
-        data['id'] = doc.id;
-        final newItems = FlightModel().fromDocument(data);
-        newList.add(newItems);
-      }
-    }
-
-
-    // Update the flights list
-    if (flights.length <= index) {
-      flights.add(newList);
-    } else {
-      flights[index].clear();
-      flights[index] = newList;
-    }
-    add(FlightEventLoad(flights));
-  }
-  
 }

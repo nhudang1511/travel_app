@@ -11,3 +11,5 @@ export 'item_utility.dart';
 export 'custom_appbar_item.dart';
 export 'custom_button2.dart';
 export 'custom_inkwell.dart';
+export 'facilities_item.dart';
+export 'check_item.dart';
