@@ -44,12 +44,12 @@ class _HomeScreenState extends State<HomeScreen> {
       sound: true,
     );
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
+      //print('User granted permission');
       // TODO: handle the received notifications
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         //print('title: ${message.notification?.title}');
         //print('body: ${message.notification?.body}');
-        print(message.sentTime);
+       // print(message.sentTime);
         NotificationModel notification = NotificationModel(
             title: message.notification?.title,
             body: message.notification?.body,
@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
         if (_notificationInfo != null) {
           // For displaying the notification as an overlay
-          print('total: $_totalNotifications');
+          //print('total: $_totalNotifications');
           showSimpleNotification(
             Text(_notificationInfo!.title!),
             //leading: NotificationBadge(totalNotifications: _totalNotifications),
@@ -85,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
         if (_notificationInfo != null) {
           // For displaying the notification as an overlay
-          print('total: $_totalNotifications');
+         // print('total: $_totalNotifications');
           showSimpleNotification(
             Text(_notificationInfo!.title!),
             //leading: NotificationBadge(totalNotifications: _totalNotifications),
@@ -99,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
       });
       //FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     } else {
-      print('User declined or has not accepted permission');
+      //print('User declined or has not accepted permission');
     }
     // final token = await firebaseMessaging.getToken();
     // print('token: $token');

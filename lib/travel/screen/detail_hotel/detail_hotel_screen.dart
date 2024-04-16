@@ -73,29 +73,6 @@ class _DetailHotelScreenState extends State<DetailHotelScreen> {
               ),
             ),
           ),
-          Positioned(
-            top: 24.0 * 3,
-            right: 24.0,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                    16.0,
-                  ),
-                  color: Colors.white,
-                ),
-                padding: const EdgeInsets.all(10.0),
-                child: const Icon(
-                  FontAwesomeIcons.solidHeart,
-                  size: 16.0,
-                  color: Colors.red,
-                ),
-              ),
-            ),
-          ),
           BlocProvider(
             create: (context) => _roomBloc,
             child: DraggableScrollableSheet(

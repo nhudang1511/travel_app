@@ -244,6 +244,7 @@ class AuthRepository {
       SharedService.clear("password");
       SharedService.clear("phone");
       SharedService.clear("country");
+      SharedService.clear("likedHotels");
       sharedServiceClear();
       // DBOP.deleteAll();
     } catch (_) {

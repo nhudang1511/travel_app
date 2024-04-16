@@ -27,41 +27,42 @@ class _BookingFlightScreenState extends State<BookingFlightScreen> {
         length: 3,
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Column(
-            children: <Widget>[
-              ButtonsTabBar(
-                backgroundColor: const Color(0xffFE9C5E),
-                unselectedBackgroundColor: const Color(0xffE0DDF5),
-                unselectedLabelStyle: Theme.of(context).textTheme.titleLarge?.copyWith(color: const Color(0xff6022AB)),
-                labelStyle: Theme.of(context).textTheme.titleLarge,
-                radius: 20,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-                height: 50,
-                tabs: const [
-                  Tab(
-                    text: "One way",
-                  ),
-                  Tab(
-                    text: "Round Trip",
-                  ),
-                  Tab(
-                    text: "Multi-City",
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10,),
-              const Expanded(
-                child: TabBarView(
-                  children: <Widget>[
-                    OneWayScreen(),
-                    RoundTripScreen(),
-                    MultiCityScreen()
-                  ],
-                ),
-              ),
-
-            ],
-          ),
+          child: const OneWayScreen()
+          // Column(
+          //   children: <Widget>[
+          //     ButtonsTabBar(
+          //       backgroundColor: const Color(0xffFE9C5E),
+          //       unselectedBackgroundColor: const Color(0xffE0DDF5),
+          //       unselectedLabelStyle: Theme.of(context).textTheme.titleLarge?.copyWith(color: const Color(0xff6022AB)),
+          //       labelStyle: Theme.of(context).textTheme.titleLarge,
+          //       radius: 20,
+          //       contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+          //       height: 50,
+          //       tabs: const [
+          //         Tab(
+          //           text: "One way",
+          //         ),
+          //         Tab(
+          //           text: "Round Trip",
+          //         ),
+          //         Tab(
+          //           text: "Multi-City",
+          //         ),
+          //       ],
+          //     ),
+          //     const SizedBox(height: 10,),
+          //     const Expanded(
+          //       child: TabBarView(
+          //         children: <Widget>[
+          //           OneWayScreen(),
+          //           RoundTripScreen(),
+          //           MultiCityScreen()
+          //         ],
+          //       ),
+          //     ),
+          //
+          //   ],
+          // ),
         ),
 
       ),

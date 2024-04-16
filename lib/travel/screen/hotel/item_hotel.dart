@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import '../../../config/shared_preferences.dart';
 import '../../model/hotel_model.dart';
 import '../../widget/widget.dart';
 
@@ -17,6 +20,20 @@ class ItemHotelWidget extends StatefulWidget {
 }
 
 class _ItemHotelWidgetState extends State<ItemHotelWidget> {
+  List<HotelModel> hotelLiked = [];
+  List<String> hotelList = SharedService.getLikedHotels();
+
+  @override
+  void initState() {
+    super.initState();
+    if (hotelList.isNotEmpty) {
+      hotelLiked = hotelList
+          .map((e) => HotelModel().fromDocument(json.decode(e)))
+          .toList();
+      print(hotelLiked.length);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -51,16 +68,44 @@ class _ItemHotelWidgetState extends State<ItemHotelWidget> {
                 Positioned(
                     top: 10,
                     right: 10,
-                    child: IconButton(
-                      onPressed: (){
-
-                      },
-                      icon: const Icon(
-                        Icons.favorite,
-                        color: Colors.white,
-                      ),
-                    )
-                )
+                    child: hotelLiked.any(
+                            (element) => element.id == widget.hotelModel.id)
+                        ? IconButton(
+                            onPressed: () {
+                              setState(() {
+                                hotelLiked.removeWhere(
+                                        (element) =>
+                                    element.id == widget.hotelModel.id);
+                              });
+                              List<String> hotelString =
+                              hotelLiked
+                                  .map((e) => jsonEncode(
+                                  e.toDocument()))
+                                  .toList();
+                              SharedService.setLikedPlaces(
+                                  hotelString);
+                            },
+                            icon: const Icon(
+                              Icons.favorite,
+                              color: Colors.redAccent,
+                            ),
+                          )
+                        : IconButton(
+                            onPressed: () {
+                              setState(() {
+                                hotelLiked.add(widget.hotelModel);
+                              });
+                              List<String> hotelString =
+                              hotelLiked
+                                  .map((e) => jsonEncode(
+                                  e.toDocument()))
+                                  .toList();
+                              SharedService.setLikedHotels(hotelString);
+                            },
+                            icon: const Icon(
+                              Icons.favorite,
+                              color: Colors.white,
+                            )))
               ],
             ),
           ),
