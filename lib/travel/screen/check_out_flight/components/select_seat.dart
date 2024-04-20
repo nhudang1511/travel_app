@@ -66,6 +66,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
     if (seatStringList.isNotEmpty) {
       seats =
           seatStringList.map((e) => Seat.fromDocument(json.decode(e))).toList();
+     //print('len: ${seats.length}');
     }
   }
 
@@ -190,7 +191,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
                         child: Column(
                           children: [
                             Text(
-                              "Bussiness Class",
+                              "Business Class",
                               style: Theme.of(context)
                                   .textTheme
                                   .headlineSmall

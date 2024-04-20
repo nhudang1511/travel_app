@@ -20,18 +20,41 @@ class FlightRepository {
     }
   }
 
-  Future<List<FlightModel>> getAllFlightByDes(String from, String to) async {
+  Future<List<FlightModel>> getAllFlightByDes(
+      String from, String to, DateTime? selectedTime, int passengers) async {
     try {
       var querySnapshot = await _firebaseFirestore
           .collection('flight')
-          .where("from_place", isEqualTo: from)
-          .where("to_place", isEqualTo: to)
+          .where("departure_time",
+              isGreaterThanOrEqualTo: Timestamp.fromDate(selectedTime!))
           .get();
-      return querySnapshot.docs.map((doc) {
+      List<FlightModel>? flights = querySnapshot.docs.map((doc) {
         var data = doc.data();
         data['id'] = doc.id;
         return FlightModel().fromDocument(data);
       }).toList();
+      if(from != 'All' && to != 'All'){
+        flights = flights
+            .where(
+                (element) => element.from_place == from && element.to_place == to)
+            .toList();
+      }
+      flights = flights.where((flight) {
+        bool hasTrueCountGreaterThanZero = false;
+        for (var seatMap in flight.seat ?? []) {
+          int trueCount = 0;
+          if (seatMap is Map) {
+            var seatValues = seatMap.values.expand((e) => e).toList();
+            trueCount = seatValues.where((element) => element == true).length;
+          }
+          if (trueCount > passengers) {
+            hasTrueCountGreaterThanZero = true;
+            break; // no need to continue checking other seat maps if one has true count > 0
+          }
+        }
+        return hasTrueCountGreaterThanZero;
+      }).toList();
+      return flights;
     } catch (e) {
       log(e.toString());
       rethrow;
@@ -60,7 +83,10 @@ class FlightRepository {
                 (element) => element.price! >= start && element.price! <= end)
             .toList();
       }
-      if (transStart != null && transEnd != null && transStart > 0 && transEnd > 0) {
+      if (transStart != null &&
+          transEnd != null &&
+          transStart > 0 &&
+          transEnd > 0) {
         flights = flights.where((flight) {
           var duration = flight.arrive_time!.difference(flight.departure_time!);
           return duration.inDays >= transStart && duration.inDays <= transEnd;
@@ -69,26 +95,24 @@ class FlightRepository {
       if (services.isNotEmpty) {
         flights = flights.where((flight) {
           // Kiểm tra xem mỗi chuyến bay có chứa tất cả các dịch vụ được chỉ định hay không
-          return services.every(
-              (service) => flight.facilities!.contains(service));
+          return services
+              .every((service) => flight.facilities!.contains(service));
         }).toList();
       }
       if (sort != null && sort != 'All' && sort != '') {
         if (sort == 'lowest_price') {
           flights.sort((a, b) => a.price!.compareTo(b.price!));
         } else if (sort == 'earliest_departure') {
-          flights.sort((a, b) => a.departure_time!.compareTo(b.departure_time!));
-        }
-        else if (sort == 'latest_departure') {
-          flights.sort((a, b) => b.departure_time!.compareTo(a.departure_time!));
-        }
-        else if (sort == 'earliest_arrive') {
+          flights
+              .sort((a, b) => a.departure_time!.compareTo(b.departure_time!));
+        } else if (sort == 'latest_departure') {
+          flights
+              .sort((a, b) => b.departure_time!.compareTo(a.departure_time!));
+        } else if (sort == 'earliest_arrive') {
           flights.sort((a, b) => a.arrive_time!.compareTo(b.arrive_time!));
-        }
-        else if (sort == 'latest_arrive') {
+        } else if (sort == 'latest_arrive') {
           flights.sort((a, b) => b.arrive_time!.compareTo(a.arrive_time!));
-        }
-        else if (sort == 'shortest_duration') {
+        } else if (sort == 'shortest_duration') {
           flights.sort((a, b) {
             var durationA = a.arrive_time!.difference(a.departure_time!);
             var durationB = b.arrive_time!.difference(b.departure_time!);

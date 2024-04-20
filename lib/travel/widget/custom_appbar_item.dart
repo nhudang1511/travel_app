@@ -61,8 +61,11 @@ class _CustomAppBarItemState extends State<CustomAppBarItem> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(widget.title,
-                              style: Theme.of(context).textTheme.displayLarge),
+                          FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Text(widget.title,
+                                style: Theme.of(context).textTheme.displayLarge),
+                          ),
                         ],
                       ),
                     ),

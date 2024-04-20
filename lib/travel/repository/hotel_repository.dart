@@ -29,6 +29,7 @@ class HotelRepository {
   Future<List<HotelModel>> getAllHotelByBooking(
       int maxGuest, int maxRoom, String destination) async {
     try {
+      List<RoomModel> room = await _roomRepository.getAllRoom();
       var querySnapshot = await _firebaseFirestore.collection('hotel').get();
       List<HotelModel> hotels = querySnapshot.docs.map((doc) {
         var data = doc.data();
@@ -40,11 +41,22 @@ class HotelRepository {
             .where((element) => element.location!.contains(destination))
             .toList();
       }
+      // if (maxRoom > 1 || maxGuest > 1) {
+      //   hotels = hotels
+      //       .where((element) =>
+      //           element.maxRoom! >= maxRoom && element.maxGuest! >= maxGuest)
+      //       .toList();
+      // }
       if (maxRoom > 1 || maxGuest > 1) {
-        hotels = hotels
-            .where((element) =>
-                element.maxRoom! >= maxRoom && element.maxGuest! >= maxGuest)
-            .toList();
+        hotels = hotels.where((hotel) {
+          List<RoomModel> hotelRooms = room
+              .where((room) =>
+          room.hotel == hotel.id &&
+              room.total! >= maxRoom &&
+              (maxRoom * room.maxGuest!) >= maxGuest)
+              .toList();
+          return hotelRooms.isNotEmpty;
+        }).toList();
       }
       return hotels;
     } catch (e) {
@@ -168,7 +180,8 @@ class HotelRepository {
       var querySnapshot = await hotelsQuery.get();
       List<HotelModel> hotels = querySnapshot.docs.map((doc) {
         var data = doc.data();
-        if (data is Map<String, dynamic>) { // Kiểm tra xem 'data' có phải là một Map không
+        if (data is Map<String, dynamic>) {
+          // Kiểm tra xem 'data' có phải là một Map không
           data['id'] = doc.id;
           return HotelModel().fromDocument(data);
         } else {
@@ -182,7 +195,8 @@ class HotelRepository {
       }
       if (start != null && end != null && start >= 0 && end > 0) {
         hotels = hotels
-            .where((element) => element.price! >= start && element.price! <= end)
+            .where(
+                (element) => element.price! >= start && element.price! <= end)
             .toList();
       }
 
@@ -213,79 +227,4 @@ class HotelRepository {
       rethrow;
     }
   }
-
-// Future<List<HotelModel>> getHotels(int limit, HotelModel hotelModel) async {
-//   try {
-//     DocumentSnapshot? documentSnapshot;
-//
-//     // Kiểm tra xem hotelModel có ID không
-//     if (hotelModel.id != null) {
-//       // Nếu có, thì lấy DocumentSnapshot tương ứng
-//       documentSnapshot = await _firebaseFirestore
-//           .collection('hotel')
-//           .doc(hotelModel.id)
-//           .get();
-//     }
-//
-//     var query = _firebaseFirestore.collection('hotel').limit(limit);
-//
-//     // Nếu DocumentSnapshot tồn tại, thêm điều kiện startAfterDocument vào truy vấn
-//     if (documentSnapshot != null && documentSnapshot.exists) {
-//       query = query.startAfterDocument(documentSnapshot);
-//     }
-//
-//     var querySnapshot = await query.get();
-//
-//     return querySnapshot.docs.map((doc) {
-//       var data = doc.data();
-//       data['id'] = doc.id;
-//       return HotelModel().fromDocument(data);
-//     }).toList();
-//   } catch (e) {
-//     log(e.toString());
-//     rethrow;
-//   }
-// }
-
-// final Query<Map<String, dynamic>> _hotelCollection = FirebaseFirestore
-//     .instance
-//     .collection('hotel')
-//     .where('max_room', isGreaterThanOrEqualTo: 12);
-//
-// Stream<QuerySnapshot> getHotel(
-//     int maxGuest, int maxRoom, String destination) {
-//   Query query = _hotelCollection.limit(3);
-//   // if (destination != 'All') {
-//   //   // Thêm điều kiện cho điểm đến
-//   //   query = query.where('location', isEqualTo: destination);
-//   // }
-//   // if (maxRoom > 1) {
-//   //   query = query.where('max_room', isGreaterThanOrEqualTo: maxRoom);
-//   // }
-//   // if (maxGuest > 1){
-//   //   query = query.where('max_guest', isGreaterThanOrEqualTo: maxGuest);
-//   // }
-//   return query.snapshots();
-// }
-//
-// Stream<QuerySnapshot> getHotelPage(
-//   DocumentSnapshot lastDoc,
-//   int maxGuest,
-//   int maxRoom,
-//   String destination,
-// ) {
-//   Query query = _hotelCollection.limit(3);
-//   // if (destination != 'All') {
-//   //   // Thêm điều kiện cho điểm đến
-//   //   query = query.where('location', isEqualTo: destination);
-//   // }
-//   // if (maxRoom > 1) {
-//   //   query = query.where('max_room', isGreaterThanOrEqualTo: maxRoom);
-//   // }
-//   // if (maxGuest > 1){
-//   //   query = query.where('max_guest', isGreaterThanOrEqualTo: maxGuest);
-//   // }
-//   query = query.startAfterDocument(lastDoc);
-//   return query.snapshots();
-// }
 }

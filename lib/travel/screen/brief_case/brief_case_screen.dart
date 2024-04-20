@@ -36,6 +36,7 @@ class _BriefcaseScreenState extends State<BriefcaseScreen> {
 
   @override
   void initState() {
+    super.initState();
     _bookingBloc = BookingBloc(BookingRepository())..add(LoadBooking());
     _hotelBloc = HotelBloc(HotelRepository(RoomRepository()))
       ..add(LoadHotels());
@@ -114,7 +115,7 @@ class _BriefcaseScreenState extends State<BriefcaseScreen> {
                                             child: Text(
                                                 bookings[index].createdAt !=
                                                         null
-                                                    ? 'Booking ${dateFormatter.format(bookings[index].createdAt!)}'
+                                                    ? 'Booking ${bookings[index].createdAt?.toDate()}'
                                                     : 'Booking',
                                                 style: Theme.of(context)
                                                     .textTheme

@@ -71,7 +71,7 @@ class _ConfirmFlightScreenState extends State<ConfirmFlightScreen> {
                       {
                         "name": "${widget.flightModel.airline}",
                         "quantity": 1,
-                        "price": "${widget.flightModel.airline}",
+                        "price": "${widget.flightModel.price}",
                         "currency": "USD"
                       },
                       // {
@@ -111,7 +111,7 @@ class _ConfirmFlightScreenState extends State<ConfirmFlightScreen> {
       ));
     }
     else if (SharedService.getTypePayment() == 'Bank Transfer') {
-      if (SharedService.getBookingId() == null) {
+      if (SharedService.getBookingFlightId() == null) {
         await Navigator.pushNamed(context, BankTransferScreen.routeName);
         _bookingFlightBloc.add(AddBookingFlight(
             price: 100,
@@ -122,13 +122,13 @@ class _ConfirmFlightScreenState extends State<ConfirmFlightScreen> {
             guest: guests,
             promoCode: promoString,
             seat: seats,
-            status: true,
+            status: false,
             typePayment: SharedService.getTypePayment() ?? ""));
         sharedServiceClear();
       }
       else {
-        // _bookingBloc.add(
-        //     LoadBookingById(id: SharedService.getBookingId()!));
+        _bookingFlightBloc.add(
+            LoadBookingFlightById(id: SharedService.getBookingFlightId()!));
       }
     }
   }
@@ -155,7 +155,47 @@ class _ConfirmFlightScreenState extends State<ConfirmFlightScreen> {
   Widget build(BuildContext context) {
     return BlocListener<BookingFlightBloc, BookingFlightState>(
       listener: (context, state) {
-        // TODO: implement listener}
+        print(state);
+        if (state is BookingFlightAdded) {
+          if (state.bookingFlightModel.id != null) {
+            SharedService.setBookingFlightId(state.bookingFlightModel.id!);
+          }
+          if (state.bookingFlightModel.status == true) {
+            _bookingFlightBloc.add(
+                LoadBookingFlightById(id: SharedService.getBookingFlightId()!));
+            Navigator.pushNamed(context, FinishCheckoutFlightScreen.routeName);
+
+          } else {
+            Future.delayed(const Duration(seconds: 3), () {
+              AwesomeDialog(
+                  context: context,
+                  dialogType: DialogType.warning,
+                  headerAnimationLoop: false,
+                  animType: AnimType.bottomSlide,
+                  title: 'Warning',
+                  titleTextStyle: const TextStyle(color: Colors.black),
+                  descTextStyle: const TextStyle(color: Colors.black),
+                  desc:
+                  'Please wait a few minutes for admin to confirm the transfer',
+                  buttonsTextStyle: const TextStyle(color: Colors.black),
+                  showCloseIcon: true,
+                  btnOkOnPress: () {
+                    if (SharedService.getBookingFlightId() != null) {
+                      _bookingFlightBloc.add(
+                          LoadBookingFlightById(id: SharedService.getBookingFlightId()!));
+                    }
+                  }).show();
+            });
+          }
+        } else if (state is BookingFlightLoaded) {
+          if (state.bookingFlightModel.status == true) {
+            Navigator.pushNamed(context, FinishCheckoutFlightScreen.routeName);
+            sharedServiceClear();
+          }
+          else{
+            _bookingFlightBloc.add(LoadBookingFlightById(id: SharedService.getBookingFlightId()! ));
+          }
+        }
       },
       child: Column(
         children: [

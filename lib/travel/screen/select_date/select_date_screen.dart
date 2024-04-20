@@ -37,6 +37,7 @@ class _SelectDateScreenState extends State<SelectDateScreen> {
               todayHighlightColor:const Color(0xffFE9C5E),
               selectionShape: DateRangePickerSelectionShape.rectangle,
               toggleDaySelection: true,
+              minDate: DateTime.now(),
               onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
                 if (widget.selectionMode == DateRangePickerSelectionMode.single) {
                   selectedDate = args.value is DateTime ? args.value : null;

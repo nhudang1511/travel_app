@@ -43,9 +43,9 @@ class _FinishCheckoutScreenState extends State<FinishCheckoutScreen> {
           //print(bookingModel?.id);
           if (bookingModel?.dateStart != null &&
               bookingModel?.dateEnd != null) {
-            Duration? duration = bookingModel?.dateEnd
-                ?.difference(bookingModel?.dateStart ?? DateTime.now());
-            daysDifference = duration?.inDays;
+            // Duration? duration = bookingModel?.dateEnd
+            //     ?.difference(bookingModel?.dateStart ?? DateTime.now());
+            // daysDifference = duration?.inDays;
           }
         }
         return Scaffold(

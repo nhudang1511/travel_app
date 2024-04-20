@@ -12,7 +12,7 @@ class FilterHotel extends StatefulWidget {
 }
 
 class _FilterHotelState extends State<FilterHotel> {
-  final labels = ['\$0', '\$200', '\$400', '\$600', '\$800', '\$1000'];
+  final labels = ['\$0', '\$200', '\$400', '\$600', '\$800'];
   RangeValues values = const RangeValues(0, 200);
   String sortValue = 'All';
   num rating = 0;

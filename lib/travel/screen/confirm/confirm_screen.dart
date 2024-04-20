@@ -1,11 +1,14 @@
 import 'dart:convert';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/bloc/bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/model/room_model.dart';
+import 'package:flutter_nhu_nguyen/travel/repository/hotel_repository.dart';
+import 'package:flutter_nhu_nguyen/travel/repository/repository.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/confirm/components/bank_transfer_screen.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/confirm/components/item_card.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/confirm/components/item_confirm_room.dart';
@@ -39,6 +42,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
   String? cardString = SharedService.getCard();
   String? promoString = SharedService.getPromo();
   DateFormat dateFormat = DateFormat('dd MMM yyyy');
+  late RoomBloc _roomBloc;
 
   Future<void> confirm() async {
     if (SharedService.getTypePayment() == 'Card') {
@@ -90,20 +94,25 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
           note: "Contact us for any questions on your order.",
           onSuccess: (Map params) async {
             print("onSuccess: $params");
+            BookingModel bookingModel = BookingModel(
+                email: SharedService.getEmail(),
+                hotel: widget.roomModel.hotel,
+                room: widget.roomModel.id,
+                guest: guests,
+                typePayment: SharedService.getTypePayment() ?? "",
+                card: card,
+                promoCode: promoString,
+                dateStart: Timestamp.fromDate(
+                    dateFormat.parse(SharedService.getStartDate() ?? '')),
+                dateEnd: Timestamp.fromDate(
+                    dateFormat.parse(SharedService.getEndDate() ?? '')),
+                status: true,
+                createdAt: Timestamp.fromDate(DateTime.now()),
+                expired: false,
+                numberGuest: SharedService.getGuest() ?? 1,
+                numberRoom: SharedService.getRoom() ?? 1);
             _bookingBloc.add(
-              AddBooking(
-                  email: SharedService.getEmail(),
-                  hotel: widget.roomModel.hotel,
-                  room: widget.roomModel.id,
-                  guest: guests,
-                  typePayment: SharedService.getTypePayment() ?? "",
-                  card: card,
-                  promoCode: promoString,
-                  dateStart:
-                      dateFormat.parse(SharedService.getStartDate() ?? ""),
-                  dateEnd: dateFormat.parse(SharedService.getEndDate() ?? ""),
-                  status: true,
-                  createdAt: DateTime.now()),
+              AddBooking(bookingModel: bookingModel),
             );
             sharedServiceClear();
           },
@@ -116,28 +125,32 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
           },
         ),
       ));
-    }
-    else if (SharedService.getTypePayment() == 'Bank Transfer') {
-     if( SharedService.getBookingId() == null){
-       await Navigator.pushNamed(context, BankTransferScreen.routeName);
-       _bookingBloc.add(AddBooking(
-           email: SharedService.getEmail(),
-           hotel: widget.roomModel.hotel,
-           room: widget.roomModel.id,
-           guest: guests,
-           typePayment: SharedService.getTypePayment() ?? "",
-           card: card,
-           promoCode: promoString,
-           dateStart: dateFormat.parse(SharedService.getStartDate() ?? ""),
-           dateEnd: dateFormat.parse(SharedService.getEndDate() ?? ""),
-           status: false,
-           createdAt: DateTime.now()));
-       sharedServiceClear();
-     }
-     else{
-       _bookingBloc.add(
-           LoadBookingById(id: SharedService.getBookingId()!));
-     }
+    } else if (SharedService.getTypePayment() == 'Bank Transfer') {
+      if (SharedService.getBookingId() == null ||
+          SharedService.getBookingId() == "") {
+        await Navigator.pushNamed(context, BankTransferScreen.routeName);
+        BookingModel bookingModel = BookingModel(
+            email: SharedService.getEmail(),
+            hotel: widget.roomModel.hotel,
+            room: widget.roomModel.id,
+            guest: guests,
+            typePayment: SharedService.getTypePayment() ?? "",
+            card: card,
+            promoCode: promoString,
+            dateStart: Timestamp.fromDate(
+                dateFormat.parse(SharedService.getStartDate() ?? '')),
+            dateEnd: Timestamp.fromDate(
+                dateFormat.parse(SharedService.getEndDate() ?? '')),
+            status: false,
+            createdAt: Timestamp.fromDate(DateTime.now()),
+            expired: false,
+            numberGuest: SharedService.getGuest() ?? 1,
+            numberRoom: SharedService.getRoom() ?? 1);
+        _bookingBloc.add(AddBooking(bookingModel: bookingModel));
+        sharedServiceClear();
+      } else {
+        _bookingBloc.add(LoadBookingById(id: SharedService.getBookingId()!));
+      }
     }
   }
 
@@ -152,24 +165,98 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
     if (cardString != null) {
       card = CardModel.fromDocument(json.decode(cardString!));
     }
+    _roomBloc = RoomBloc(RoomRepository())..add(LoadRoom());
+    SharedService.setBookingId("");
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<BookingBloc, BookingState>(
-      listener: (context, state) {
-        if (state is BookingAdded) {
-          if (state.bookingModel.id != null) {
-            SharedService.setBookingId(state.bookingModel.id!);
-          }
-          if (state.bookingModel.status == true) {
-            _bookingBloc.add(
-                LoadBookingById(id: SharedService.getBookingId()!));
-            Navigator.pushNamed(context, FinishCheckoutScreen.routeName);
+    return BlocProvider(
+      create: (context) => _roomBloc,
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<BookingBloc, BookingState>(
+            listener: (context, state) {
+              //print(state);
+              // print('id ${SharedService.getBookingId()}');
+              if (state is BookingAdded) {
+                if (state.bookingModel.id != null) {
+                  SharedService.setBookingId(state.bookingModel.id!);
+                }
+                if (state.bookingModel.status == true) {
+                  //print('num ${state.bookingModel.numberGuest}');
+                  _bookingBloc
+                      .add(LoadBookingById(id: SharedService.getBookingId()!));
+                  // _hotelBloc.add(RemoveInHotel(
+                  //     widget.roomModel.hotel ?? '',
+                  //     state.bookingModel.numberGuest ?? 1,
+                  //     state.bookingModel.numberRoom ?? 1));
+                  _roomBloc.add(RemoveInRoom(
+                      widget.roomModel.id ?? '',
+                      state.bookingModel.numberGuest ?? 1,
+                      state.bookingModel.numberRoom ?? 1));
 
-          } else {
-            Future.delayed(const Duration(seconds: 3), () {
-              AwesomeDialog(
+                  sharedServiceClear();
+                  Navigator.pushNamed(context, FinishCheckoutScreen.routeName);
+                } else {
+                  Future.delayed(const Duration(seconds: 3), () {
+                    AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.warning,
+                        headerAnimationLoop: false,
+                        animType: AnimType.bottomSlide,
+                        title: 'Warning',
+                        titleTextStyle: const TextStyle(color: Colors.black),
+                        descTextStyle: const TextStyle(color: Colors.black),
+                        desc:
+                            'Please wait a few minutes for admin to confirm the transfer.'
+                            ' And please transfer before exiting the application',
+                        buttonsTextStyle: const TextStyle(color: Colors.black),
+                        showCloseIcon: true,
+                        btnOkOnPress: () {
+                          if (SharedService.getBookingId() != null) {
+                            _bookingBloc.add(LoadBookingById(
+                                id: SharedService.getBookingId()!));
+                          }
+                        }).show();
+                  });
+                }
+              } else if (state is BookingLoadedById) {
+                if (state.bookingModel.status == true) {
+                  // _hotelBloc.add(RemoveInHotel(
+                  //     widget.roomModel.hotel ?? '',
+                  //     state.bookingModel.numberGuest ?? 1,
+                  //     state.bookingModel.numberRoom ?? 1));
+                  _roomBloc.add(RemoveInRoom(widget.roomModel.id ?? '',
+                      state.bookingModel.numberGuest ?? 1,
+                      state.bookingModel.numberRoom ?? 1));
+                  Navigator.pushNamed(context, FinishCheckoutScreen.routeName);
+                  sharedServiceClear();
+                } else {
+                  _bookingBloc
+                      .add(LoadBookingById(id: SharedService.getBookingId()!));
+                }
+              }
+            },
+          ),
+          BlocListener<RoomBloc, RoomState>(listener: (context, state) {
+            print(state);
+          })
+        ],
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 24.0,
+            ),
+            ItemConfirmRoomWidget(roomModel: widget.roomModel),
+            ItemTotal(
+              price: widget.roomModel.price ?? 0,
+            ),
+            const ItemCard(),
+            CustomButton(
+              title: 'Done',
+              button: () {
+                AwesomeDialog(
                   context: context,
                   dialogType: DialogType.warning,
                   headerAnimationLoop: false,
@@ -177,59 +264,20 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                   title: 'Warning',
                   titleTextStyle: const TextStyle(color: Colors.black),
                   descTextStyle: const TextStyle(color: Colors.black),
-                  desc:
-                      'Please wait a few minutes for admin to confirm the transfer',
+                  desc: 'Are you sure order this hotels',
                   buttonsTextStyle: const TextStyle(color: Colors.black),
                   showCloseIcon: true,
                   btnOkOnPress: () {
-                    if (SharedService.getBookingId() != null) {
-                      _bookingBloc.add(
-                          LoadBookingById(id: SharedService.getBookingId()!));
-                    }
-                  }).show();
-            });
-          }
-        } else if (state is BookingLoadedById) {
-          if (state.bookingModel.status == true) {
-            Navigator.pushNamed(context, FinishCheckoutScreen.routeName);
-            sharedServiceClear();
-          }
-        }
-      },
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 24.0,
-          ),
-          ItemConfirmRoomWidget(roomModel: widget.roomModel),
-          ItemTotal(
-            price: widget.roomModel.price ?? 0,
-          ),
-          const ItemCard(),
-          CustomButton(
-            title: 'Done',
-            button: () {
-              AwesomeDialog(
-                context: context,
-                dialogType: DialogType.warning,
-                headerAnimationLoop: false,
-                animType: AnimType.bottomSlide,
-                title: 'Warning',
-                titleTextStyle: const TextStyle(color: Colors.black),
-                descTextStyle: const TextStyle(color: Colors.black),
-                desc: 'Are you sure order this hotels',
-                buttonsTextStyle: const TextStyle(color: Colors.black),
-                showCloseIcon: true,
-                btnOkOnPress: () {
-                  confirm();
-                },
-              ).show();
-            },
-          ),
-          const SizedBox(
-            height: 24.0,
-          ),
-        ],
+                    confirm();
+                  },
+                ).show();
+              },
+            ),
+            const SizedBox(
+              height: 24.0,
+            ),
+          ],
+        ),
       ),
     );
   }

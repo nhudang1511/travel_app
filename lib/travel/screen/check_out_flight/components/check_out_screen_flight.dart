@@ -55,7 +55,8 @@ class _CheckOutScreenFlightState extends State<CheckOutScreenFlight> {
           const SizedBox(
             height: 24,
           ),
-          ItemCheckoutFlight(flight: widget.flight,
+          ItemCheckoutFlight(
+            flight: widget.flight,
             guest: guests.isNotEmpty ? guests[0] : Guest(),
             seat: seats.isNotEmpty ? seats[0] : Seat(),),
           const SizedBox(

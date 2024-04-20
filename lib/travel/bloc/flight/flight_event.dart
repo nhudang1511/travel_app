@@ -1,15 +1,24 @@
 part of 'flight_bloc.dart';
+
 abstract class FlightEvent {
   const FlightEvent();
 }
-class LoadFlight extends FlightEvent {
-}
+
+class LoadFlight extends FlightEvent {}
+
 class LoadFlightByDes extends FlightEvent {
   final String from;
   final String to;
-  LoadFlightByDes({required this.from, required this.to});
-}
+  final DateTime selectedDate;
+  final int passengers;
 
+  LoadFlightByDes(
+      {required this.from,
+      required this.to,
+      required this.selectedDate,
+        required this.passengers
+      });
+}
 
 class SortFlightBy extends FlightEvent {
   final String sort;
@@ -21,12 +30,11 @@ class SortFlightBy extends FlightEvent {
 
   SortFlightBy(
       {required this.sort,
-        required this.start,
-        required this.end,
-        required this.services,
-        required this.transStart,
-        required this.transEnd
-      });
+      required this.start,
+      required this.end,
+      required this.services,
+      required this.transStart,
+      required this.transEnd});
 }
 
 // class FlightEventStart extends FlightEvent {

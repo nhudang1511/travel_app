@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../model/filght_model.dart';
 import '../../repository/flight_repository.dart';
@@ -28,8 +26,8 @@ class FlightBloc extends Bloc<FlightEvent, FlightState> {
 
   void _onLoadFlightByDes(event, Emitter<FlightState> emit) async {
     try {
-      List<FlightModel> flights =
-          await _flightRepository.getAllFlightByDes(event.from, event.to);
+      List<FlightModel> flights = await _flightRepository.getAllFlightByDes(
+          event.from, event.to, event.selectedDate, event.passengers);
       emit(FlightLoaded(flights: flights));
     } catch (e) {
       emit(FlightFailure());

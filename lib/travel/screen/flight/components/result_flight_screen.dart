@@ -12,14 +12,19 @@ import 'package:coupon_uikit/coupon_uikit.dart';
 
 import '../../screen.dart';
 
-
 class ResultFlightScreen extends StatefulWidget {
   const ResultFlightScreen(
-      {super.key, required this.fromPlace, required this.toPlace});
+      {super.key,
+      required this.fromPlace,
+      required this.toPlace,
+      required this.selectedTime,
+      required this.passengers});
 
   static const String routeName = '/result_flight';
-  final String fromPlace;
-  final String toPlace;
+  final String? fromPlace;
+  final String? toPlace;
+  final DateTime? selectedTime;
+  final int? passengers;
 
   @override
   State<ResultFlightScreen> createState() => _ResultFlightScreenState();
@@ -32,13 +37,11 @@ class _ResultFlightScreenState extends State<ResultFlightScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.fromPlace == "All" || widget.toPlace == "All") {
-      flightBloc.add(LoadFlight());
-    }
-    else {
-      flightBloc.add(
-          LoadFlightByDes(from: widget.fromPlace, to: widget.toPlace));
-    }
+    flightBloc.add(LoadFlightByDes(
+        from: widget.fromPlace ?? '',
+        to: widget.toPlace ?? '',
+        selectedDate: widget.selectedTime ?? DateTime.now(),
+        passengers: widget.passengers ?? 0));
     //scrollController.addListener(_onScroll);
   }
 
@@ -60,9 +63,7 @@ class _ResultFlightScreenState extends State<ResultFlightScreen> {
         end: result['budgetEnd'],
         services: result['facilities'],
         transStart: result['transitStart'],
-        transEnd: result['transitEnd']
-    )
-    );
+        transEnd: result['transitEnd']));
   }
 
   @override
@@ -83,10 +84,7 @@ class _ResultFlightScreenState extends State<ResultFlightScreen> {
               return Center(
                 child: Text(
                   'No Posts',
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .displayMedium,
+                  style: Theme.of(context).textTheme.displayMedium,
                 ),
               );
             } else if (state is FlightLoaded) {
@@ -103,8 +101,7 @@ class _ResultFlightScreenState extends State<ResultFlightScreen> {
             }
             return const SizedBox();
           },
-        )
-    );
+        ));
   }
 }
 
@@ -221,8 +218,7 @@ class ItemDetailTicket extends StatelessWidget {
         Text(
           title,
           textAlign: TextAlign.center,
-          style: Theme
-              .of(context)
+          style: Theme.of(context)
               .textTheme
               .bodyLarge
               ?.copyWith(color: const Color(0xFF636363)),
@@ -231,8 +227,7 @@ class ItemDetailTicket extends StatelessWidget {
         Text(
           content,
           textAlign: TextAlign.center,
-          style: Theme
-              .of(context)
+          style: Theme.of(context)
               .textTheme
               .headlineSmall
               ?.copyWith(color: Colors.black),

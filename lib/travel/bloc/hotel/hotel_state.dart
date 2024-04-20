@@ -13,16 +13,3 @@ class HotelLoaded extends HotelState{
 
 class HotelFailure extends HotelState{
 }
-
-// class HotelStateLoading extends HotelState {
-// }
-//
-// class HotelStateEmpty extends HotelState {
-// }
-//
-// class HotelStateLoadSuccess extends HotelState {
-//   final List<HotelModel> hotel;
-//   final bool hasMoreHotel;
-//
-//   const HotelStateLoadSuccess(this.hotel, this.hasMoreHotel);
-// }

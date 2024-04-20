@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_nhu_nguyen/travel/model/guest_model.dart';
 import 'card_model.dart';
 import 'custom_model.dart';
@@ -11,10 +12,13 @@ class BookingModel extends CustomModel {
   final String typePayment;
   final CardModel? card;
   final String? promoCode;
-  final DateTime? dateStart;
-  final DateTime? dateEnd;
-  final DateTime? createdAt;
+  final Timestamp? dateStart;
+  final Timestamp? dateEnd;
+  final Timestamp? createdAt;
   final bool? status;
+  bool? expired;
+  final int? numberRoom;
+  final int? numberGuest;
 
   BookingModel({
     this.id,
@@ -28,7 +32,10 @@ class BookingModel extends CustomModel {
     this.dateStart,
     this.dateEnd,
     this.createdAt,
-    this.status
+    this.status,
+    this.expired = false,
+    this.numberRoom,
+    this.numberGuest
   });
 
   @override
@@ -41,15 +48,18 @@ class BookingModel extends CustomModel {
       guest: (doc['guest'] is List<dynamic>)
           ? (doc['guest'] as List<dynamic>).map((guestMap) => Guest.fromDocument(guestMap as Map<String, dynamic>)).toList()
           : [(Guest.fromDocument(doc['guest'] as Map<String, dynamic>))],
-      typePayment: doc['typePayment'] as String? ?? "miniMarket",
+      typePayment: doc['typePayment'] as String? ?? "Bank Transfer",
       card: (doc["payment_card_info"] != null)
           ? CardModel.fromDocument(doc["payment_card_info"] as Map<String, dynamic>)
           : null,
       promoCode: doc['promoCode'] as String?,
-      dateStart: doc['dateStart'] != null ? DateTime.parse(doc['dateStart']) : null,
-      dateEnd: doc['dateEnd'] != null ? DateTime.parse(doc['dateEnd']) : null,
-      createdAt: doc['createdAt'] != null ? DateTime.parse(doc['createdAt']) : null,
-      status: doc['status'] as bool?
+      dateStart: doc['dateStart'] as Timestamp?,
+      dateEnd: doc['dateEnd'] as Timestamp?,
+      createdAt: doc['createdAt'] as Timestamp?,
+      status: doc['status'] as bool?,
+      expired: doc['expired'] as bool?,
+      numberRoom: doc['numberRoom'] as int?,
+      numberGuest: doc['numberGuest'] as int?
     );
   }
 
@@ -64,10 +74,13 @@ class BookingModel extends CustomModel {
       typePayment.toString().split('.').last, // convert enum to string
       'card': card?.toDocument(),
       'promoCode': promoCode,
-      'dateStart': dateStart?.toIso8601String(),
-      'dateEnd': dateEnd?.toIso8601String(),
-      'createdAt': createdAt?.toIso8601String(),
-      'status': status
+      'dateStart': dateStart,
+      'dateEnd': dateEnd,
+      'createdAt': createdAt,
+      'status': status,
+      'expired': expired,
+      'numberRoom': numberRoom,
+      'numberGuest': numberGuest
     };
   }
 }

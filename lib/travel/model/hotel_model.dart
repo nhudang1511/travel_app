@@ -11,8 +11,6 @@ class HotelModel extends CustomModel {
       this.price,
       this.location_description,
       this.information,
-      this.maxGuest,
-      this.maxRoom,
         this.typePrice
       });
 
@@ -25,8 +23,6 @@ class HotelModel extends CustomModel {
   final num? star;
   final int? numberOfReview;
   final int? price;
-  final int? maxGuest;
-  final int? maxRoom;
   final String? typePrice;
 
   @override
@@ -41,8 +37,6 @@ class HotelModel extends CustomModel {
         price: doc['price'] as int,
         location_description: doc['location_description'] as String,
         information: doc['information'] as String,
-        maxGuest: doc['max_guest'] as int,
-        maxRoom: doc['max_room'] as int,
         typePrice: doc['type_price'] as String
     );
   }
@@ -59,8 +53,6 @@ class HotelModel extends CustomModel {
       'price': price,
       'location_description': location_description,
       'information': information,
-      'max_guest': maxGuest,
-      'max_room': maxRoom,
       'type_price': typePrice
     };
   }

@@ -29,7 +29,7 @@ class _FinishCheckoutFlightScreenState extends State<FinishCheckoutFlightScreen>
   Widget build(BuildContext context) {
     return BlocBuilder<BookingFlightBloc, BookingFlightState>(
       builder: (context, state) {
-        if(state is BookingFlightAdded){
+        if(state is BookingFlightLoaded){
           bookingFlightModel = state.bookingFlightModel;
           print(bookingFlightModel?.id);
         }

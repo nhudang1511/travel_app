@@ -16,27 +16,19 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     on<AddBooking>(_onAddBooking);
     on<LoadBooking>(_onLoadBooking);
     on<LoadBookingById>(_onLoadBookingById);
+    on<GetBookingByLessDay>(_onGetBookingByLessDay);
+    on<GetBookingByMoreDay>(_onGetBookingByMoreDay);
+    on<EditBooking>(_onEditBooking);
+
   }
 
   void _onAddBooking(event, Emitter<BookingState> emit) async {
     try {
-      final booking = BookingModel(
-          email: event.email,
-          hotel: event.hotel,
-          room: event.room,
-          guest: event.guest,
-          typePayment: event.typePayment,
-          dateStart: event.dateStart,
-          dateEnd: event.dateEnd,
-          card: event.card,
-          promoCode: event.promoCode,
-          createdAt: event.createdAt,
-          status: event.status,
-          id: '');
       final bookingModel =
-          await _bookingRepository.createBooking(booking.toDocument());
+          await _bookingRepository.createBooking(event.bookingModel.toDocument());
       emit(BookingAdded(bookingModel: bookingModel));
     } catch (e) {
+      print(e.toString());
       emit(BookingFailure());
     }
   }
@@ -55,6 +47,33 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
 
       emit(BookingLoadedById(bookingModel: bookingModel));
     } catch (e) {
+      emit(BookingFailure());
+    }
+  }
+  void _onGetBookingByLessDay(event, Emitter<BookingState> emit) async {
+    try {
+      List<BookingModel> bookingModel = await _bookingRepository.getExpiredLess();
+      emit(BookingLoaded(bookingModel: bookingModel));
+    } catch (e) {
+      emit(BookingFailure());
+    }
+  }
+  void _onGetBookingByMoreDay(event, Emitter<BookingState> emit) async {
+    try {
+      List<BookingModel> bookingModel = await _bookingRepository.getExpiredMore();
+      emit(BookingLoaded(bookingModel: bookingModel));
+    } catch (e) {
+      emit(BookingFailure());
+    }
+  }
+  void _onEditBooking(event, Emitter<BookingState> emit) async {
+    try {
+      BookingModel bookingModel = await _bookingRepository.getBookingById(event.id);
+      //print(bookingModel.id);
+      await _bookingRepository.editBooking(bookingModel);
+      emit(BookingLoaded(bookingModel: [bookingModel]));
+    } catch (e) {
+      print(e);
       emit(BookingFailure());
     }
   }

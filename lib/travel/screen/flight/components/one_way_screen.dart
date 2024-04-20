@@ -24,8 +24,8 @@ class _OneWayScreenState extends State<OneWayScreen> {
   String? from;
   String? to;
   String? date;
+  DateTime? selectedTime;
   int? passengers;
-  String? typeSeat;
   final countryPicker = FlCountryCodePicker(
       title: Container(
           padding: const EdgeInsets.only(left: 20, top: 10),
@@ -37,6 +37,7 @@ class _OneWayScreenState extends State<OneWayScreen> {
         hintText: 'Country',
       ));
   CountryCode? countryCode = CountryCode.fromName('United States');
+
   @override
   void initState() {
     super.initState();
@@ -62,7 +63,7 @@ class _OneWayScreenState extends State<OneWayScreen> {
                     setState(() {
                       countryCode = code;
                       from = code.name;
-                      if(from == "United States"){
+                      if (from == "United States") {
                         from = "USA";
                       }
                     });
@@ -99,6 +100,7 @@ class _OneWayScreenState extends State<OneWayScreen> {
                     final dateFormatter = DateFormat('dd MMM yyyy');
                     setState(() {
                       date = dateFormatter.format(startDate!);
+                      selectedTime = startDate;
                     });
                   }
                 },
@@ -134,68 +136,26 @@ class _OneWayScreenState extends State<OneWayScreen> {
                       });
                 },
               ),
-              ItemOptionsBookingWidget(
-                title: 'Class',
-                value: typeSeat ?? 'Economy',
-                icon: AppPath.iconClass,
-                onTap: () {
-                  showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      constraints: const BoxConstraints(maxHeight: 200),
-                      builder: (BuildContext context) {
-                        return ListView(
-                          children: [
-                            ListTile(
-                              title: Text(
-                                'Economy',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineSmall
-                                    ?.copyWith(color: Colors.black),
-                              ),
-                              onTap: () {
-                                setState(() {
-                                  typeSeat = 'Economy';
-                                });
-                                Navigator.pop(context);
-                              },
-                            ),
-                            ListTile(
-                              title: Text(
-                                'Business',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineSmall
-                                    ?.copyWith(color: Colors.black),
-                              ),
-                              onTap: () {
-                                setState(() {
-                                  typeSeat = 'Business';
-                                });
-                                Navigator.pop(context);
-                              },
-                            ),
-                          ],
-                        );
-                      });
-                },
-              ),
               CustomButton(
                   title: 'Search',
                   button: () {
-                   if(from != null && to != null){
-                     Navigator.pushNamed(context, ResultFlightScreen.routeName, arguments: {
-                       'from_place': from,
-                       'to_place': to,
-                     });
-                   }
-                   else{
-                     Navigator.pushNamed(context, ResultFlightScreen.routeName, arguments: {
-                       'from_place': "All",
-                       'to_place': "All",
-                     });
-                   }
+                    if (from != null && to != null) {
+                      Navigator.pushNamed(context, ResultFlightScreen.routeName,
+                          arguments: {
+                            'from_place': from,
+                            'to_place': to,
+                            'departure': selectedTime,
+                            'passengers': passengers,
+                          });
+                    } else {
+                      Navigator.pushNamed(context, ResultFlightScreen.routeName,
+                          arguments: {
+                            'from_place': "All",
+                            'to_place': "All",
+                            'departure': selectedTime,
+                            'passengers': passengers,
+                          });
+                    }
                   })
             ],
           ),
@@ -203,7 +163,13 @@ class _OneWayScreenState extends State<OneWayScreen> {
             top: 60,
             right: 10,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  String? temp = from;
+                  from = to;
+                  to = temp;
+                });
+              },
               style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFE0DDF5),
                   shadowColor: Colors.transparent,

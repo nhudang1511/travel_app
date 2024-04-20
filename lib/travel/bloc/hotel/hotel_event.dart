@@ -59,30 +59,3 @@ class SortHotelBy extends HotelEvent {
       required this.services,
       required this.property});
 }
-// class LoadMore extends HotelEvent{
-//   final int limit;
-//   final HotelModel hotelModel;
-//   LoadMore(this.limit, this.hotelModel);
-// }
-
-// class HotelEventStart extends HotelEvent {
-//   final String destination;
-//   final int maxGuest;
-//   final int maxRoom;
-//
-//   HotelEventStart(this.maxGuest, this.maxRoom, this.destination);
-// }
-//
-// class HotelEventLoad extends HotelEvent {
-//   final List<List<HotelModel>> flight;
-//
-//   HotelEventLoad(this.flight);
-// }
-//
-// class HotelEventFetchMore extends HotelEvent {
-//   final String destination;
-//   final int maxGuest;
-//   final int maxRoom;
-//
-//   HotelEventFetchMore(this.maxGuest, this.maxRoom, this.destination);
-// }

@@ -44,12 +44,12 @@ class _HomeScreenState extends State<HomeScreen> {
       sound: true,
     );
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      //print('User granted permission');
+      print('User granted permission');
       // TODO: handle the received notifications
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         //print('title: ${message.notification?.title}');
         //print('body: ${message.notification?.body}');
-       // print(message.sentTime);
+        print(message.sentTime);
         NotificationModel notification = NotificationModel(
             title: message.notification?.title,
             body: message.notification?.body,
@@ -85,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
         });
         if (_notificationInfo != null) {
           // For displaying the notification as an overlay
-         // print('total: $_totalNotifications');
+          print('total: $_totalNotifications');
           showSimpleNotification(
             Text(_notificationInfo!.title!),
             //leading: NotificationBadge(totalNotifications: _totalNotifications),
@@ -99,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
       });
       //FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     } else {
-      //print('User declined or has not accepted permission');
+      print('User declined or has not accepted permission');
     }
     // final token = await firebaseMessaging.getToken();
     // print('token: $token');
@@ -137,6 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 margin: const EdgeInsets.all(20),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CustomChooseButton(
                       title: 'Hotels',
@@ -156,12 +157,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             context, BookingFlightScreen.routeName);
                       },
                     ),
-                    CustomChooseButton(
-                      title: 'All',
-                      color: const Color(0xFF3EC8BC),
-                      imgLink: AppPath.icAll,
-                      onTap: () {},
-                    ),
+                    // CustomChooseButton(
+                    //   title: 'All',
+                    //   color: const Color(0xFF3EC8BC),
+                    //   imgLink: AppPath.icAll,
+                    //   onTap: () {},
+                    // ),
                   ],
                 ),
               ),
@@ -361,7 +362,7 @@ class CustomChooseButton extends StatelessWidget {
                 Opacity(
                   opacity: 0.20,
                   child: Container(
-                    width: 95,
+                    width: MediaQuery.of(context).size.width/2.5,
                     height: 75,
                     decoration: ShapeDecoration(
                       color: color,
@@ -372,7 +373,7 @@ class CustomChooseButton extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  left: 37,
+                  left: MediaQuery.of(context).size.width/6,
                   top: 26,
                   child: Container(
                     width: 24,

@@ -77,7 +77,7 @@ class AppRouter {
             hotelModel: hotelModel,
           ),
         );
-        //return _route(const ReviewsScreen());
+      //return _route(const ReviewsScreen());
       case SortScreen.routeName:
         return _route(const SortScreen());
       case FacilitiesScreen.routeName:
@@ -88,14 +88,19 @@ class AppRouter {
         final List<RoomModel> rooms = (settings.arguments as List<RoomModel>);
         return MaterialPageRoute<dynamic>(
             settings: settings,
-            builder: (context) => SelectRoomScreen(rooms: rooms,));
+            builder: (context) => SelectRoomScreen(
+                  rooms: rooms,
+                ));
       case CheckOutStep.routeName:
         if (settings.arguments is Map<String, dynamic>) {
           final Map<String, dynamic> arguments =
-          settings.arguments as Map<String, dynamic>;
+              settings.arguments as Map<String, dynamic>;
           final int step = arguments['step'] as int;
           final RoomModel room = arguments['room'] as RoomModel;
-          return _route(CheckOutStep(step: step, roomModel: room,));
+          return _route(CheckOutStep(
+            step: step,
+            roomModel: room,
+          ));
         } else {
           return _route(const MainScreen());
         }
@@ -136,24 +141,28 @@ class AppRouter {
       case ResultFlightScreen.routeName:
         if (settings.arguments is Map<String, dynamic>) {
           final Map<String, dynamic> arguments =
-          settings.arguments as Map<String, dynamic>;
-          final String fromPlace = arguments['from_place'] as String;
-          final String toPlace = arguments['to_place'] as String;
-          return _route(ResultFlightScreen(fromPlace: fromPlace, toPlace: toPlace));
+              settings.arguments as Map<String, dynamic>;
+          final String? fromPlace = arguments['from_place'] as String?;
+          final String? toPlace = arguments['to_place'] as String?;
+          final DateTime? selectedTime = arguments['departure'] as DateTime?;
+          final int? passengers = arguments['passengers'] as int?;
+          return _route(ResultFlightScreen(
+            fromPlace: fromPlace,
+            toPlace: toPlace,
+            selectedTime: selectedTime, passengers: passengers,
+          ));
         } else {
           return _route(const MainScreen());
         }
       case CheckOutScreenFlight.routeName:
-        final FlightModel flight =
-        (settings.arguments as FlightModel);
+        final FlightModel flight = (settings.arguments as FlightModel);
         return MaterialPageRoute<dynamic>(
             settings: settings,
             builder: (context) => CheckOutScreenFlight(
-              flight: flight,
-            ));
+                  flight: flight,
+                ));
       case SelectSeatScreen.routeName:
-        final FlightModel flight =
-        (settings.arguments as FlightModel);
+        final FlightModel flight = (settings.arguments as FlightModel);
         return MaterialPageRoute<dynamic>(
             settings: settings,
             builder: (context) => SelectSeatScreen(flight: flight));
@@ -164,7 +173,7 @@ class AppRouter {
       case CheckOutStepFlight.routeName:
         if (settings.arguments is Map<String, dynamic>) {
           final Map<String, dynamic> arguments =
-          settings.arguments as Map<String, dynamic>;
+              settings.arguments as Map<String, dynamic>;
           final int step = arguments['step'] as int;
           final FlightModel flight = arguments['flight'] as FlightModel;
           return _route(CheckOutStepFlight(step: step, flightModel: flight));
@@ -172,9 +181,10 @@ class AppRouter {
           return _route(const MainScreen());
         }
       case BookingItem.routeName:
-        final BookingModel booking =
-        (settings.arguments as BookingModel);
-        return _route( BookingItem(booking: booking,));
+        final BookingModel booking = (settings.arguments as BookingModel);
+        return _route(BookingItem(
+          booking: booking,
+        ));
       case BankTransferScreen.routeName:
         return _route(const BankTransferScreen());
       case FacilitiesFlightScreen.routeName:
