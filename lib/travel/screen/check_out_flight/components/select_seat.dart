@@ -240,7 +240,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
                 child: CustomButton(
                   title: 'Processed',
                   button: () {
-                    Navigator.pop(context);
+                    Navigator.pop(context, SharedService.getListSeat());
                   },
                 ))
           ],
@@ -301,7 +301,7 @@ class _FlightSeatState extends State<FlightSeat> {
           .map((e) => Seat.fromDocument(json.decode(e)))
           .toList();
     }
-    print(seats.length);
+    //(seats.length);
     // SharedService.clear('seats');
     if(seats.isNotEmpty){
       for (int row = 0; row < widget.rows; row++) {

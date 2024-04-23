@@ -24,7 +24,7 @@ class PromoItem extends StatelessWidget {
               child: Row(
                 children: [
                   Image.network(
-                    promo?.image ??
+                    promo?.endow ??
                         'https://cdn-icons-png.flaticon.com/128/6188/6188570.png',
                     fit: BoxFit.contain,
                     height: 75,
@@ -50,26 +50,6 @@ class PromoItem extends StatelessWidget {
                     ),
                     Text(
                       promo?.code ?? 'no code',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge
-                          ?.copyWith(color: const Color(0xFF636363)),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text(
-                      'Endow: ',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall
-                          ?.copyWith(color: const Color(0xFF636363)),
-                    ),
-                    Text(
-                      promo?.endow ?? 'no endow',
                       textAlign: TextAlign.center,
                       style: Theme.of(context)
                           .textTheme

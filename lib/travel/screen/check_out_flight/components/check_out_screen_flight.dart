@@ -47,6 +47,13 @@ class _CheckOutScreenFlightState extends State<CheckOutScreenFlight> {
     }
   }
 
+
+  @override
+  void dispose() {
+    super.dispose();
+    SharedService.clear("seats");
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -58,7 +65,8 @@ class _CheckOutScreenFlightState extends State<CheckOutScreenFlight> {
           ItemCheckoutFlight(
             flight: widget.flight,
             guest: guests.isNotEmpty ? guests[0] : Guest(),
-            seat: seats.isNotEmpty ? seats[0] : Seat(),),
+            seat: seats.isNotEmpty ? seats[0] : Seat(),
+          ),
           const SizedBox(
             height: 24,
           ),
@@ -79,8 +87,7 @@ class _CheckOutScreenFlightState extends State<CheckOutScreenFlight> {
             isChoose: guests.isNotEmpty ? true : false,
             child: Column(
               children: guests
-                  .map((e) =>
-                  ContactItem(
+                  .map((e) => ContactItem(
                       guest: e,
                       onTap: () {
                         AwesomeDialog(
@@ -93,7 +100,7 @@ class _CheckOutScreenFlightState extends State<CheckOutScreenFlight> {
                           descTextStyle: const TextStyle(color: Colors.black),
                           desc: 'Are you sure to remove this contact?',
                           buttonsTextStyle:
-                          const TextStyle(color: Colors.black),
+                              const TextStyle(color: Colors.black),
                           showCloseIcon: true,
                           btnOkOnPress: () {
                             setState(() {
@@ -116,13 +123,20 @@ class _CheckOutScreenFlightState extends State<CheckOutScreenFlight> {
             icon: AppPath.seats,
             title: 'Passengers & Seats',
             value: 'Add Passenger',
-            child: seats.isNotEmpty ? ItemSeat(
-                flight: widget.flight, seats: seats
-            ) : const SizedBox(),
-            onTap: () {
-              Navigator.of(context).pushNamed(
+            child: seats.isNotEmpty
+                ? ItemSeat(flight: widget.flight, seats: seats)
+                : const SizedBox(),
+            onTap: () async {
+              var newSeats = await Navigator.of(context).pushNamed(
                   SelectSeatScreen.routeName,
-                  arguments: widget.flight);
+                  arguments: widget.flight) as List<String>?;
+              if (newSeats != null) {
+                setState(() {
+                  seats = newSeats
+                      .map((e) => Seat.fromDocument(json.decode(e)))
+                      .toList();
+                });
+              }
             },
           ),
           const SizedBox(
@@ -145,27 +159,27 @@ class _CheckOutScreenFlightState extends State<CheckOutScreenFlight> {
             },
             child: promo != null
                 ? PromoItem(
-              promo: promo,
-              onTap: () {
-                AwesomeDialog(
-                  context: context,
-                  dialogType: DialogType.warning,
-                  headerAnimationLoop: false,
-                  animType: AnimType.bottomSlide,
-                  title: 'Warning',
-                  titleTextStyle: const TextStyle(color: Colors.black),
-                  descTextStyle: const TextStyle(color: Colors.black),
-                  desc: 'Are you sure to remove this promo?',
-                  buttonsTextStyle: const TextStyle(color: Colors.black),
-                  showCloseIcon: true,
-                  btnOkOnPress: () {
-                    setState(() {
-                      promo = null;
-                    });
-                  },
-                ).show();
-              },
-            )
+                    promo: promo,
+                    onTap: () {
+                      AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.warning,
+                        headerAnimationLoop: false,
+                        animType: AnimType.bottomSlide,
+                        title: 'Warning',
+                        titleTextStyle: const TextStyle(color: Colors.black),
+                        descTextStyle: const TextStyle(color: Colors.black),
+                        desc: 'Are you sure to remove this promo?',
+                        buttonsTextStyle: const TextStyle(color: Colors.black),
+                        showCloseIcon: true,
+                        btnOkOnPress: () {
+                          setState(() {
+                            promo = null;
+                          });
+                        },
+                      ).show();
+                    },
+                  )
                 : const SizedBox(),
           ),
           const SizedBox(
@@ -174,14 +188,13 @@ class _CheckOutScreenFlightState extends State<CheckOutScreenFlight> {
           CustomButton(
               title: 'Payment',
               button: () {
-                if(guests.isNotEmpty && seats.isNotEmpty){
-                  if(promo == null){
+                if (guests.isNotEmpty && seats.isNotEmpty) {
+                  if (promo == null) {
                     SharedService.clear("promo");
                   }
                   Navigator.of(context).pushNamed(CheckOutStepFlight.routeName,
                       arguments: {'step': 1, 'flight': widget.flight});
-                }
-                else{
+                } else {
                   AwesomeDialog(
                     context: context,
                     dialogType: DialogType.error,
@@ -220,8 +233,7 @@ class ItemDetailCheckout extends StatelessWidget {
         Text(
           title,
           textAlign: TextAlign.center,
-          style: Theme
-              .of(context)
+          style: Theme.of(context)
               .textTheme
               .bodyLarge
               ?.copyWith(color: const Color(0xFF636363)),
@@ -230,8 +242,7 @@ class ItemDetailCheckout extends StatelessWidget {
         Text(
           content,
           textAlign: TextAlign.center,
-          style: Theme
-              .of(context)
+          style: Theme.of(context)
               .textTheme
               .headlineSmall
               ?.copyWith(color: Colors.black),
@@ -264,8 +275,8 @@ class _ItemSeatState extends State<ItemSeat> {
       child: Column(
         children: List.generate(
           widget.seats.length,
-              (index) {
-            return  Container(
+          (index) {
+            return Container(
               margin: const EdgeInsets.only(bottom: 20),
               child: CouponCard(
                 height: 100,
@@ -297,17 +308,17 @@ class _ItemSeatState extends State<ItemSeat> {
                           Text(
                             'Position: ',
                             textAlign: TextAlign.center,
-                            style: Theme
-                                .of(context)
+                            style: Theme.of(context)
                                 .textTheme
                                 .headlineSmall
                                 ?.copyWith(color: const Color(0xFF636363)),
                           ),
                           Text(
-                            widget.seats.isNotEmpty ? widget.seats[index].name ?? '' : '',
+                            widget.seats.isNotEmpty
+                                ? widget.seats[index].name ?? ''
+                                : '',
                             textAlign: TextAlign.center,
-                            style: Theme
-                                .of(context)
+                            style: Theme.of(context)
                                 .textTheme
                                 .bodyLarge
                                 ?.copyWith(color: const Color(0xFF636363)),
@@ -319,17 +330,17 @@ class _ItemSeatState extends State<ItemSeat> {
                           Text(
                             'Type: ',
                             textAlign: TextAlign.center,
-                            style: Theme
-                                .of(context)
+                            style: Theme.of(context)
                                 .textTheme
                                 .headlineSmall
                                 ?.copyWith(color: const Color(0xFF636363)),
                           ),
                           Text(
-                            widget.seats.isNotEmpty ? widget.seats[index].type ?? '' : '',
+                            widget.seats.isNotEmpty
+                                ? widget.seats[index].type ?? ''
+                                : '',
                             textAlign: TextAlign.center,
-                            style: Theme
-                                .of(context)
+                            style: Theme.of(context)
                                 .textTheme
                                 .bodyLarge
                                 ?.copyWith(color: const Color(0xFF636363)),
@@ -350,7 +361,10 @@ class _ItemSeatState extends State<ItemSeat> {
 
 class ItemCheckoutFlight extends StatefulWidget {
   const ItemCheckoutFlight(
-      {super.key, required this.flight, required this.guest, required this.seat});
+      {super.key,
+      required this.flight,
+      required this.guest,
+      required this.seat});
 
   @override
   State<ItemCheckoutFlight> createState() => _ItemCheckoutFlightState();
@@ -401,8 +415,7 @@ class _ItemCheckoutFlightState extends State<ItemCheckoutFlight> {
                   ),
                   Text(
                     widget.flight.from_place ?? "All",
-                    style: Theme
-                        .of(context)
+                    style: Theme.of(context)
                         .textTheme
                         .titleLarge
                         ?.copyWith(color: Colors.black),
@@ -420,8 +433,7 @@ class _ItemCheckoutFlightState extends State<ItemCheckoutFlight> {
                     style: const TextStyle(color: Colors.black, fontSize: 24),
                   ),
                   Text(widget.flight.to_place ?? "All",
-                      style: Theme
-                          .of(context)
+                      style: Theme.of(context)
                           .textTheme
                           .titleLarge
                           ?.copyWith(color: Colors.black))
@@ -434,7 +446,7 @@ class _ItemCheckoutFlightState extends State<ItemCheckoutFlight> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Image.asset(
-                iconAir[widget.flight.airline] ?? AppPath.iconAsia,
+                iconAir[widget.flight.airline] ?? AppPath.flight,
                 fit: BoxFit.contain,
                 height: 50,
                 width: 50,
@@ -501,8 +513,7 @@ class _ItemCheckoutFlightState extends State<ItemCheckoutFlight> {
                 ),
                 Text(
                   '/passenger',
-                  style: Theme
-                      .of(context)
+                  style: Theme.of(context)
                       .textTheme
                       .bodyMedium
                       ?.copyWith(color: Colors.black),
@@ -511,8 +522,7 @@ class _ItemCheckoutFlightState extends State<ItemCheckoutFlight> {
             ),
             Text(
               ' passenger',
-              style: Theme
-                  .of(context)
+              style: Theme.of(context)
                   .textTheme
                   .bodyLarge
                   ?.copyWith(color: Colors.black),

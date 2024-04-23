@@ -43,6 +43,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
   String? promoString = SharedService.getPromo();
   DateFormat dateFormat = DateFormat('dd MMM yyyy');
   late RoomBloc _roomBloc;
+  int total = 0;
 
   Future<void> confirm() async {
     if (SharedService.getTypePayment() == 'Card') {
@@ -58,10 +59,10 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
           transactions: [
             {
               "amount": {
-                "total": "${widget.roomModel.price}",
+                "total": "$total",
                 "currency": "USD",
                 "details": {
-                  "subtotal": "${widget.roomModel.price}",
+                  "subtotal": "$total",
                   "shipping": '0',
                   "shipping_discount": 0
                 }
@@ -78,7 +79,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                     "quantity": (SharedService.getRoom() != null)
                         ? SharedService.getRoom()
                         : 1,
-                    "price": "${widget.roomModel.price}",
+                    "price": "${widget.roomModel.price} / 1 room / 1 night",
                     "currency": "USD"
                   },
                   // {
@@ -167,6 +168,11 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
     }
     _roomBloc = RoomBloc(RoomRepository())..add(LoadRoom());
     SharedService.setBookingId("");
+    int price = widget.roomModel.price?.toInt() ?? 1;
+    int room = SharedService.getRoom() ?? 1;
+    int date = SharedService.getDays() ?? 1;
+    total = price * room * date;
+
   }
 
   @override
@@ -240,7 +246,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
             },
           ),
           BlocListener<RoomBloc, RoomState>(listener: (context, state) {
-            print(state);
+            //print(state);
           })
         ],
         child: Column(

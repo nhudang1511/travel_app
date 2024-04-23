@@ -46,10 +46,10 @@ class ItemConfirmRoomWidget extends StatelessWidget {
                   const SizedBox(
                     height: 16.0,
                   ),
-                  const Row(
+                  Row(
                     children: [
-                      Icon(Icons.bed_rounded, color: Color(0xFFFE9C5E),),
-                      Text('2 King Bed', style: TextStyle(color: Colors.black),)
+                      const Icon(Icons.bed_rounded, color: Color(0xFFFE9C5E),),
+                      Text('${roomModel.maxGuest} Bed', style: const TextStyle(color: Colors.black),)
                     ],
                   )
                 ],

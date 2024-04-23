@@ -15,7 +15,7 @@ class PromoBloc extends Bloc<PromoEvent, PromoState> {
 
   void _onPromoLoaded(event, Emitter<PromoState> emit) async {
     try {
-      Promo? promo = await _promoRepository.getPromoById(event.promo);
+      Promo? promo = await _promoRepository.getPromoByCode(event.code);
       emit(PromoLoaded(promo: promo));
     } catch (e) {
       emit(PromoFailure());

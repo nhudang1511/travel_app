@@ -145,7 +145,7 @@ class _ItemTicketState extends State<ItemTicket> {
               child: Row(
                 children: [
                   Image.asset(
-                    iconAir[widget.flightModel.airline] ?? AppPath.iconAsia,
+                    iconAir[widget.flightModel.airline] ?? AppPath.flight,
                     fit: BoxFit.contain,
                     height: 75,
                     width: 75,

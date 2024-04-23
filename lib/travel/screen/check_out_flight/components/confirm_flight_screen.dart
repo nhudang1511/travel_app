@@ -40,6 +40,7 @@ class _ConfirmFlightScreenState extends State<ConfirmFlightScreen> {
   List<Guest> guests = List.empty(growable: true);
   List<Seat> seats = List.empty(growable: true);
   List<String> seatStringList = SharedService.getListSeat();
+  int total =0;
 
   Future<void> confirm() async {
     if (SharedService.getTypePayment() == 'Card') {
@@ -55,10 +56,10 @@ class _ConfirmFlightScreenState extends State<ConfirmFlightScreen> {
           transactions: [
             {
               "amount": {
-                "total": "${widget.flightModel.price}",
+                "total": "$total",
                 "currency": "USD",
                 "details": {
-                  "subtotal": "${widget.flightModel.price}",
+                  "subtotal": "$total",
                   "shipping": '0',
                   "shipping_discount": 0
                 }
@@ -72,8 +73,8 @@ class _ConfirmFlightScreenState extends State<ConfirmFlightScreen> {
                 "items": [
                   {
                     "name": "${widget.flightModel.airline}",
-                    "quantity": 1,
-                    "price": "${widget.flightModel.price}",
+                    "quantity": SharedService.getListSeat().length,
+                    "price": "${widget.flightModel.price} / 1 ticket",
                     "currency": "USD"
                   },
                   // {
@@ -150,6 +151,9 @@ class _ConfirmFlightScreenState extends State<ConfirmFlightScreen> {
           seatStringList.map((e) => Seat.fromDocument(json.decode(e))).toList();
     }
     _flightBloc = FlightBloc(FlightRepository())..add(LoadFlight());
+    int numberTicket = SharedService.getListSeat().length;
+    int price = widget.flightModel.price ?? 1;
+    total = numberTicket * price;
   }
 
   @override

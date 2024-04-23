@@ -13,7 +13,7 @@ class FilterFlight extends StatefulWidget {
 }
 
 class _FilterFlightState extends State<FilterFlight> {
-  final labels = ['\$0', '\$200', '\$400', '\$600', '\$800', '\$1000'];
+  final labels = ['\$0', '\$200', '\$400', '\$600', '\$800'];
   RangeValues values = const RangeValues(0, 200);
 
   final labelsTransit = ['0d', '3d', '6d', '9d', '12d'];
