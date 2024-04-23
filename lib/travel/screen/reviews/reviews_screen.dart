@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_nhu_nguyen/travel/bloc/get_user/get_user_bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/bloc/rating/rating_bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/model/hotel_model.dart';
 import 'package:flutter_nhu_nguyen/travel/model/rating_model.dart';
+import 'package:flutter_nhu_nguyen/travel/model/user_model.dart';
 import 'package:flutter_nhu_nguyen/travel/repository/repository.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/hotel/components/hotel_filter_button.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/reviews/components/item_review.dart';
@@ -33,7 +35,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
       ..add(LoadRating(widget.hotelModel.id ?? ''));
   }
 
-    void _callModalBottomSheet() async {
+  void _callModalBottomSheet() async {
     Map<String, dynamic> result = await showModalBottomSheet(
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
@@ -54,12 +56,12 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     }
     print('rates is: $rates');
 
-    ratings.removeWhere((element) => element.rates!<rates);
+    ratings.removeWhere((element) => element.rates! < rates);
 
-    if(checkComment == true){
+    if (checkComment == true) {
       ratings.removeWhere((element) => element.comment!.isEmpty);
     }
-    if(checkPhotos == true){
+    if (checkPhotos == true) {
       ratings.removeWhere((element) => element.photos?[0] == '');
     }
 
@@ -71,7 +73,6 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
 
   void sortReview(String value) {
     setState(() {
-      
       ratings.sort((a, b) {
         dynamic keyA, keyB;
         switch (value) {
@@ -91,7 +92,6 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
       });
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -115,29 +115,32 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                       height: 24.0,
                     ),
                     // ItemConfirmRoomWidget(roomModel: widget.roomModel),
-                    ItemRatingRoomWidget(rating: [0,0,0,0,0], ratingTotal: 0,  count: 0),
+                    ItemRatingRoomWidget(
+                        rating: [0, 0, 0, 0, 0], ratingTotal: 0, count: 0),
                     SizedBox(
                       height: 24.0,
                     ),
                   ]),
                 );
               } else if (state is RatingLoaded) {
-                if(ratings.isEmpty){
+                if (ratings.isEmpty) {
                   ratings = List.from(state.ratings);
                 }
-                if(ratingsD.isEmpty){
+                if (ratingsD.isEmpty) {
                   ratingsD = List.from(state.ratings);
                 }
                 return Column(
                   children: [
                     // ignore: prefer_const_constructors
-                    ItemRatingRoomWidget(rating: state.ratingCount, ratingTotal: state.ratingTotal, count: ratings.length),
+                    ItemRatingRoomWidget(
+                        rating: state.ratingCount,
+                        ratingTotal: state.ratingTotal,
+                        count: ratings.length),
                     Expanded(
                         child: ListView.separated(
                       // controller: scrollController,
                       itemCount: ratings.length,
                       itemBuilder: (context, i) {
-
                         if (i >= ratings.length) {
                           return Container(
                             margin: const EdgeInsets.only(top: 15),
@@ -159,7 +162,6 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                 );
               }
               return const SizedBox();
-            })
-        );
+            }));
   }
 }

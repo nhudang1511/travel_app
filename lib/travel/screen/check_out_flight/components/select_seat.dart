@@ -13,7 +13,6 @@ import '../../../model/seat_model.dart';
 
 class SelectSeatScreen extends StatefulWidget {
   const SelectSeatScreen({super.key, required this.flight});
-
   static const String routeName = '/seat';
   final FlightModel flight;
 
@@ -36,10 +35,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
         rowData.insert(middleIndex, false);
       }
 
-      return rowData
-          .asMap()
-          .entries
-          .map((MapEntry<int, bool> mapEntry) {
+      return rowData.asMap().entries.map((MapEntry<int, bool> mapEntry) {
         int index = mapEntry.key;
         bool value = mapEntry.value;
 
@@ -61,7 +57,6 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
   List<List<SeatState>>? economyClassSeats;
   List<Seat> seats = List.empty(growable: true);
   List<String> seatStringList = SharedService.getListSeat();
-
   @override
   void initState() {
     super.initState();
@@ -71,7 +66,6 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
     if (seatStringList.isNotEmpty) {
       seats =
           seatStringList.map((e) => Seat.fromDocument(json.decode(e))).toList();
-      //print('len: ${seats.length}');
     }
   }
 
@@ -173,8 +167,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
               child: Column(
                 children: [
                   Text(widget.flight.from_place ?? '',
-                      style: Theme
-                          .of(context)
+                      style: Theme.of(context)
                           .textTheme
                           .displayLarge
                           ?.copyWith(color: const Color(0xFF6155CC))),
@@ -186,8 +179,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
                     height: 20,
                   ),
                   Text(widget.flight.to_place ?? '',
-                      style: Theme
-                          .of(context)
+                      style: Theme.of(context)
                           .textTheme
                           .displayLarge
                           ?.copyWith(color: const Color(0xFF6155CC))),
@@ -204,17 +196,13 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
                       size: const Size(240, 650),
                     ),
                     Positioned(
-                        top: MediaQuery
-                            .of(context)
-                            .size
-                            .height / 4 + 10,
+                        top: MediaQuery.of(context).size.height / 4 +10,
                         left: 20,
                         child: Column(
                           children: [
                             Text(
-                              "Business Class",
-                              style: Theme
-                                  .of(context)
+                              "Bussiness Class",
+                              style: Theme.of(context)
                                   .textTheme
                                   .headlineSmall
                                   ?.copyWith(color: Colors.black),
@@ -229,8 +217,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
                             ),
                             Text(
                               "Economy Class",
-                              style: Theme
-                                  .of(context)
+                              style: Theme.of(context)
                                   .textTheme
                                   .headlineSmall
                                   ?.copyWith(color: Colors.black),
@@ -249,10 +236,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
             ),
             Positioned(
                 bottom: -20,
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width - 30,
+                width: MediaQuery.of(context).size.width - 30,
                 child: CustomButton(
                   title: 'Processed',
                   button: () {
@@ -265,11 +249,12 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
 }
 
 class FlightSeat extends StatefulWidget {
-  const FlightSeat({Key? key,
-    required this.cols,
-    required this.rows,
-    required this.currentSeatsState,
-    required this.type})
+  const FlightSeat(
+      {Key? key,
+      required this.cols,
+      required this.rows,
+      required this.currentSeatsState,
+      required this.type})
       : super(key: key);
 
   @override

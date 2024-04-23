@@ -131,8 +131,8 @@ class _BriefcaseScreenState extends State<BriefcaseScreen> {
                                                         element.id ==
                                                         bookings[index].hotel)
                                                     .first;
-                                              }
-                                              return Container(
+
+                                                    return Container(
                                                 padding: const EdgeInsets.only(
                                                     left: 0),
                                                 child: Text(
@@ -147,7 +147,9 @@ class _BriefcaseScreenState extends State<BriefcaseScreen> {
                                                             color:
                                                                 Colors.black)),
                                               );
-                                            },
+                                              }
+                                               return const SizedBox(); 
+                                            }
                                           ),
                                           BlocBuilder<RoomBloc, RoomState>(
                                             builder: (context, state) {
@@ -157,8 +159,7 @@ class _BriefcaseScreenState extends State<BriefcaseScreen> {
                                                         element.id ==
                                                         bookings[index].room)
                                                     .first;
-                                              }
-                                              return Container(
+                                                    return Container(
                                                 padding: const EdgeInsets.only(
                                                     left: 0),
                                                 child: Text(
@@ -172,6 +173,9 @@ class _BriefcaseScreenState extends State<BriefcaseScreen> {
                                                             color:
                                                                 Colors.black)),
                                               );
+                                              }
+                                              
+                                               return const SizedBox();
                                             },
                                           )
                                         ],
