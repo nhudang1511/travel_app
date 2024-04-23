@@ -13,8 +13,7 @@ class HotelModel extends CustomModel {
       this.information,
       this.maxGuest,
       this.maxRoom,
-        this.typePrice
-      });
+      this.typePrice});
 
   final String? id;
   final String? hotelImage;
@@ -41,10 +40,9 @@ class HotelModel extends CustomModel {
         price: doc['price'] as int,
         location_description: doc['location_description'] as String,
         information: doc['information'] as String,
-        maxGuest: doc['max_guest'] as int,
-        maxRoom: doc['max_room'] as int,
-        typePrice: doc['type_price'] as String
-    );
+        // maxGuest: doc['max_guest'] as int,
+        // maxRoom: doc['max_room'] as int,
+        typePrice: doc['type_price'] as String);
   }
 
   @override

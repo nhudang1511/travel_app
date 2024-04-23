@@ -68,6 +68,8 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
   @override
   Widget build(BuildContext context) {
     // _ratingBloc = BlocProvider.of<RatingBloc>(context);
+    final _formKey = GlobalKey<FormState>();
+    String _textInput = '';
     return CustomAppBarItem(
         title: 'Your Profile',
         isIcon: false,
@@ -77,139 +79,158 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
             create: (_) => RatingBloc(RatingRepository()),
             child: SingleChildScrollView(
               child: Container(
-                padding: EdgeInsets.all(1.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(
-                      width: 5.0,
-                    ),
-                    ItemHotelR(hotelModel: widget.hotelModel),
-                    Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16.0),
-                          color: Colors.white,
+                  padding: EdgeInsets.all(1.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          width: 5.0,
                         ),
-                        margin: const EdgeInsets.only(bottom: 24.0),
-                        child: Column(
-                          children: [
-                            const Divider(color: Colors.black),
-                            Text(
-                              'Rating',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displayMedium
-                                  ?.copyWith(color: Colors.black),
+                        ItemHotelR(hotelModel: widget.hotelModel),
+                        Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16.0),
+                              color: Colors.white,
                             ),
-                            RatingBar.builder(
-                              initialRating: rating.toDouble(),
-                              minRating: 1,
-                              direction: Axis.horizontal,
-                              allowHalfRating: false,
-                              itemCount: 5,
-                              itemPadding:
-                                  const EdgeInsets.symmetric(horizontal: 5),
-                              itemBuilder: (context, _) =>
-                                  const Icon(Icons.star, color: Colors.amber),
-                              onRatingUpdate: (rate) {
-                                rating = rate.toInt();
-                              },
-                            ),
-                            const Divider(color: Colors.black),
-                            Text(
-                              'Comment',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displayMedium
-                                  ?.copyWith(color: Colors.black),
-                            ),
-                            // Thêm các widget cho việc đánh giá
-                            TextField(
-                              controller: commentController,
-                              keyboardType: TextInputType.multiline,
-                              textAlign: TextAlign.start,
-                              maxLength: 200,
-                              maxLines: null,
-                              decoration: const InputDecoration(
-                                labelText:
-                                    'Enter your comment', // Nhãn của ô nhập
-                                hintText:
-                                    'Type something...', // Gợi ý cho người dùng
-                                border:
-                                    OutlineInputBorder(), // Định dạng viền của ô nhập
-                                contentPadding:
-                                    EdgeInsets.symmetric(vertical: 40.0),
-                                alignLabelWithHint: true,
-                              ),
-                            ),
-                            const Divider(color: Colors.black),
-                            Text(
-                              'Images',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displayMedium
-                                  ?.copyWith(color: Colors.black),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.black, // Màu của đường viền
-                                  width: 0.2, // Độ dày của đường viền
-                                  style: BorderStyle.solid,
+                            margin: const EdgeInsets.only(bottom: 24.0),
+                            child: Column(
+                              children: [
+                                const Divider(color: Colors.black),
+                                Text(
+                                  'Rating',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displayMedium
+                                      ?.copyWith(color: Colors.black),
                                 ),
-                              ),
-                              height: 100,
-                              width: 400,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                shrinkWrap: true,
-                                itemCount:
-                                    _images != null ? _images!.length : 0,
-                                itemBuilder: (context, index) {
-                                  if (_images == null) {
-                                    return Text('Not foud');
-                                  }
-                                  return Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: _images != null
-                                        ? Image.memory(_images![index])
-                                        : Text('No image data available.'),
-                                  );
-                                },
-                              ),
-                            ),
-                            ElevatedButton(
-                                onPressed: selectImage,
-                                child: const Text('Select image')),
-                          ],
-                        )),
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (_images != null) {
-                          for (Uint8List u in _images!) {
-                            String image = await saveImage(u);
-                            if (photos[0] == '') {
-                              photos[0] = image;
-                            } else {
-                              photos.add(image);
+                                RatingBar.builder(
+                                  initialRating: rating.toDouble(),
+                                  minRating: 1,
+                                  direction: Axis.horizontal,
+                                  allowHalfRating: false,
+                                  itemCount: 5,
+                                  itemPadding:
+                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  itemBuilder: (context, _) => const Icon(
+                                      Icons.star,
+                                      color: Colors.amber),
+                                  onRatingUpdate: (rate) {
+                                    rating = rate.toInt();
+                                  },
+                                ),
+                                const Divider(color: Colors.black),
+                                Text(
+                                  'Comment',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displayMedium
+                                      ?.copyWith(color: Colors.black),
+                                ),
+                                // Thêm các widget cho việc đánh giá
+                                TextFormField(
+                                  controller: commentController,
+                                  keyboardType: TextInputType.multiline,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter some text';
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (value) {
+                                    _textInput = value!;
+                                  },
+                                  textAlign: TextAlign.start,
+                                  maxLength: 200,
+                                  maxLines: null,
+                                  decoration: const InputDecoration(
+                                    labelText:
+                                        'Enter your comment', // Nhãn của ô nhập
+                                    hintText:
+                                        'Type something...', // Gợi ý cho người dùng
+                                    border:
+                                        OutlineInputBorder(), // Định dạng viền của ô nhập
+                                    contentPadding:
+                                        EdgeInsets.symmetric(vertical: 40.0),
+                                    alignLabelWithHint: true,
+                                  ),
+                                ),
+
+                                const Divider(color: Colors.black),
+                                Text(
+                                  'Images',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displayMedium
+                                      ?.copyWith(color: Colors.black),
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.black, // Màu của đường viền
+                                      width: 0.2, // Độ dày của đường viền
+                                      style: BorderStyle.solid,
+                                    ),
+                                  ),
+                                  height: 100,
+                                  width: 400,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    shrinkWrap: true,
+                                    itemCount:
+                                        _images != null ? _images!.length : 0,
+                                    itemBuilder: (context, index) {
+                                      if (_images == null) {
+                                        return Text('Not foud');
+                                      }
+                                      return Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: _images != null
+                                            ? Image.memory(_images![index])
+                                            : Text('No image data available.'),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                ElevatedButton(
+                                    onPressed: selectImage,
+                                    child: const Text('Select image')),
+                              ],
+                            )),
+                        ElevatedButton(
+                          onPressed: () async {
+                            if (_images != null) {
+                              for (Uint8List u in _images!) {
+                                String image = await saveImage(u);
+                                if (photos[0] == '') {
+                                  photos[0] = image;
+                                } else {
+                                  photos.add(image);
+                                }
+                              }
                             }
-                          }
-                        }
-                        RatingBloc(RatingRepository()).add(AddRating(
-                            comment: commentController.text,
-                            hotel: widget.hotelModel.id,
-                            photos: photos,
-                            ratedTime: Timestamp.now(),
-                            rates: rating,
-                            user: SharedService.getUserId()));
-                        Navigator.pushNamedAndRemoveUntil(context,
-                                  MainScreen.routeName, (route) => false);
-                      },
-                      child: const Text('Done'),
+                            if (!_formKey.currentState!.validate()) {
+                              // Do something with the input data
+                              
+                            }
+                            else{
+                            RatingBloc(RatingRepository()).add(AddRating(
+                                comment: commentController.text,
+                                hotel: widget.hotelModel.id,
+                                photos: photos,
+                                ratedTime: Timestamp.now(),
+                                rates: rating,
+                                user: SharedService.getUserId()));
+                            Navigator.pushNamedAndRemoveUntil(context,
+                                MainScreen.routeName, (route) => false);
+                            }
+                          },
+                          child: const Text('Done'),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
+                  )),
             )));
   }
 }
