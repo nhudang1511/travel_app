@@ -1,7 +1,10 @@
 import 'dart:developer';
 
+import 'package:book_my_seat/book_my_seat.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_nhu_nguyen/travel/model/filght_model.dart';
+
+import '../model/seat_model.dart';
 
 class FlightRepository {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
@@ -33,10 +36,10 @@ class FlightRepository {
         data['id'] = doc.id;
         return FlightModel().fromDocument(data);
       }).toList();
-      if(from != 'All' && to != 'All'){
+      if (from != 'All' && to != 'All') {
         flights = flights
-            .where(
-                (element) => element.from_place == from && element.to_place == to)
+            .where((element) =>
+                element.from_place == from && element.to_place == to)
             .toList();
       }
       flights = flights.where((flight) {
@@ -126,28 +129,84 @@ class FlightRepository {
       rethrow;
     }
   }
+  Future<FlightModel> getFlightById(String flightId) async {
+    try {
+      var querySnapshot = await _firebaseFirestore
+          .collection('flight')
+          .doc(flightId) // Specify the document ID
+          .get();
+      var data = querySnapshot.data() as Map<String, dynamic>;
+      data['id'] = querySnapshot.id;
+      return FlightModel().fromDocument(data);
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+  Future<void> editSeat(FlightModel flightModel, List<Seat> seat) async {
+    try {
+      //print(flightModel.seat?[1].length);
+      for(Seat s in seat){
+        if(s.type == 'Business'){
+          //print('flight: ${flightModel.seat?[0]}');
+          for (MapEntry<String, dynamic>? entry in flightModel.seat?[0].entries) {
+            List<bool> colData = (entry?.value as List<dynamic>).cast<bool>();
+            String? rowData = entry?.key;
+            if(rowData == '${s.row! + 1}'){
+              colData[s.col!] = false;
+            }
+          }
+        }
+        else if(s.type == 'Economy'){
+          //print('flight: ${flightModel.seat?[1]}');
+          for (MapEntry<String, dynamic>? entry in flightModel.seat?[1].entries) {
+            List<bool> colData = (entry?.value as List<dynamic>).cast<bool>();
+            String? rowData = entry?.key;
+            if(rowData == '${s.row! + 1}'){
+              colData[s.col!] = false;
+            }
+          }
+        }
+      }
+      await _firebaseFirestore
+          .collection('flight')
+          .doc(flightModel.id)
+          .update(flightModel.toDocument());
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
 
-// final CollectionReference _flightCollection = FirebaseFirestore.instance
-//     .collection('flight');
-// Stream<QuerySnapshot> getFlight(String from, String to) {
-//   Query query = _flightCollection.limit(3);
-//
-//   if (from.isNotEmpty && to.isNotEmpty) {
-//     query = query.where("from_place", isEqualTo: from).where("to_place", isEqualTo: to);
-//   }
-//
-//   return query.snapshots();
-// }
-//
-// Stream<QuerySnapshot> getFlightPage(DocumentSnapshot lastDoc, String from, String to ) {
-//   Query query = _flightCollection.limit(3);
-//
-//   if (from.isNotEmpty && to.isNotEmpty) {
-//     query = query.where("from_place", isEqualTo: from).where("to_place", isEqualTo: to);
-//   }
-//
-//   query = query.startAfterDocument(lastDoc);
-//
-//   return query.snapshots();
-// }
+  // Future<FlightModel?> editFlight(String flightId, String type) async {
+  //   try {
+  //     var flightDoc =
+  //     await _firebaseFirestore.collection('flight').doc(flightId).get();
+  //     if (flightDoc.exists) {
+  //       var data = flightDoc.data();
+  //       if (data != null) {
+  //         if(type == 'Business'){
+  //
+  //         }
+  //         else if(type == 'Economic'){
+  //
+  //         }
+  //         // await _firebaseFirestore.collection('flight').doc(flightId).update({
+  //         //   'seat': newMaxG,
+  //         // });
+  //         // data['id'] = roomDoc.id;
+  //         // data['max_guest'] = newMaxGuest;
+  //         // data['total'] = newMaxRoom;
+  //         return FlightModel().fromDocument(data);
+  //       }
+  //     }
+  //     else {
+  //       return null;
+  //     }
+  //     } catch (e) {
+  //     log(e.toString());
+  //     rethrow;
+  //   }
+  //   return null;
+  // }
 }

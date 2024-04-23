@@ -91,10 +91,8 @@ class _HotelScreenState extends State<HotelScreen> {
         listeners: [
           BlocListener<BookingBloc, BookingState>(
             listener: (context, state) {
-              print(state);
               if (state is BookingLoaded) {
                 List<BookingModel> booking = state.bookingModel;
-                print(booking.length);
                 if (booking.isNotEmpty) {
                   for (BookingModel bookItem in booking) {
                     // hotelBloc.add(AddInHotel(bookItem.hotel ?? '',

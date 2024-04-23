@@ -73,7 +73,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       await _bookingRepository.editBooking(bookingModel);
       emit(BookingLoaded(bookingModel: [bookingModel]));
     } catch (e) {
-      print(e);
+      //print(e);
       emit(BookingFailure());
     }
   }

@@ -259,79 +259,89 @@ class _ItemSeatState extends State<ItemSeat> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      child: CouponCard(
-        height: 100,
-        backgroundColor: Colors.grey.withOpacity(0.2),
-        curveAxis: Axis.vertical,
-        curveRadius: 20,
-        clockwise: true,
-        firstChild: Container(
-            margin: const EdgeInsets.all(15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  AppPath.iconSeat,
-                  fit: BoxFit.contain,
-                  height: 50,
-                  width: 50,
-                )
-              ],
-            )),
-        secondChild: Container(
-          margin: const EdgeInsets.only(left: 10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    'Position: ',
-                    textAlign: TextAlign.center,
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .headlineSmall
-                        ?.copyWith(color: const Color(0xFF636363)),
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Column(
+        children: List.generate(
+          widget.seats.length,
+              (index) {
+            return  Container(
+              margin: const EdgeInsets.only(bottom: 20),
+              child: CouponCard(
+                height: 100,
+                backgroundColor: Colors.grey.withOpacity(0.2),
+                curveAxis: Axis.vertical,
+                curveRadius: 20,
+                clockwise: true,
+                firstChild: Container(
+                    margin: const EdgeInsets.all(15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          AppPath.iconSeat,
+                          fit: BoxFit.contain,
+                          height: 50,
+                          width: 50,
+                        )
+                      ],
+                    )),
+                secondChild: Container(
+                  margin: const EdgeInsets.only(left: 10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            'Position: ',
+                            textAlign: TextAlign.center,
+                            style: Theme
+                                .of(context)
+                                .textTheme
+                                .headlineSmall
+                                ?.copyWith(color: const Color(0xFF636363)),
+                          ),
+                          Text(
+                            widget.seats.isNotEmpty ? widget.seats[index].name ?? '' : '',
+                            textAlign: TextAlign.center,
+                            style: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyLarge
+                                ?.copyWith(color: const Color(0xFF636363)),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            'Type: ',
+                            textAlign: TextAlign.center,
+                            style: Theme
+                                .of(context)
+                                .textTheme
+                                .headlineSmall
+                                ?.copyWith(color: const Color(0xFF636363)),
+                          ),
+                          Text(
+                            widget.seats.isNotEmpty ? widget.seats[index].type ?? '' : '',
+                            textAlign: TextAlign.center,
+                            style: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyLarge
+                                ?.copyWith(color: const Color(0xFF636363)),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  Text(
-                    widget.seats.isNotEmpty ? widget.seats[0].name ?? '' : '',
-                    textAlign: TextAlign.center,
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .bodyLarge
-                        ?.copyWith(color: const Color(0xFF636363)),
-                  ),
-                ],
+                ),
               ),
-              Row(
-                children: [
-                  Text(
-                    'Type: ',
-                    textAlign: TextAlign.center,
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .headlineSmall
-                        ?.copyWith(color: const Color(0xFF636363)),
-                  ),
-                  Text(
-                    widget.seats.isNotEmpty ? widget.seats[0].type ?? '' : '',
-                    textAlign: TextAlign.center,
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .bodyLarge
-                        ?.copyWith(color: const Color(0xFF636363)),
-                  ),
-                ],
-              ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

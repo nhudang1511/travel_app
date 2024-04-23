@@ -13,6 +13,7 @@ import '../../../model/seat_model.dart';
 
 class SelectSeatScreen extends StatefulWidget {
   const SelectSeatScreen({super.key, required this.flight});
+
   static const String routeName = '/seat';
   final FlightModel flight;
 
@@ -35,7 +36,10 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
         rowData.insert(middleIndex, false);
       }
 
-      return rowData.asMap().entries.map((MapEntry<int, bool> mapEntry) {
+      return rowData
+          .asMap()
+          .entries
+          .map((MapEntry<int, bool> mapEntry) {
         int index = mapEntry.key;
         bool value = mapEntry.value;
 
@@ -57,6 +61,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
   List<List<SeatState>>? economyClassSeats;
   List<Seat> seats = List.empty(growable: true);
   List<String> seatStringList = SharedService.getListSeat();
+
   @override
   void initState() {
     super.initState();
@@ -66,7 +71,7 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
     if (seatStringList.isNotEmpty) {
       seats =
           seatStringList.map((e) => Seat.fromDocument(json.decode(e))).toList();
-     //print('len: ${seats.length}');
+      //print('len: ${seats.length}');
     }
   }
 
@@ -90,64 +95,75 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
                   ),
                 ),
                 child: Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Image.asset(AppPath.iconSeat),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Column(
-                            children: [
-                              Text(
-                                'Seat',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge
-                                    ?.copyWith(color: const Color(0xFF636363)),
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: List.generate(
+                        seats.length,
+                            (index) {
+                          return Container(
+                            width: 100,
+                            height: 150,
+                            margin: const EdgeInsets.symmetric(horizontal: 8),
+                            decoration: ShapeDecoration(
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                seats.isNotEmpty ? seats[0].name ?? '' : '',
-                                style: const TextStyle(
-                                  color: Color(0xFF6155CC),
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w500,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Image.asset(AppPath.iconSeat),
+                                    const SizedBox(width: 10),
+                                    Column(
+                                      children: [
+                                        Text(
+                                          'Seat',
+                                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: const Color(0xFF636363)),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          seats[index].name ?? '',
+                                          style: const TextStyle(
+                                            color: Color(0xFF6155CC),
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
                                 ),
-                              )
-                            ],
-                          )
-                        ],
+                                Text(
+                                  seats[index].type ?? '',
+                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.black, fontWeight: FontWeight.w500),
+                                ),
+                                Container(
+                                  width: 85,
+                                  height: 40,
+                                  decoration: ShapeDecoration(
+                                    color: const Color(0xFFE0DDF5),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      '${widget.flight.price}',
+                                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: const Color(0xFF6155CC)),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
                       ),
-                      Text(
-                        seats.isNotEmpty ? seats[0].type ?? '' : '',
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Colors.black, fontWeight: FontWeight.w500),
-                      ),
-                      Container(
-                        width: 85,
-                        height: 40,
-                        decoration: ShapeDecoration(
-                          color: const Color(0xFFE0DDF5),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: Center(
-                          child: Text('${widget.flight.price}',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineMedium
-                                  ?.copyWith(color: const Color(0xFF6155CC))),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
@@ -157,7 +173,8 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
               child: Column(
                 children: [
                   Text(widget.flight.from_place ?? '',
-                      style: Theme.of(context)
+                      style: Theme
+                          .of(context)
                           .textTheme
                           .displayLarge
                           ?.copyWith(color: const Color(0xFF6155CC))),
@@ -169,7 +186,8 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
                     height: 20,
                   ),
                   Text(widget.flight.to_place ?? '',
-                      style: Theme.of(context)
+                      style: Theme
+                          .of(context)
                           .textTheme
                           .displayLarge
                           ?.copyWith(color: const Color(0xFF6155CC))),
@@ -186,13 +204,17 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
                       size: const Size(240, 650),
                     ),
                     Positioned(
-                        top: MediaQuery.of(context).size.height / 4 +10,
+                        top: MediaQuery
+                            .of(context)
+                            .size
+                            .height / 4 + 10,
                         left: 20,
                         child: Column(
                           children: [
                             Text(
                               "Business Class",
-                              style: Theme.of(context)
+                              style: Theme
+                                  .of(context)
                                   .textTheme
                                   .headlineSmall
                                   ?.copyWith(color: Colors.black),
@@ -207,7 +229,8 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
                             ),
                             Text(
                               "Economy Class",
-                              style: Theme.of(context)
+                              style: Theme
+                                  .of(context)
                                   .textTheme
                                   .headlineSmall
                                   ?.copyWith(color: Colors.black),
@@ -226,7 +249,10 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
             ),
             Positioned(
                 bottom: -20,
-                width: MediaQuery.of(context).size.width - 30,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width - 30,
                 child: CustomButton(
                   title: 'Processed',
                   button: () {
@@ -239,12 +265,11 @@ class _SelectSeatScreenState extends State<SelectSeatScreen> {
 }
 
 class FlightSeat extends StatefulWidget {
-  const FlightSeat(
-      {Key? key,
-      required this.cols,
-      required this.rows,
-      required this.currentSeatsState,
-      required this.type})
+  const FlightSeat({Key? key,
+    required this.cols,
+    required this.rows,
+    required this.currentSeatsState,
+    required this.type})
       : super(key: key);
 
   @override
@@ -277,6 +302,41 @@ class SeatNumber {
 
 class _FlightSeatState extends State<FlightSeat> {
   Set<SeatNumber> selectedSeats = {};
+  int center = 0;
+  late Seat seat;
+  List<Seat> seats = [];
+  List<String> seatsList = SharedService.getListSeat();
+
+  @override
+  void initState() {
+    super.initState();
+    center = widget.cols ~/ 2;
+    if (seatsList.isNotEmpty) {
+      seats = seatsList
+          .map((e) => Seat.fromDocument(json.decode(e)))
+          .toList();
+    }
+    print(seats.length);
+    // SharedService.clear('seats');
+    if(seats.isNotEmpty){
+      for (int row = 0; row < widget.rows; row++) {
+        for (int col = 0; col < widget.cols; col++) {
+          // Kiểm tra xem có ghế nào đã được chọn không
+          for (Seat seat in seats) {
+            if (seat.row == row && seat.col == col && seat.type == widget.type) {
+              // Cập nhật currentSeatsState tại vị trí tương ứng
+             if(widget.currentSeatsState[row][col] != SeatState.disabled){
+               setState(() {
+                 widget.currentSeatsState[row][col] = SeatState.selected;
+               });
+               break;
+             }
+            }
+          }
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -284,8 +344,51 @@ class _FlightSeatState extends State<FlightSeat> {
       key: widget.key,
       onSeatStateChanged: (rowI, colI, seatState) {
         if (seatState == SeatState.selected) {
+          //print('row: $rowI, col: $colI');
           selectedSeats.add(SeatNumber(rowI: rowI, colI: colI));
+          if (colI > center) {
+            seat = Seat(
+                name: '${rowI + 1}${String.fromCharCode(colI + 64)}',
+                type: widget.type,
+                row: rowI,
+                col: colI
+            );
+          } else {
+            seat = Seat(
+                name: '${rowI + 1}${String.fromCharCode(colI + 65)}',
+                type: widget.type,
+                row: rowI,
+                col: colI
+            );
+          }
+          setState(() {
+            seats.add(seat);
+          });
+          List<String> seatString =
+          seats.map((e) => jsonEncode(e.toDocument())).toList();
+          SharedService.setListSeat(seatString);
         } else {
+          if (colI > center) {
+            seat = Seat(
+                name: '${rowI + 1}${String.fromCharCode(colI + 64)}',
+                type: widget.type,
+                row: rowI,
+                col: colI
+            );
+          } else {
+            seat = Seat(
+                name: '${rowI + 1}${String.fromCharCode(colI + 65)}',
+                type: widget.type,
+                row: rowI,
+                col: colI
+            );
+          }
+          setState(() {
+            seats.removeWhere((element) => element.name == seat.name);
+          });
+          List<String> seatString =
+          seats.map((e) => jsonEncode(e.toDocument())).toList();
+          SharedService.setListSeat(seatString);
           selectedSeats.remove(SeatNumber(rowI: rowI, colI: colI));
         }
       },
@@ -297,7 +400,8 @@ class _FlightSeatState extends State<FlightSeat> {
           pathDisabledSeat: AppPath.iconSeatDisabled,
           pathSoldSeat: AppPath.iconSeatSold,
           pathUnSelectedSeat: AppPath.iconSeatUnselected,
-          currentSeatsState: widget.currentSeatsState), type: widget.type,
+          currentSeatsState: widget.currentSeatsState),
+      type: widget.type,
       //type: '',
     );
   }

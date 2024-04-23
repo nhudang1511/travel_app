@@ -58,7 +58,16 @@ class FlightModel extends CustomModel {
 
   @override
   Map<String, dynamic> toDocument() {
-    // TODO: implement toDocument
-    throw UnimplementedError();
+    return {
+      'airline': airline,
+      'arrive_time': arrive_time,
+      'departure_time': departure_time,
+      'from_place': from_place,
+      'no': no,
+      'price': price,
+      'seat': seat,
+      'to_place': to_place,
+      'facilities': facilities
+    };
   }
 }

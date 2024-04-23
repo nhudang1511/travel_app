@@ -16,8 +16,7 @@ class LoadFlightByDes extends FlightEvent {
       {required this.from,
       required this.to,
       required this.selectedDate,
-        required this.passengers
-      });
+      required this.passengers});
 }
 
 class SortFlightBy extends FlightEvent {
@@ -37,20 +36,11 @@ class SortFlightBy extends FlightEvent {
       required this.transEnd});
 }
 
-// class FlightEventStart extends FlightEvent {
-//   final String from;
-//   final String to;
-//   FlightEventStart(this.from, this.to);
-// }
-//
-// class FlightEventLoad extends FlightEvent {
-//   final List<List<FlightModel>> flight;
-//
-//   const FlightEventLoad(this.flight);
-// }
-//
-// class FlightEventFetchMore extends FlightEvent {
-//   final String from;
-//   final String to;
-//   const FlightEventFetchMore(this.from, this.to);
-// }
+class EditFlight extends FlightEvent {
+  final String flightId;
+  final List<Seat> seat;
+
+  EditFlight(
+      {required this.flightId,
+      required this.seat});
+}
