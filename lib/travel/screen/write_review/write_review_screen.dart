@@ -7,10 +7,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nhu_nguyen/config/firebase.dart';
 import 'package:flutter_nhu_nguyen/config/shared_preferences.dart';
 import 'package:flutter_nhu_nguyen/travel/bloc/rating/rating_bloc.dart';
+import 'package:flutter_nhu_nguyen/travel/model/booking_model.dart';
 import 'package:flutter_nhu_nguyen/travel/model/hotel_model.dart';
+import 'package:flutter_nhu_nguyen/travel/model/rating_model.dart';
 import 'package:flutter_nhu_nguyen/travel/repository/rating_repository.dart';
+import 'package:flutter_nhu_nguyen/travel/screen/check_out/components/promo_screen.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/main_screen.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/write_review/components/item_hotel.dart';
+import 'package:flutter_nhu_nguyen/travel/screen/write_review/promo_code.dart';
 import 'package:flutter_nhu_nguyen/travel/widget/custom_app_bar.dart';
 import 'package:flutter_nhu_nguyen/travel/widget/custom_appbar_item.dart';
 import 'package:flutter_nhu_nguyen/travel/widget/custom_button.dart';
@@ -23,9 +27,10 @@ import 'package:multiple_images_picker/multiple_images_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WriteReviewScreen extends StatefulWidget {
-  const WriteReviewScreen({super.key, required this.hotelModel});
+  const WriteReviewScreen({super.key, required this.hotelModel, required this.booking});
 
   final HotelModel hotelModel;
+  final String booking;
 
   static const String routeName = '/writeReviews';
 
@@ -34,7 +39,7 @@ class WriteReviewScreen extends StatefulWidget {
 }
 
 class _WriteReviewScreenState extends State<WriteReviewScreen> {
-  //late RatingBloc _ratingBloc;
+  late RatingBloc _ratingBloc;
   // final reviewBloc = BlocProvider.of<RatingBloc>(context);
   final TextEditingController commentController = TextEditingController();
   int rating = 5;
@@ -47,7 +52,7 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
   @override
   void initState() {
     super.initState();
-    //_ratingBloc = BlocProvider.of<RatingBloc>(context);
+    _ratingBloc = RatingBloc(RatingRepository());
   }
 
   Future selectImage() async {
@@ -71,12 +76,12 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
     final _formKey = GlobalKey<FormState>();
     String _textInput = '';
     return CustomAppBarItem(
-        title: 'Your Profile',
+        title: 'Review',
         isIcon: false,
         isFirst: false,
         showModalBottomSheet: () {},
         child: BlocProvider(
-            create: (_) => RatingBloc(RatingRepository()),
+            create: (context) => _ratingBloc,
             child: SingleChildScrollView(
               child: Container(
                   padding: EdgeInsets.all(1.0),
@@ -123,6 +128,7 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
                                 const Divider(color: Colors.black),
                                 Text(
                                   'Comment',
+                                  //widget.booking,
                                   style: Theme.of(context)
                                       .textTheme
                                       .displayMedium
@@ -212,22 +218,52 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
                             }
                             if (!_formKey.currentState!.validate()) {
                               // Do something with the input data
-                              
-                            }
-                            else{
-                            RatingBloc(RatingRepository()).add(AddRating(
-                                comment: commentController.text,
-                                hotel: widget.hotelModel.id,
-                                photos: photos,
-                                ratedTime: Timestamp.now(),
-                                rates: rating,
-                                user: SharedService.getUserId()));
-                            Navigator.pushNamedAndRemoveUntil(context,
-                                MainScreen.routeName, (route) => false);
+                            } else {
+                              print(SharedService.getUserId());
+                              // _ratingBloc = BlocProvider.of<RatingBloc>(context)
+                              RatingBloc(RatingRepository())
+                                .add(AddRating(
+                                    comment: commentController.text,
+                                    hotel: widget.hotelModel.id,
+                                    photos: photos,
+                                    ratedTime: Timestamp.now(),
+                                    rates: rating,
+                                    user: SharedService.getUserId(),
+                                    booking: widget.booking));
+                              // BlocBuilder<RatingBloc, RatingState>(
+                              //   bloc: _ratingBloc,
+                              //   builder: (context, state) {
+
+                              //     if (state is RatingFailure) {
+                              //       // Hiển thị ID của rating sau khi đã được thêm thành công
+                              //     } else if (state is RatingAdded) {
+                              //       // Hiển thị trạng thái khác (nếu cần)
+                              //       print("thanh cong11");
+                              //     }
+                              //     return const SizedBox();
+                              //   },
+                              // );
+                              // Navigator.pushNamedAndRemoveUntil(context,
+                              //     MainScreen.routeName, (route) => false);
+                              Navigator.pushNamed(context, promoCodeState.routeName);
                             }
                           },
                           child: const Text('Done'),
                         ),
+                        //  BlocBuilder<RatingBloc, RatingState>(
+                        //         bloc: _ratingBloc,
+                        //         builder: (context, state) {
+                        //           print("thanh cong");
+
+                        //           if (state is RatingFailure) {
+                        //             // Hiển thị ID của rating sau khi đã được thêm thành công
+                        //           } else if (state is RatingAdded){
+                        //             // Hiển thị trạng thái khác (nếu cần)
+                        //             print("thanh cong11");
+                        //           }
+                        //           return const SizedBox();
+                        //         },
+                        //       ),
                       ],
                     ),
                   )),

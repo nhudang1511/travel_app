@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_nhu_nguyen/config/shared_preferences.dart';
+
 
 import 'package:flutter_nhu_nguyen/travel/model/rating_model.dart';
 import 'package:flutter_nhu_nguyen/travel/repository/repository.dart';
@@ -16,8 +18,8 @@ class RatingBloc extends Bloc<RatingEvent, RatingState> {
 
   void _onAddRating(event, Emitter<RatingState> emit) async{
     try {
+      print('------------------------------');
       final rating = RatingModel(
-        id: '',
         comment: event.comment,
         hotel: event.hotel,
         photos: event.photos,
@@ -25,7 +27,13 @@ class RatingBloc extends Bloc<RatingEvent, RatingState> {
         rates: event.rates,
         user: event.user
       );
+      print('------------------------------');
+      print( SharedService.getUserId());
       final ratingModel = await _ratingRepository.createRating(rating.toDocument());
+      final bookingRepository = BookingRepository();
+      await bookingRepository.editAddReviewBooking(event.booking, ratingModel.id??'');
+      final userRepository = UserRepository(); 
+      await userRepository.addPromoUserById();
       emit(RatingAdded(ratingModel: ratingModel));
     } catch (e) {
       emit(RatingFailure());

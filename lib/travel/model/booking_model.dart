@@ -19,6 +19,7 @@ class BookingModel extends CustomModel {
   bool? expired;
   final int? numberRoom;
   final int? numberGuest;
+  String? review;
 
   BookingModel({
     this.id,
@@ -35,7 +36,8 @@ class BookingModel extends CustomModel {
     this.status,
     this.expired = false,
     this.numberRoom,
-    this.numberGuest
+    this.numberGuest,
+    this.review = "",
   });
 
   @override
@@ -59,7 +61,8 @@ class BookingModel extends CustomModel {
       status: doc['status'] as bool?,
       expired: doc['expired'] as bool?,
       numberRoom: doc['numberRoom'] as int?,
-      numberGuest: doc['numberGuest'] as int?
+      numberGuest: doc['numberGuest'] as int?,
+      review: doc['review'] as String? ?? "",
     );
   }
 

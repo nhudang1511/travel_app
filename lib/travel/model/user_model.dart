@@ -7,6 +7,7 @@ class User extends CustomModel {
   final String? avatar;
   final String? email;
   final String? password;
+  String? promoCode;
 
   User(
       {this.id,
@@ -15,7 +16,8 @@ class User extends CustomModel {
       this.phone,
       this.avatar,
       this.email,
-      this.password}
+      this.password,
+      this.promoCode = "",}
       );
 
   @override
@@ -27,6 +29,7 @@ class User extends CustomModel {
       country: doc['country'] as String?,
       avatar: doc['avatar'] as String?,
       email: doc['email'] as String?,
+      promoCode: doc['promoCode'] as String? ?? "",
     );
   }
 
@@ -38,6 +41,7 @@ class User extends CustomModel {
     country: json['country'] as String?,
     avatar: json['avatar'] as String?,
     email: json['email'] as String?,
+    promoCode: json['promoCode'] as String? ?? "",
   );
   @override
   Map<String, dynamic> toDocument() {
@@ -47,7 +51,8 @@ class User extends CustomModel {
       'email': email,
       'phone': phone,
       'country': country,
-      'avatar': avatar
+      'avatar': avatar,
+      'promoCode': promoCode,
     };
   }
 }

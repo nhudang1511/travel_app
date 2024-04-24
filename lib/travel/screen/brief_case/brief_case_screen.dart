@@ -335,12 +335,21 @@ class _BookingItemState extends State<BookingItem> {
                                   .toList();
                               hotelModel = hotels.first;
                             }
+                            if(widget.booking.review != ""){
+                              return CustomButton(
+                                title: 'Reviewed',
+                                button: () {
+                                    // Navigator.of(context).pushNamed(
+                                    //     WriteReviewScreen.routeName,
+                                    //     arguments: hotelModel);
+                                });
+                            }
                             return CustomButton(
                                 title: 'Write Review',
                                 button: () {
                                     Navigator.of(context).pushNamed(
                                         WriteReviewScreen.routeName,
-                                        arguments: hotelModel);
+                                        arguments: {'hotelModel': hotelModel,'booking': widget.booking.id});
                                 });
                           },
                         ),

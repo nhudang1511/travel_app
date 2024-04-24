@@ -23,3 +23,9 @@ class EditBooking extends BookingEvent{
   EditBooking({required this.id});
 }
 
+class AddReviewBooking extends BookingEvent{
+  final String id;
+  final String review;
+  AddReviewBooking({required this.id, required this.review});
+}
+

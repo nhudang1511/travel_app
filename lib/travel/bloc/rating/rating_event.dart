@@ -13,6 +13,7 @@ class LoadRating extends RatingEvent{
 }
 
 class AddRating extends RatingEvent{
+  final String? booking;
   final String? comment;
   final String? hotel;
   final List<String>? photos;
@@ -20,5 +21,5 @@ class AddRating extends RatingEvent{
   final int? rates;
   final String? user;
 
-  AddRating({this.comment, this.hotel, this.photos, this.ratedTime, this.rates, this.user});
+  AddRating({this.comment, this.hotel, this.photos, this.ratedTime, this.rates, this.user, this.booking});
 }
