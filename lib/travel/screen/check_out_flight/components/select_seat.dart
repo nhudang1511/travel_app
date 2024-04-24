@@ -385,8 +385,7 @@ class _FlightSeatState extends State<FlightSeat> {
           pathDisabledSeat: AppPath.iconSeatDisabled,
           pathSoldSeat: AppPath.iconSeatSold,
           pathUnSelectedSeat: AppPath.iconSeatUnselected,
-          currentSeatsState: widget.currentSeatsState),
-      //type: widget.type,
+          currentSeatsState: widget.currentSeatsState), type: widget.type,
       //type: '',
     );
   }
