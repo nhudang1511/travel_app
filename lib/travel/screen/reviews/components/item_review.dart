@@ -63,7 +63,7 @@ class ItemReviewWidget extends StatelessWidget {
                           builder: (context, state) {
                             if (state is GetUserLoaded) {
                               User user = state.user;
-                              if (user.avatar != null) {
+                              if (user.avatar != null &&user.avatar!='') {
                                 return Padding(
                                   padding: EdgeInsets.all(8.0),
                                   child: Image.network(

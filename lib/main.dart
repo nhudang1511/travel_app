@@ -3,7 +3,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nhu_nguyen/config/bloc_observe.dart';
+import 'package:flutter_nhu_nguyen/travel/bloc/promo/promo_bloc.dart';
+import 'package:flutter_nhu_nguyen/travel/bloc/rating/rating_bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/model/notification_model.dart';
+import 'package:flutter_nhu_nguyen/travel/repository/promo_repository.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/splash/splash_screen.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
@@ -61,7 +64,9 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider(create: (_)=>BookingBloc(BookingRepository())),
         BlocProvider(create: (_)=>BookingFlightBloc(BookingFlightRepository())),
-        BlocProvider(create: (_) => NotificationBloc(NotificationRepository()))
+        BlocProvider(create: (_) => NotificationBloc(NotificationRepository())),
+        BlocProvider(create: (_) => RatingBloc(RatingRepository())),
+        BlocProvider(create: (_) => PromoBloc(PromoRepository())),
       ],
       child: OverlaySupport.global(
         child: MaterialApp(

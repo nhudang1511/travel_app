@@ -19,7 +19,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     on<GetBookingByLessDay>(_onGetBookingByLessDay);
     on<GetBookingByMoreDay>(_onGetBookingByMoreDay);
     on<EditBooking>(_onEditBooking);
-
+    on<AddReviewBooking>(_onAddReviewBooking);
   }
 
   void _onAddBooking(event, Emitter<BookingState> emit) async {
@@ -67,6 +67,19 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     }
   }
   void _onEditBooking(event, Emitter<BookingState> emit) async {
+    try {
+      BookingModel bookingModel = await _bookingRepository.getBookingById(event.id);
+      //print(bookingModel.id);
+      await _bookingRepository.editBooking(bookingModel);
+      emit(BookingLoaded(bookingModel: [bookingModel]));
+    } catch (e) {
+      //print(e);
+      emit(BookingFailure());
+    }
+  }
+
+
+  void _onAddReviewBooking(event, Emitter<BookingState> emit) async {
     try {
       BookingModel bookingModel = await _bookingRepository.getBookingById(event.id);
       //print(bookingModel.id);

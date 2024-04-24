@@ -14,7 +14,7 @@ class GetUserBloc extends Bloc<GetUserEvent, GetUserState> {
   void _onUserLoaded(event, Emitter<GetUserState> emit) async {
     try {
       User user = await userRepository.getUserById(event.Id);
-      // print(user.name);
+      print(user.name);
       if(user == null){
         emit(GetUsergEmpty());
       }else{

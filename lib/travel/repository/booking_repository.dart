@@ -103,4 +103,22 @@ class BookingRepository {
     }
   }
 
+  Future<void> editAddReviewBooking(String booking, String review) async {
+    if (review != '') {
+      var querySnapshot = await _firebaseFirestore
+        .collection('booking')
+        .doc(booking) // Specify the document ID
+        .get();
+      var data = querySnapshot.data() as Map<String, dynamic>;
+      data['id'] = booking;
+      data['review'] = review;
+      await _firebaseFirestore
+          .collection('booking')
+          .doc(data['id'])
+          .update(data);
+    } else {
+      throw Exception("Invalid booking ID");
+    }
+  }
+
 }

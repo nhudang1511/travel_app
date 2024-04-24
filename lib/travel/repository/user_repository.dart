@@ -55,6 +55,26 @@ class UserRepository {
     }
   }
 
+    Future<void> addPromoUserById() async {
+    try {
+      String id = SharedService.getUserId() ?? '';
+      String name = SharedService.getName() ?? '';
+      String phone = SharedService.getPhone() ?? '';
+      String country = SharedService.getCountry() ?? '';
+      //  String avatar = SharedService.getAvatar() ?? '';
+    
+      await _firebaseFirestore.collection("user").doc(id).update({
+        "name": name,
+        "phoneNumber": phone,
+        "country": country,
+        "promoCode": '123'
+      });
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
   Future setSP(User user) async {
     //Uint8List? _avatar;
     SharedService.setUserId(user.id ?? '');
@@ -64,5 +84,6 @@ class UserRepository {
     SharedService.setPassword(user.password ?? '');
     SharedService.setCountry(user.country ?? '');
     SharedService.setAvatar(user.avatar ?? '');
+
   }
 }
