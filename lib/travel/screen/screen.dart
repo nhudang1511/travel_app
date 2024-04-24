@@ -30,3 +30,5 @@ export 'login/verify_email.dart';
 export 'confirm/components/bank_transfer_screen.dart';
 export 'notification/notification_screen.dart';
 export 'flight/components/sort/facilities_flight_screen.dart';
+export 'settings/setting_screen.dart';
+export 'statistical/statistical_screen.dart';

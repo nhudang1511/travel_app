@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nhu_nguyen/config/shared_preferences.dart';
-import 'package:flutter_nhu_nguyen/travel/screen/login/login_screen.dart';
+import 'package:flutter_nhu_nguyen/travel/screen/screen.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/user/user_edit_screen.dart';
 import '../../bloc/bloc.dart';
 import '../../widget/widget.dart';
@@ -109,7 +109,7 @@ class _UserScreenState extends State<UserScreen> {
                   //settings
                   CustomInkwell(
                       onTap: () {
-                        Navigator.pushNamed(context, '/settings');
+                        Navigator.pushNamed(context, SettingScreen.routeName);
                       },
                       mainIcon: Icon(
                         Icons.settings,
@@ -119,6 +119,34 @@ class _UserScreenState extends State<UserScreen> {
                             .primary,
                       ),
                       title: "Settings",
+                      currentHeight: MediaQuery
+                          .of(context)
+                          .size
+                          .height),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 64, right: 64),
+                    child: Container(
+                      height: 0.5,
+                      decoration: BoxDecoration(
+                        color: Theme
+                            .of(context)
+                            .colorScheme
+                            .secondary,
+                      ),
+                    ),
+                  ),
+                  CustomInkwell(
+                      onTap: () {
+                        Navigator.pushNamed(context, StatisticalScreen.routeName);
+                      },
+                      mainIcon: Icon(
+                        Icons.data_thresholding,
+                        color: Theme
+                            .of(context)
+                            .colorScheme
+                            .primary,
+                      ),
+                      title: "Statistical",
                       currentHeight: MediaQuery
                           .of(context)
                           .size

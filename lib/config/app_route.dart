@@ -191,11 +191,23 @@ class AppRouter {
         return _route(const FacilitiesFlightScreen());
       case SortFlightScreen.routeName:
         return _route(const SortFlightScreen());
+      case SettingScreen.routeName:
+        return _route(const SettingScreen());
+      case StatisticalScreen.routeName:
+        return _route(const StatisticalScreen());
       default:
-        return _route(const MainScreen());
+        return _errorRoute();
     }
   }
-
+  static Route _errorRoute() {
+    return MaterialPageRoute(
+        settings: const RouteSettings(name: '/error'),
+        builder: (_) => Scaffold(
+          appBar: AppBar(
+            title: const Text('Error'),
+          ),
+        ));
+  }
   static Route _route(screen) {
     return MaterialPageRoute(builder: (context) => screen);
   }

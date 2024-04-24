@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'light_theme.dart';
+import 'dark_theme.dart';
 
 class ThemeProvider with ChangeNotifier {
   ThemeData _themeData = lightTheme;
@@ -13,7 +14,7 @@ class ThemeProvider with ChangeNotifier {
   }
   void toggleTheme() {
     if (_themeData == lightTheme) {
-      //themeData = darkTheme;
+      themeData = darkTheme;
     } else {
       themeData = lightTheme;
     }

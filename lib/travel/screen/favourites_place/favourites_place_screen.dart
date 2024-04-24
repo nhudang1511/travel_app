@@ -1,12 +1,6 @@
-import 'dart:convert';
-
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_nhu_nguyen/travel/model/place_model.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/favourites_place/components/favourites_hotels.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-
-import '../../../config/shared_preferences.dart';
 import '../../widget/widget.dart';
 import 'components/favourites_places.dart';
 

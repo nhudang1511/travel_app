@@ -122,7 +122,7 @@ class _CustomAppBarItemState extends State<CustomAppBarItem> {
               automaticallyImplyLeading: false,
               elevation: 0,
               toolbarHeight: 90,
-              backgroundColor: const Color(0xFFF2F2F2),
+              backgroundColor: Colors.transparent,
             ),
           ),
           // widget.child,

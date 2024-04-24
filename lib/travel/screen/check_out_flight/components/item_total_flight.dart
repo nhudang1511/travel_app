@@ -9,6 +9,7 @@ class ItemTotalFlight extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const int free = 0;
+    int ticket = SharedService.getListSeat().length;
     return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24.0),
@@ -27,6 +28,10 @@ class ItemTotalFlight extends StatelessWidget {
               title: 'Taxes and Fees',
               price: free,
             ),
+            ItemPrice(
+              title: 'Quantity',
+              price: ticket,
+            ),
             const DashLineWidget(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -39,7 +44,7 @@ class ItemTotalFlight extends StatelessWidget {
                       ?.copyWith(color: Colors.black),
                 ),
                 Text(
-                  '${free + price}',
+                  '${free + price*ticket}',
                   style: Theme.of(context)
                       .textTheme
                       .headlineSmall
