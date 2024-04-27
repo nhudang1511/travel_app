@@ -31,7 +31,7 @@ class _FinishCheckoutFlightScreenState extends State<FinishCheckoutFlightScreen>
       builder: (context, state) {
         if(state is BookingFlightLoaded){
           bookingFlightModel = state.bookingFlightModel;
-          print(bookingFlightModel?.id);
+          //print(bookingFlightModel?.id);
         }
         return Scaffold(
           body: Container(
@@ -110,7 +110,7 @@ class _FinishCheckoutFlightScreenState extends State<FinishCheckoutFlightScreen>
                             height: 30,
                           ),
                           Text(
-                            'Create at: ${bookingFlightModel?.createdAt}',
+                            'Create at: ${bookingFlightModel?.createdAt?.toDate()}',
                             style: Theme.of(context)
                                 .textTheme
                                 .headlineSmall

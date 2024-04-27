@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_nhu_nguyen/travel/model/booking_flight_model.dart';
 import 'package:flutter_nhu_nguyen/travel/model/booking_model.dart';
 import 'package:flutter_nhu_nguyen/travel/model/room_model.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/flight/components/sort/sort_flight.dart';
@@ -13,6 +14,8 @@ import '../travel/model/filght_model.dart';
 import '../travel/model/hotel_model.dart';
 import '../travel/model/place_model.dart';
 import '../travel/on_boarding_page.dart';
+import '../travel/screen/brief_case/components/booking_flight_item.dart';
+import '../travel/screen/brief_case/components/booking_item.dart';
 import '../travel/screen/main_screen.dart';
 import '../travel/screen/screen.dart';
 
@@ -210,19 +213,27 @@ class AppRouter {
         return _route(const SettingScreen());
       case StatisticalScreen.routeName:
         return _route(const StatisticalScreen());
+      case BookingFlightItem.routeName:
+        final BookingFlightModel bookingFlightModel =
+            (settings.arguments as BookingFlightModel);
+        return _route(BookingFlightItem(
+          bookingFlightModel: bookingFlightModel,
+        ));
       default:
         return _errorRoute();
     }
   }
+
   static Route _errorRoute() {
     return MaterialPageRoute(
         settings: const RouteSettings(name: '/error'),
         builder: (_) => Scaffold(
-          appBar: AppBar(
-            title: const Text('Error'),
-          ),
-        ));
+              appBar: AppBar(
+                title: const Text('Error'),
+              ),
+            ));
   }
+
   static Route _route(screen) {
     return MaterialPageRoute(builder: (context) => screen);
   }

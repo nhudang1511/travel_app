@@ -15,11 +15,21 @@ class FlightBloc extends Bloc<FlightEvent, FlightState> {
     on<LoadFlightByDes>(_onLoadFlightByDes);
     on<SortFlightBy>(_onSortFlight);
     on<EditFlight>(_onEditFlight);
+    on<LoadAllFlight>(_onLoadAllFlight);
   }
 
   void _onLoadFlight(event, Emitter<FlightState> emit) async {
     try {
       List<FlightModel> flights = await _flightRepository.getAllFlight();
+      emit(FlightLoaded(flights: flights));
+    } catch (e) {
+      emit(FlightFailure());
+    }
+  }
+
+  void _onLoadAllFlight(event, Emitter<FlightState> emit) async {
+    try {
+      List<FlightModel> flights = await _flightRepository.getFlights();
       emit(FlightLoaded(flights: flights));
     } catch (e) {
       emit(FlightFailure());
@@ -54,7 +64,7 @@ class FlightBloc extends Bloc<FlightEvent, FlightState> {
   void _onEditFlight(event, Emitter<FlightState> emit) async {
     try {
       FlightModel flightModel = await _flightRepository.getFlightById(event.flightId);
-      print(flightModel.id);
+      // print(flightModel.id);
       await _flightRepository.editSeat(
           flightModel, event.seat);
       emit(FlightLoaded(flights: [flightModel]));

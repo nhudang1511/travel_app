@@ -33,4 +33,48 @@ class BookingFlightRepository {
       rethrow;
     }
   }
+
+  Future<List<BookingFlightModel>> getAllBookingFlightByEmail(
+      String email) async {
+    try {
+      var querySnapshot = await _firebaseFirestore
+          .collection('booking_flight')
+          .where('status', isEqualTo: true)
+          .where("email", isEqualTo: email)
+          .get();
+      return querySnapshot.docs.map((doc) {
+        var data = doc.data();
+        data['id'] = doc.id;
+        return BookingFlightModel().fromDocument(data);
+      }).toList();
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+  Future<List<BookingFlightModel>> getBookingFlightByMonth(
+      DateTime createdAt, String email) async {
+    try {
+      var startOfMonth = DateTime(createdAt.year, createdAt.month);
+      var endOfMonth = DateTime(createdAt.year, createdAt.month + 1, 0);
+
+      var querySnapshot = await _firebaseFirestore
+          .collection('booking_flight')
+          .where("createdAt",
+          isGreaterThanOrEqualTo: Timestamp.fromDate(startOfMonth),
+          isLessThan: Timestamp.fromDate(endOfMonth))
+          .where('status', isEqualTo: true)
+          .where("email", isEqualTo: email)
+          .get();
+
+      return querySnapshot.docs.map((doc) {
+        var data = doc.data();
+        data['id'] = doc.id;
+        return BookingFlightModel().fromDocument(data);
+      }).toList();
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
 }

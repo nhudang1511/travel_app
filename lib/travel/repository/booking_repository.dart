@@ -71,26 +71,6 @@ class BookingRepository {
     }
   }
 
-  Future<List<BookingModel>> getExpiredMore() async {
-    try {
-      var now = DateTime.now();
-      var querySnapshot = await _firebaseFirestore
-          .collection('booking')
-          .where('status', isEqualTo: true)
-          .where('expired', isEqualTo: false)
-          .where('dateEnd', isGreaterThan: now)
-          .get();
-      return querySnapshot.docs.map((doc) {
-        var data = doc.data();
-        data['id'] = doc.id;
-        return BookingModel().fromDocument(data);
-      }).toList();
-    } catch (e) {
-      log(e.toString());
-      rethrow;
-    }
-  }
-
   Future<void> editBooking(BookingModel bookingModel) async {
     if (bookingModel.id != null && bookingModel.id!.isNotEmpty) {
       bookingModel.expired = true;
@@ -106,9 +86,9 @@ class BookingRepository {
   Future<void> editAddReviewBooking(String booking, String review) async {
     if (review != '') {
       var querySnapshot = await _firebaseFirestore
-        .collection('booking')
-        .doc(booking) // Specify the document ID
-        .get();
+          .collection('booking')
+          .doc(booking) // Specify the document ID
+          .get();
       var data = querySnapshot.data() as Map<String, dynamic>;
       data['id'] = booking;
       data['review'] = review;
@@ -121,4 +101,29 @@ class BookingRepository {
     }
   }
 
+  Future<List<BookingModel>> getBookingsByMonth(
+      DateTime createdAt, String email) async {
+    try {
+      var startOfMonth = DateTime(createdAt.year, createdAt.month);
+      var endOfMonth = DateTime(createdAt.year, createdAt.month + 1, 0);
+
+      var querySnapshot = await _firebaseFirestore
+          .collection('booking')
+          .where("createdAt",
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startOfMonth),
+              isLessThan: Timestamp.fromDate(endOfMonth))
+          .where('status', isEqualTo: true)
+          .where("email", isEqualTo: email)
+          .get();
+
+      return querySnapshot.docs.map((doc) {
+        var data = doc.data();
+        data['id'] = doc.id;
+        return BookingModel().fromDocument(data);
+      }).toList();
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
 }

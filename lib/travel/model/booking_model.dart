@@ -20,6 +20,7 @@ class BookingModel extends CustomModel {
   final int? numberRoom;
   final int? numberGuest;
   String? review;
+  final int? price;
 
   BookingModel({
     this.id,
@@ -38,6 +39,7 @@ class BookingModel extends CustomModel {
     this.numberRoom,
     this.numberGuest,
     this.review = "",
+    this.price
   });
 
   @override
@@ -63,6 +65,7 @@ class BookingModel extends CustomModel {
       numberRoom: doc['numberRoom'] as int?,
       numberGuest: doc['numberGuest'] as int?,
       review: doc['review'] as String? ?? "",
+      price: doc['price'] as int?
     );
   }
 
@@ -83,7 +86,8 @@ class BookingModel extends CustomModel {
       'status': status,
       'expired': expired,
       'numberRoom': numberRoom,
-      'numberGuest': numberGuest
+      'numberGuest': numberGuest,
+      'price': price
     };
   }
 }

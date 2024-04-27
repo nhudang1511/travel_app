@@ -46,7 +46,7 @@ class ItemHotelR extends StatelessWidget {
                 hotelModel.hotelName ?? "",
                 style: Theme.of(context)
                     .textTheme
-                    .displayMedium
+                    .displaySmall
                     ?.copyWith(color: Colors.black),
               ),
               // const SizedBox(

@@ -17,58 +17,58 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     on<LoadBooking>(_onLoadBooking);
     on<LoadBookingById>(_onLoadBookingById);
     on<GetBookingByLessDay>(_onGetBookingByLessDay);
-    on<GetBookingByMoreDay>(_onGetBookingByMoreDay);
     on<EditBooking>(_onEditBooking);
     on<AddReviewBooking>(_onAddReviewBooking);
+    on<LoadBookingByMonth>(_onLoadBookingByMonth);
   }
 
   void _onAddBooking(event, Emitter<BookingState> emit) async {
     try {
-      final bookingModel =
-          await _bookingRepository.createBooking(event.bookingModel.toDocument());
+      final bookingModel = await _bookingRepository
+          .createBooking(event.bookingModel.toDocument());
       emit(BookingAdded(bookingModel: bookingModel));
     } catch (e) {
       print(e.toString());
       emit(BookingFailure());
     }
   }
+
   void _onLoadBooking(event, Emitter<BookingState> emit) async {
     try {
-      List<BookingModel> bookingModel = await _bookingRepository.getAllBooking();
+      List<BookingModel> bookingModel =
+          await _bookingRepository.getAllBooking();
 
       emit(BookingLoaded(bookingModel: bookingModel));
     } catch (e) {
       emit(BookingFailure());
     }
   }
+
   void _onLoadBookingById(event, Emitter<BookingState> emit) async {
     try {
-      BookingModel bookingModel = await _bookingRepository.getBookingById(event.id);
+      BookingModel bookingModel =
+          await _bookingRepository.getBookingById(event.id);
 
       emit(BookingLoadedById(bookingModel: bookingModel));
     } catch (e) {
       emit(BookingFailure());
     }
   }
+
   void _onGetBookingByLessDay(event, Emitter<BookingState> emit) async {
     try {
-      List<BookingModel> bookingModel = await _bookingRepository.getExpiredLess();
+      List<BookingModel> bookingModel =
+          await _bookingRepository.getExpiredLess();
       emit(BookingLoaded(bookingModel: bookingModel));
     } catch (e) {
       emit(BookingFailure());
     }
   }
-  void _onGetBookingByMoreDay(event, Emitter<BookingState> emit) async {
-    try {
-      List<BookingModel> bookingModel = await _bookingRepository.getExpiredMore();
-      emit(BookingLoaded(bookingModel: bookingModel));
-    } catch (e) {
-      emit(BookingFailure());
-    }
-  }
+
   void _onEditBooking(event, Emitter<BookingState> emit) async {
     try {
-      BookingModel bookingModel = await _bookingRepository.getBookingById(event.id);
+      BookingModel bookingModel =
+          await _bookingRepository.getBookingById(event.id);
       //print(bookingModel.id);
       await _bookingRepository.editBooking(bookingModel);
       emit(BookingLoaded(bookingModel: [bookingModel]));
@@ -77,16 +77,27 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
       emit(BookingFailure());
     }
   }
-
 
   void _onAddReviewBooking(event, Emitter<BookingState> emit) async {
     try {
-      BookingModel bookingModel = await _bookingRepository.getBookingById(event.id);
+      BookingModel bookingModel =
+          await _bookingRepository.getBookingById(event.id);
       //print(bookingModel.id);
       await _bookingRepository.editBooking(bookingModel);
       emit(BookingLoaded(bookingModel: [bookingModel]));
     } catch (e) {
       //print(e);
+      emit(BookingFailure());
+    }
+  }
+
+  void _onLoadBookingByMonth(event, Emitter<BookingState> emit) async {
+    try {
+      List<BookingModel> bookingModel = await _bookingRepository
+          .getBookingsByMonth(event.createdAt, event.email);
+
+      emit(BookingLoaded(bookingModel: bookingModel));
+    } catch (e) {
       emit(BookingFailure());
     }
   }

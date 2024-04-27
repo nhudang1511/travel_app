@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/bloc/booking_flight/booking_flight_bloc.dart';
@@ -40,7 +41,7 @@ class _ConfirmFlightScreenState extends State<ConfirmFlightScreen> {
   List<Guest> guests = List.empty(growable: true);
   List<Seat> seats = List.empty(growable: true);
   List<String> seatStringList = SharedService.getListSeat();
-  int total =0;
+  int total = 1;
 
   Future<void> confirm() async {
     if (SharedService.getTypePayment() == 'Card') {
@@ -74,7 +75,7 @@ class _ConfirmFlightScreenState extends State<ConfirmFlightScreen> {
                   {
                     "name": "${widget.flightModel.airline}",
                     "quantity": SharedService.getListSeat().length,
-                    "price": "${widget.flightModel.price} / 1 ticket",
+                    "price": "${widget.flightModel.price}",
                     "currency": "USD"
                   },
                   // {
@@ -91,11 +92,11 @@ class _ConfirmFlightScreenState extends State<ConfirmFlightScreen> {
           onSuccess: (Map params) async {
             print("onSuccess: $params");
             _bookingFlightBloc.add(AddBookingFlight(
-                price: 100,
+                price: total,
                 flight: widget.flightModel.airline,
                 card: card,
-                createdAt: DateTime.now(),
-                email: guests[0].email ?? "",
+                createdAt: Timestamp.fromDate(DateTime.now()),
+                email: SharedService.getEmail(),
                 guest: guests,
                 promoCode: promoString,
                 seat: seats,
@@ -116,11 +117,11 @@ class _ConfirmFlightScreenState extends State<ConfirmFlightScreen> {
       if (SharedService.getBookingFlightId() == null) {
         await Navigator.pushNamed(context, BankTransferScreen.routeName);
         _bookingFlightBloc.add(AddBookingFlight(
-            price: 100,
+            price: total,
             flight: widget.flightModel.airline,
             card: card,
-            createdAt: DateTime.now(),
-            email: guests[0].email ?? "",
+            createdAt: Timestamp.fromDate(DateTime.now()),
+            email: SharedService.getEmail(),
             guest: guests,
             promoCode: promoString,
             seat: seats,

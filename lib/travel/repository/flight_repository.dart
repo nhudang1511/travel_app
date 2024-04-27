@@ -25,6 +25,22 @@ class FlightRepository {
     }
   }
 
+  Future<List<FlightModel>> getFlights() async {
+    try {
+      var querySnapshot = await _firebaseFirestore
+          .collection('flight')
+          .get();
+      return querySnapshot.docs.map((doc) {
+        var data = doc.data();
+        data['id'] = doc.id;
+        return FlightModel().fromDocument(data);
+      }).toList();
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
+
   Future<List<FlightModel>> getAllFlightByDes(
       String from, String to, DateTime? selectedTime, int passengers) async {
     try {
@@ -157,19 +173,35 @@ class FlightRepository {
           for (MapEntry<String, dynamic>? entry
               in flightModel.seat?[0].entries) {
             List<bool> colData = (entry?.value as List<dynamic>).cast<bool>();
+            int center = colData.length ~/2;
+            late int? col;
+            if(s.col! > center){
+              col = s.col! - 1;
+            }
+            else{
+              col = s.col;
+            }
             String? rowData = entry?.key;
             if (rowData == '${s.row! + 1}') {
-              colData[s.col!] = false;
+              colData[col!] = false;
             }
           }
         } else if (s.type == 'Economy') {
-          //print('flight: ${flightModel.seat?[1]}');
+          // print('flight: ${flightModel.seat?[1]}');
           for (MapEntry<String, dynamic>? entry
               in flightModel.seat?[1].entries) {
             List<bool> colData = (entry?.value as List<dynamic>).cast<bool>();
+            int center = colData.length ~/2;
+            late int? col;
+            if(s.col! > center){
+              col = s.col! - 1;
+            }
+            else{
+              col = s.col;
+            }
             String? rowData = entry?.key;
             if (rowData == '${s.row! + 1}') {
-              colData[s.col!] = false;
+              colData[col!] = false;
             }
           }
         }

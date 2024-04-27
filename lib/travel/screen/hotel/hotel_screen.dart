@@ -98,8 +98,7 @@ class _HotelScreenState extends State<HotelScreen> {
                     // hotelBloc.add(AddInHotel(bookItem.hotel ?? '',
                     //     bookItem.numberGuest ?? 0, bookItem.numberRoom ?? 0));
                     _bookingBloc.add(EditBooking(id: bookItem.id ?? ''));
-                    _roomBloc.add(AddInRoom(bookItem.room ?? '',
-                        bookItem.numberGuest ?? 0, bookItem.numberRoom ?? 0));
+                    _roomBloc.add(AddInRoom(bookItem.room ?? '', bookItem.numberRoom ?? 0));
                   }
                   _bookingBloc.close();
                   _roomBloc.close();

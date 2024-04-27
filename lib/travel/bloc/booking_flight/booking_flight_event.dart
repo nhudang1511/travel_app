@@ -11,7 +11,7 @@ class AddBookingFlight extends BookingFlightEvent {
   final String typePayment;
   final CardModel? card;
   final String? promoCode;
-  final DateTime? createdAt;
+  final Timestamp? createdAt;
   final int? price;
   final List<Seat>? seat;
   final bool? status;
@@ -33,4 +33,13 @@ class AddBookingFlight extends BookingFlightEvent {
 class LoadBookingFlightById extends BookingFlightEvent{
   final String id;
   LoadBookingFlightById({required this.id});
+}
+class LoadBookingFlightByEmail extends BookingFlightEvent{
+  final String email;
+  LoadBookingFlightByEmail({required this.email});
+}
+class LoadBookingFlightByByMonth extends BookingFlightEvent{
+  final DateTime createdAt;
+  final String email;
+  LoadBookingFlightByByMonth({required this.createdAt, required this.email});
 }

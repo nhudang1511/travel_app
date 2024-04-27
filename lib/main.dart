@@ -8,6 +8,7 @@ import 'package:flutter_nhu_nguyen/travel/bloc/rating/rating_bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/model/notification_model.dart';
 import 'package:flutter_nhu_nguyen/travel/repository/promo_repository.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/splash/splash_screen.dart';
+import 'package:month_year_picker/month_year_picker.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'config/app_route.dart';
@@ -17,6 +18,7 @@ import 'travel/bloc/bloc.dart';
 import 'travel/cubits/cubit.dart';
 import 'travel/repository/repository.dart';
 import 'firebase_options.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -81,6 +83,11 @@ class _MyAppState extends State<MyApp> {
               return const SplashScreen();
             },
           ),
+          localizationsDelegates: const [
+            GlobalWidgetsLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            MonthYearPickerLocalizations.delegate,
+          ],
         ),
       ),
     );

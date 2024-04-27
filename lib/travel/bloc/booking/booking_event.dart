@@ -28,4 +28,9 @@ class AddReviewBooking extends BookingEvent{
   final String review;
   AddReviewBooking({required this.id, required this.review});
 }
+class LoadBookingByMonth extends BookingEvent{
+  final DateTime createdAt;
+  final String email;
+  LoadBookingByMonth({required this.createdAt, required this.email});
+}
 

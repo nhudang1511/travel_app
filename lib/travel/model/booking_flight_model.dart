@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_nhu_nguyen/travel/model/guest_model.dart';
 import 'package:flutter_nhu_nguyen/travel/model/seat_model.dart';
 import 'card_model.dart';
@@ -11,7 +12,7 @@ class BookingFlightModel extends CustomModel {
   final String typePayment;
   final CardModel? card;
   final String? promoCode;
-  final DateTime? createdAt;
+  final Timestamp? createdAt;
   final int? price;
   final List<Seat>? seat;
   final bool? status;
@@ -42,7 +43,7 @@ class BookingFlightModel extends CustomModel {
           ? CardModel.fromDocument(doc["payment_card_info"] as Map<String, dynamic>)
           : null,
       promoCode: doc['promoCode'] as String?,
-      createdAt: doc['createdAt'] != null ? DateTime.parse(doc['createdAt']) : null,
+      createdAt: doc['createdAt'] as Timestamp?,
       price: doc['price'] as int,
       seat: (doc["seat"] as List<dynamic>?)?.map((seatMap) => Seat()).toList(),
       status: doc['status'] as bool
@@ -58,7 +59,7 @@ class BookingFlightModel extends CustomModel {
       typePayment.toString().split('.').last, // convert enum to string
       'card': card?.toDocument(),
       'promoCode': promoCode,
-      'createdAt': createdAt?.toIso8601String(),
+      'createdAt': createdAt,
       'price': price,
       'seat': seat?.map((e) => e.toDocument()).toList(),
       'flight': flight,

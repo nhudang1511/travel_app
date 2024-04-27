@@ -19,4 +19,9 @@ class BookingFlightLoaded extends BookingFlightState {
   BookingFlightLoaded({required this.bookingFlightModel});
 }
 
+class BookingFlightListLoaded extends BookingFlightState{
+  final List<BookingFlightModel> bookingFlights;
+  BookingFlightListLoaded({required this.bookingFlights});
+}
+
 class BookingFlightFailure extends BookingFlightState {}

@@ -6,6 +6,8 @@ abstract class FlightEvent {
 
 class LoadFlight extends FlightEvent {}
 
+class LoadAllFlight extends FlightEvent {}
+
 class LoadFlightByDes extends FlightEvent {
   final String from;
   final String to;

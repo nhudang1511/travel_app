@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../model/booking_flight_model.dart';
 import '../../model/card_model.dart';
@@ -16,6 +17,8 @@ class BookingFlightBloc extends Bloc<BookingFlightEvent, BookingFlightState> {
   BookingFlightBloc(this._bookingFlightRepository) : super(BookingFlightLoading()) {
     on<AddBookingFlight>(_onAddBookingFlightFlight);
     on<LoadBookingFlightById>(_onLoadBookingFlightById);
+    on<LoadBookingFlightByEmail>(_onLoadBookingFlightByEmail);
+    on<LoadBookingFlightByByMonth>(_onLoadBookingFlightByByMonth);
   }
 
   void _onAddBookingFlightFlight(event, Emitter<BookingFlightState> emit) async {
@@ -45,6 +48,25 @@ class BookingFlightBloc extends Bloc<BookingFlightEvent, BookingFlightState> {
       BookingFlightModel bookingFlightModel =
           await _bookingFlightRepository.getBookingFlightById(event.id);
       emit(BookingFlightLoaded(bookingFlightModel: bookingFlightModel));
+    } catch (e) {
+      emit(BookingFlightFailure());
+    }
+  }
+  void _onLoadBookingFlightByEmail(event, Emitter<BookingFlightState> emit) async {
+    try {
+      List<BookingFlightModel> bookingFlightModel =
+      await _bookingFlightRepository.getAllBookingFlightByEmail(event.email);
+      emit(BookingFlightListLoaded(bookingFlights: bookingFlightModel));
+    } catch (e) {
+      emit(BookingFlightFailure());
+    }
+  }
+  void _onLoadBookingFlightByByMonth(event, Emitter<BookingFlightState> emit) async {
+    try {
+      List<BookingFlightModel> bookingModel = await _bookingFlightRepository
+          .getBookingFlightByMonth(event.createdAt, event.email);
+
+      emit(BookingFlightListLoaded(bookingFlights: bookingModel));
     } catch (e) {
       emit(BookingFlightFailure());
     }

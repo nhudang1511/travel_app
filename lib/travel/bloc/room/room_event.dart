@@ -24,15 +24,13 @@ class LoadRoomByHotelIdGuestRoom extends RoomEvent{
 }
 class RemoveInRoom extends RoomEvent{
   final String roomId;
-  final int maxGuest;
   final int maxRoom;
-  RemoveInRoom(this.roomId, this.maxGuest, this.maxRoom);
+  RemoveInRoom(this.roomId, this.maxRoom);
 }
 class AddInRoom extends RoomEvent{
   final String roomId;
-  final int maxGuest;
   final int maxRoom;
-  AddInRoom(this.roomId, this.maxGuest, this.maxRoom);
+  AddInRoom(this.roomId, this.maxRoom);
 }
 
 

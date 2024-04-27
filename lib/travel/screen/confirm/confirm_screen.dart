@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -7,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/bloc/bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/model/room_model.dart';
-import 'package:flutter_nhu_nguyen/travel/repository/hotel_repository.dart';
 import 'package:flutter_nhu_nguyen/travel/repository/repository.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/confirm/components/bank_transfer_screen.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/confirm/components/item_card.dart';
@@ -79,7 +77,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                     "quantity": (SharedService.getRoom() != null)
                         ? SharedService.getRoom()
                         : 1,
-                    "price": "${widget.roomModel.price} / 1 room / 1 night",
+                    "price": "${widget.roomModel.price}",
                     "currency": "USD"
                   },
                   // {
@@ -111,7 +109,8 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                 createdAt: Timestamp.fromDate(DateTime.now()),
                 expired: false,
                 numberGuest: SharedService.getGuest() ?? 1,
-                numberRoom: SharedService.getRoom() ?? 1);
+                numberRoom: SharedService.getRoom() ?? 1,
+                price: total);
             _bookingBloc.add(
               AddBooking(bookingModel: bookingModel),
             );
@@ -146,7 +145,8 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
             createdAt: Timestamp.fromDate(DateTime.now()),
             expired: false,
             numberGuest: SharedService.getGuest() ?? 1,
-            numberRoom: SharedService.getRoom() ?? 1);
+            numberRoom: SharedService.getRoom() ?? 1,
+            price: total);
         _bookingBloc.add(AddBooking(bookingModel: bookingModel));
         sharedServiceClear();
       } else {
@@ -172,7 +172,6 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
     int room = SharedService.getRoom() ?? 1;
     int date = SharedService.getDays() ?? 1;
     total = price * room * date;
-
   }
 
   @override
@@ -199,7 +198,6 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                   //     state.bookingModel.numberRoom ?? 1));
                   _roomBloc.add(RemoveInRoom(
                       widget.roomModel.id ?? '',
-                      state.bookingModel.numberGuest ?? 1,
                       state.bookingModel.numberRoom ?? 1));
 
                   sharedServiceClear();
@@ -233,8 +231,8 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                   //     widget.roomModel.hotel ?? '',
                   //     state.bookingModel.numberGuest ?? 1,
                   //     state.bookingModel.numberRoom ?? 1));
-                  _roomBloc.add(RemoveInRoom(widget.roomModel.id ?? '',
-                      state.bookingModel.numberGuest ?? 1,
+                  _roomBloc.add(RemoveInRoom(
+                      widget.roomModel.id ?? '',
                       state.bookingModel.numberRoom ?? 1));
                   Navigator.pushNamed(context, FinishCheckoutScreen.routeName);
                   sharedServiceClear();

@@ -50,7 +50,7 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
   void _onRemoveInRoom(event, Emitter<RoomState> emit) async {
     try {
       RoomModel? room = await _roomRepository.removeRoomById(
-          event.roomId, event.maxGuest, event.maxRoom);
+          event.roomId, event.maxRoom);
       emit(RoomRemoved(room: room ?? RoomModel()));
     } catch (e) {
       emit(RoomFailure(error: e.toString()));
@@ -60,7 +60,7 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
   void _onAddInRoom(event, Emitter<RoomState> emit) async {
     try {
       RoomModel? room = await _roomRepository.addRoomById(
-          event.roomId, event.maxGuest, event.maxRoom);
+          event.roomId, event.maxRoom);
       emit(RoomAdded(room: room ?? RoomModel()));
     } catch (e) {
       emit(RoomFailure(error: e.toString()));
