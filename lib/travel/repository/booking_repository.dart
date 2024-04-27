@@ -18,11 +18,13 @@ class BookingRepository {
     return BookingModel().fromDocument(data);
   }
 
-  Future<List<BookingModel>> getAllBooking() async {
+  Future<List<BookingModel>> getAllBooking(String email) async {
     try {
       var querySnapshot = await _firebaseFirestore
           .collection('booking')
           .where('status', isEqualTo: true)
+          .where("email", isEqualTo: email)
+          .orderBy("createdAt", descending: true)
           .get();
       return querySnapshot.docs.map((doc) {
         var data = doc.data();

@@ -50,82 +50,75 @@ class ItemReviewWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Wrap(
+              spacing: 5.0,
+              runSpacing: 5.0,
+              direction: Axis.horizontal,
               children: [
+                const SizedBox(width: 10),
+                BlocBuilder<GetUserBloc, GetUserState>(
+                  bloc: userBloc,
+                  builder: (context, state) {
+                    if (state is GetUserLoaded) {
+                      User user = state.user;
+                      if (user.avatar != null &&user.avatar!='') {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.network(
+                            user.avatar ?? '',
+                            width: 25.14,
+                      height: 40,
+                            //fit: BoxFit.fitWidth,
+                          ),
+                        );
+                      }
+                    }
+                    return Container(
+                      width: 25.14,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(AppPath.profile),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(width: 20),
                 Column(
                   children: [
-                    Row(
-                      children: [
-                        const SizedBox(width: 10),
-                        BlocBuilder<GetUserBloc, GetUserState>(
-                          bloc: userBloc,
-                          builder: (context, state) {
-                            if (state is GetUserLoaded) {
-                              User user = state.user;
-                              if (user.avatar != null &&user.avatar!='') {
-                                return Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Image.network(
-                                    user.avatar ?? '',
-                                    width: 25.14,
-                              height: 40,
-                                    //fit: BoxFit.fitWidth,
-                                  ),
-                                );
-                              }
-                            }
-                            return Container(
-                              width: 25.14,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage(AppPath.profile),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        const SizedBox(width: 20),
-                        Column(
-                          children: [
-                            BlocBuilder<GetUserBloc, GetUserState>(
-                              bloc: userBloc,
-                              builder: (context, state) {
-                                if (state is GetUserLoaded) {
-                                  User user = state.user;
-                                  return Text(user.name ?? '',
-                                      style: const TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold));
-                                }
-                                return const SizedBox();
-                              },
-                            ),
-                            Text(differenceString,
-                                style: const TextStyle(
-                                    fontSize: 10, color: Colors.black))
-                          ],
-                        ),
-                        const SizedBox(width: 20),
-                        Row(
-                            children: List.generate(
-                          5,
-                          (index) => Icon(
-                            index < ratingModel.rates!.toInt()
-                                ? Icons.star
-                                : Icons.star_border,
-                            color: Colors.amber,
-                          ),
-                        )),
-                      ],
-                    )
-                    // Expanded(flex: 2,child: Text(ratingModel.comment??''),),
-                    // Expanded(flex: 2,child: Text(ratingModel.comment??''),)
+                    BlocBuilder<GetUserBloc, GetUserState>(
+                      bloc: userBloc,
+                      builder: (context, state) {
+                        if (state is GetUserLoaded) {
+                          User user = state.user;
+                          return Text(user.name ?? '',
+                              style: const TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                          );
+                        }
+                        return const SizedBox();
+                      },
+                    ),
+                    Text(differenceString,
+                        style: const TextStyle(
+                            fontSize: 10, color: Colors.black))
                   ],
                 ),
+                const SizedBox(width: 20),
+                Row(
+                    children: List.generate(
+                  5,
+                  (index) => Icon(
+                    index < ratingModel.rates!.toInt()
+                        ? Icons.star
+                        : Icons.star_border,
+                    color: Colors.amber,
+                  ),
+                )),
               ],
             ),
             const SizedBox(height: 20),

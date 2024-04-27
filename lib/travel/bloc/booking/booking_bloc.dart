@@ -28,7 +28,6 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
           .createBooking(event.bookingModel.toDocument());
       emit(BookingAdded(bookingModel: bookingModel));
     } catch (e) {
-      print(e.toString());
       emit(BookingFailure());
     }
   }
@@ -36,7 +35,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
   void _onLoadBooking(event, Emitter<BookingState> emit) async {
     try {
       List<BookingModel> bookingModel =
-          await _bookingRepository.getAllBooking();
+          await _bookingRepository.getAllBooking(event.email);
 
       emit(BookingLoaded(bookingModel: bookingModel));
     } catch (e) {

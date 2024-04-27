@@ -11,7 +11,6 @@ class BookingModel extends CustomModel {
   final List<Guest>? guest;
   final String typePayment;
   final CardModel? card;
-  final String? promoCode;
   final Timestamp? dateStart;
   final Timestamp? dateEnd;
   final Timestamp? createdAt;
@@ -30,7 +29,6 @@ class BookingModel extends CustomModel {
     this.guest,
     this.typePayment = "Bank Transfer",
     this.card,
-    this.promoCode,
     this.dateStart,
     this.dateEnd,
     this.createdAt,
@@ -56,7 +54,6 @@ class BookingModel extends CustomModel {
       card: (doc["payment_card_info"] != null)
           ? CardModel.fromDocument(doc["payment_card_info"] as Map<String, dynamic>)
           : null,
-      promoCode: doc['promoCode'] as String?,
       dateStart: doc['dateStart'] as Timestamp?,
       dateEnd: doc['dateEnd'] as Timestamp?,
       createdAt: doc['createdAt'] as Timestamp?,
@@ -79,7 +76,6 @@ class BookingModel extends CustomModel {
       'typePayment':
       typePayment.toString().split('.').last, // convert enum to string
       'card': card?.toDocument(),
-      'promoCode': promoCode,
       'dateStart': dateStart,
       'dateEnd': dateEnd,
       'createdAt': createdAt,

@@ -110,7 +110,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
             if (result != null) {
               setState(() {
                 promo = result;
-                SharedService.setPromo(promo?.code ?? "");
+                SharedService.setPromo(promo?.price?.toDouble() ?? 1.0);
               });
             }
           },

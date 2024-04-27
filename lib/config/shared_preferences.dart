@@ -145,12 +145,12 @@ class SharedService {
   static void setCard(String card){
     _pref.setString("card",card);
   }
-  static String? getPromo(){
-    return _pref.getString("promo");
+  static double? getPromo(){
+    return _pref.getDouble("promo");
   }
 
-  static void setPromo(String promo){
-    _pref.setString("promo",promo);
+  static void setPromo(double promo){
+    _pref.setDouble("promo",promo);
   }
   static List<String> getListSeat(){
     return _pref.getStringList("seats") ?? [];

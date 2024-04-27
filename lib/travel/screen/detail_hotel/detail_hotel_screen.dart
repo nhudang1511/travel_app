@@ -114,16 +114,18 @@ class _DetailHotelScreenState extends State<DetailHotelScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Text(
+                                  widget.hotelModel.hotelName ?? "",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displayMedium
+                                      ?.copyWith(color: Colors.black),
+                                ),
+                                const SizedBox(
+                                  height: 16.0,
+                                ),
                                 Row(
                                   children: [
-                                    Text(
-                                      widget.hotelModel.hotelName ?? "",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .displayMedium
-                                          ?.copyWith(color: Colors.black),
-                                    ),
-                                    const Spacer(),
                                     Text(
                                       '\$${widget.hotelModel.price}',
                                       style: Theme.of(context)

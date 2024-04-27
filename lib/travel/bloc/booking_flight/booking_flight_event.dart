@@ -10,7 +10,6 @@ class AddBookingFlight extends BookingFlightEvent {
   final List<Guest>? guest;
   final String typePayment;
   final CardModel? card;
-  final String? promoCode;
   final Timestamp? createdAt;
   final int? price;
   final List<Seat>? seat;
@@ -22,7 +21,6 @@ class AddBookingFlight extends BookingFlightEvent {
       this.guest,
       required this.typePayment,
       this.card,
-      this.promoCode,
       this.createdAt,
       this.price,
       this.seat,

@@ -29,7 +29,6 @@ class BookingFlightBloc extends Bloc<BookingFlightEvent, BookingFlightState> {
           guest: event.guest,
           typePayment: event.typePayment,
           card: event.card,
-          promoCode: event.promoCode,
           createdAt: event.createdAt,
           price: event.price,
           seat: event.seat,

@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -23,7 +23,32 @@ class PromoRepository {
         return Promo();
       }
     } catch (e) {
-      log(e.toString());
+      //log(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<Promo> getRandomPromo() async {
+    try {
+      var querySnapshot =
+      await _firebaseFirestore.collection('promo').get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // Lấy danh sách các tài liệu promo
+        var promoDocuments = querySnapshot.docs.map((doc) => doc.data())
+            .toList();
+
+        // Chọn ngẫu nhiên một tài liệu từ danh sách
+        var randomPromoData = promoDocuments[Random().nextInt(
+            promoDocuments.length)];
+
+        // Tạo một đối tượng Promo từ dữ liệu ngẫu nhiên đã chọn
+        return Promo().fromDocument(randomPromoData);
+      } else {
+        // Trả về null hoặc xử lý theo ý của bạn khi không tìm thấy promo
+        return Promo();
+      }
+    } catch (e) {
       rethrow;
     }
   }

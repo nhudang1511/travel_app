@@ -36,12 +36,13 @@ class _ConfirmFlightScreenState extends State<ConfirmFlightScreen> {
   late FlightBloc _flightBloc;
   CardModel? card;
   String? cardString = SharedService.getCard();
-  String? promoString = SharedService.getPromo();
+  double? promoCost = SharedService.getPromo();
   List<String> contactList = SharedService.getListContacts();
   List<Guest> guests = List.empty(growable: true);
   List<Seat> seats = List.empty(growable: true);
   List<String> seatStringList = SharedService.getListSeat();
   int total = 1;
+  int discount = 0;
 
   Future<void> confirm() async {
     if (SharedService.getTypePayment() == 'Card') {
@@ -57,12 +58,12 @@ class _ConfirmFlightScreenState extends State<ConfirmFlightScreen> {
           transactions: [
             {
               "amount": {
-                "total": "$total",
+                "total": "${total - discount}",
                 "currency": "USD",
                 "details": {
                   "subtotal": "$total",
                   "shipping": '0',
-                  "shipping_discount": 0
+                  "shipping_discount": discount
                 }
               },
               "description": "The payment transaction description.",
@@ -92,13 +93,12 @@ class _ConfirmFlightScreenState extends State<ConfirmFlightScreen> {
           onSuccess: (Map params) async {
             print("onSuccess: $params");
             _bookingFlightBloc.add(AddBookingFlight(
-                price: total,
+                price: total - discount,
                 flight: widget.flightModel.airline,
                 card: card,
                 createdAt: Timestamp.fromDate(DateTime.now()),
                 email: SharedService.getEmail(),
                 guest: guests,
-                promoCode: promoString,
                 seat: seats,
                 status: true,
                 typePayment: SharedService.getTypePayment() ?? ""));
@@ -117,13 +117,12 @@ class _ConfirmFlightScreenState extends State<ConfirmFlightScreen> {
       if (SharedService.getBookingFlightId() == null) {
         await Navigator.pushNamed(context, BankTransferScreen.routeName);
         _bookingFlightBloc.add(AddBookingFlight(
-            price: total,
+            price: total - discount,
             flight: widget.flightModel.airline,
             card: card,
             createdAt: Timestamp.fromDate(DateTime.now()),
             email: SharedService.getEmail(),
             guest: guests,
-            promoCode: promoString,
             seat: seats,
             status: false,
             typePayment: SharedService.getTypePayment() ?? ""));
@@ -155,6 +154,8 @@ class _ConfirmFlightScreenState extends State<ConfirmFlightScreen> {
     int numberTicket = SharedService.getListSeat().length;
     int price = widget.flightModel.price ?? 1;
     total = numberTicket * price;
+    double promo = SharedService.getPromo() ?? 0;
+    discount = total*promo.toInt();
   }
 
   @override

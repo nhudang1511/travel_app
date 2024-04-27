@@ -155,13 +155,7 @@ class _BookingItemState extends State<BookingItem> {
                               hotelModel = hotels.first;
                             }
                             if(widget.booking.review != ""){
-                              return CustomButton(
-                                  title: 'Reviewed',
-                                  button: () {
-                                    // Navigator.of(context).pushNamed(
-                                    //     WriteReviewScreen.routeName,
-                                    //     arguments: hotelModel);
-                                  });
+                              return const SizedBox();
                             }
                             return CustomButton(
                                 title: 'Write Review',

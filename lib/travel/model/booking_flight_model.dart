@@ -11,7 +11,6 @@ class BookingFlightModel extends CustomModel {
   final List<Guest>? guest;
   final String typePayment;
   final CardModel? card;
-  final String? promoCode;
   final Timestamp? createdAt;
   final int? price;
   final List<Seat>? seat;
@@ -24,7 +23,6 @@ class BookingFlightModel extends CustomModel {
     this.guest,
     this.typePayment = "miniMarket",
     this.card,
-    this.promoCode,
     this.createdAt,
     this.price,
     this.seat,
@@ -42,7 +40,6 @@ class BookingFlightModel extends CustomModel {
       card: (doc["payment_card_info"] != null)
           ? CardModel.fromDocument(doc["payment_card_info"] as Map<String, dynamic>)
           : null,
-      promoCode: doc['promoCode'] as String?,
       createdAt: doc['createdAt'] as Timestamp?,
       price: doc['price'] as int,
       seat: (doc["seat"] as List<dynamic>?)?.map((seatMap) => Seat()).toList(),
@@ -58,7 +55,6 @@ class BookingFlightModel extends CustomModel {
       'typePayment':
       typePayment.toString().split('.').last, // convert enum to string
       'card': card?.toDocument(),
-      'promoCode': promoCode,
       'createdAt': createdAt,
       'price': price,
       'seat': seat?.map((e) => e.toDocument()).toList(),

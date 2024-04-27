@@ -6,3 +6,7 @@ class LoadPromo extends PromoEvent {
   final String? code;
   const LoadPromo(this.code);
 }
+
+class LoadAllPromo extends PromoEvent {
+}
+

@@ -38,10 +38,10 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
   List<Guest> guests = List.empty(growable: true);
   CardModel? card;
   String? cardString = SharedService.getCard();
-  String? promoString = SharedService.getPromo();
   DateFormat dateFormat = DateFormat('dd MMM yyyy');
   late RoomBloc _roomBloc;
   int total = 0;
+  int discount = 0;
 
   Future<void> confirm() async {
     if (SharedService.getTypePayment() == 'Card') {
@@ -57,12 +57,12 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
           transactions: [
             {
               "amount": {
-                "total": "$total",
+                "total": "${total - discount}",
                 "currency": "USD",
                 "details": {
                   "subtotal": "$total",
                   "shipping": '0',
-                  "shipping_discount": 0
+                  "shipping_discount": discount
                 }
               },
               "description": "The payment transaction description.",
@@ -77,7 +77,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                     "quantity": (SharedService.getRoom() != null)
                         ? SharedService.getRoom()
                         : 1,
-                    "price": "${widget.roomModel.price}",
+                    "price": "$total",
                     "currency": "USD"
                   },
                   // {
@@ -100,7 +100,6 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                 guest: guests,
                 typePayment: SharedService.getTypePayment() ?? "",
                 card: card,
-                promoCode: promoString,
                 dateStart: Timestamp.fromDate(
                     dateFormat.parse(SharedService.getStartDate() ?? '')),
                 dateEnd: Timestamp.fromDate(
@@ -110,7 +109,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                 expired: false,
                 numberGuest: SharedService.getGuest() ?? 1,
                 numberRoom: SharedService.getRoom() ?? 1,
-                price: total);
+                price: total - discount);
             _bookingBloc.add(
               AddBooking(bookingModel: bookingModel),
             );
@@ -136,7 +135,6 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
             guest: guests,
             typePayment: SharedService.getTypePayment() ?? "",
             card: card,
-            promoCode: promoString,
             dateStart: Timestamp.fromDate(
                 dateFormat.parse(SharedService.getStartDate() ?? '')),
             dateEnd: Timestamp.fromDate(
@@ -146,7 +144,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
             expired: false,
             numberGuest: SharedService.getGuest() ?? 1,
             numberRoom: SharedService.getRoom() ?? 1,
-            price: total);
+            price: total - discount);
         _bookingBloc.add(AddBooking(bookingModel: bookingModel));
         sharedServiceClear();
       } else {
@@ -172,6 +170,8 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
     int room = SharedService.getRoom() ?? 1;
     int date = SharedService.getDays() ?? 1;
     total = price * room * date;
+    double promo = SharedService.getPromo() ?? 0;
+    discount =  (price * room * date * promo).toInt();
   }
 
   @override
@@ -196,8 +196,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                   //     widget.roomModel.hotel ?? '',
                   //     state.bookingModel.numberGuest ?? 1,
                   //     state.bookingModel.numberRoom ?? 1));
-                  _roomBloc.add(RemoveInRoom(
-                      widget.roomModel.id ?? '',
+                  _roomBloc.add(RemoveInRoom(widget.roomModel.id ?? '',
                       state.bookingModel.numberRoom ?? 1));
 
                   sharedServiceClear();
@@ -231,8 +230,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                   //     widget.roomModel.hotel ?? '',
                   //     state.bookingModel.numberGuest ?? 1,
                   //     state.bookingModel.numberRoom ?? 1));
-                  _roomBloc.add(RemoveInRoom(
-                      widget.roomModel.id ?? '',
+                  _roomBloc.add(RemoveInRoom(widget.roomModel.id ?? '',
                       state.bookingModel.numberRoom ?? 1));
                   Navigator.pushNamed(context, FinishCheckoutScreen.routeName);
                   sharedServiceClear();

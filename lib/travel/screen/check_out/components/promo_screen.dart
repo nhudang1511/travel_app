@@ -69,7 +69,7 @@ class _PromoScreenState extends State<PromoScreen> {
                           margin: const EdgeInsets.only(left: 10),
                           child: TextField(
                             decoration: InputDecoration(
-                              hintText: 'Coupon Code',
+                              hintText: 'Please enter Coupon Code',
                               hintStyle: Theme.of(context)
                                   .textTheme
                                   .titleLarge

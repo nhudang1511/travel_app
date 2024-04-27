@@ -153,7 +153,7 @@ class _CheckOutScreenFlightState extends State<CheckOutScreenFlight> {
               if (result != null) {
                 setState(() {
                   promo = result;
-                  SharedService.setPromo(promo?.code ?? "");
+                  SharedService.setPromo(promo?.price?.toDouble() ?? 1.0);
                 });
               }
             },

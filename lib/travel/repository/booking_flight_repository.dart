@@ -41,6 +41,7 @@ class BookingFlightRepository {
           .collection('booking_flight')
           .where('status', isEqualTo: true)
           .where("email", isEqualTo: email)
+          .orderBy("createdAt", descending: true)
           .get();
       return querySnapshot.docs.map((doc) {
         var data = doc.data();

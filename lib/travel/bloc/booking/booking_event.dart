@@ -9,6 +9,8 @@ class AddBooking extends BookingEvent {
   AddBooking({required this.bookingModel});
 }
 class LoadBooking extends BookingEvent{
+  final String email;
+  LoadBooking({required this.email});
 }
 class LoadBookingById extends BookingEvent{
   final String id;

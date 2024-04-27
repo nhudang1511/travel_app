@@ -20,11 +20,11 @@ class promoCodeState extends StatefulWidget {
 class _promoCodeStateState extends State<promoCodeState> {
   late Promo promo;
   late PromoBloc promoBloc;
-  String id = '123';
+  String id = 'SALEBAOTHANG5';
   @override
   void initState() {
     super.initState();
-    promoBloc = PromoBloc(PromoRepository())..add(LoadPromo(id));
+    promoBloc = PromoBloc(PromoRepository())..add(LoadAllPromo());
   }
 
   @override
