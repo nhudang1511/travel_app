@@ -136,12 +136,12 @@ class _UserEditScreenState extends State<UserEditScreen> {
                       ),
                     ),
                     Positioned(
+                      bottom: -12,
+                      left: 63,
                       child: IconButton(
                         onPressed: selectImage,
                         icon: const Icon(Icons.add_a_photo),
                       ),
-                      bottom: -12,
-                      left: 63,
                     )
                   ],
                 ),
@@ -153,9 +153,9 @@ class _UserEditScreenState extends State<UserEditScreen> {
                       .of(context)
                       .textTheme
                       .displayLarge
-                      ?.copyWith(color: Colors.black),
+                      ?.copyWith(color: const Color(0xFF313131)),
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 Form(
                   key: _formKey,
                   child: Column(

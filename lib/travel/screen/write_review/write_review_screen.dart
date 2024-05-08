@@ -6,11 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nhu_nguyen/config/firebase.dart';
 import 'package:flutter_nhu_nguyen/config/shared_preferences.dart';
+import 'package:flutter_nhu_nguyen/travel/bloc/bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/bloc/rating/rating_bloc.dart';
 import 'package:flutter_nhu_nguyen/travel/model/booking_model.dart';
 import 'package:flutter_nhu_nguyen/travel/model/hotel_model.dart';
 import 'package:flutter_nhu_nguyen/travel/model/rating_model.dart';
+import 'package:flutter_nhu_nguyen/travel/repository/hotel_repository.dart';
 import 'package:flutter_nhu_nguyen/travel/repository/rating_repository.dart';
+import 'package:flutter_nhu_nguyen/travel/repository/repository.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/check_out/components/promo_screen.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/main_screen.dart';
 import 'package:flutter_nhu_nguyen/travel/screen/write_review/components/item_hotel.dart';
@@ -27,7 +30,8 @@ import 'package:multiple_images_picker/multiple_images_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WriteReviewScreen extends StatefulWidget {
-  const WriteReviewScreen({super.key, required this.hotelModel, required this.booking});
+  const WriteReviewScreen(
+      {super.key, required this.hotelModel, required this.booking});
 
   final HotelModel hotelModel;
   final String booking;
@@ -40,6 +44,8 @@ class WriteReviewScreen extends StatefulWidget {
 
 class _WriteReviewScreenState extends State<WriteReviewScreen> {
   late RatingBloc _ratingBloc;
+  late HotelBloc _hotelBloc;
+
   // final reviewBloc = BlocProvider.of<RatingBloc>(context);
   final TextEditingController commentController = TextEditingController();
   int rating = 5;
@@ -53,6 +59,7 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
   void initState() {
     super.initState();
     _ratingBloc = RatingBloc(RatingRepository());
+    _hotelBloc = HotelBloc(HotelRepository(RoomRepository()));
   }
 
   Future selectImage() async {
@@ -75,13 +82,22 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
     // _ratingBloc = BlocProvider.of<RatingBloc>(context);
     final _formKey = GlobalKey<FormState>();
     String _textInput = '';
-    return CustomAppBarItem(
-        title: 'Review',
-        isIcon: false,
-        isFirst: false,
-        showModalBottomSheet: () {},
-        child: BlocProvider(
-            create: (context) => _ratingBloc,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<RatingBloc>(create: (context) => _ratingBloc),
+        BlocProvider<HotelBloc>(create: (context) => _hotelBloc),
+      ],
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<HotelBloc, HotelState>(listener: (context, state) {
+            print(state);
+          })
+        ],
+        child: CustomAppBarItem(
+            title: 'Review',
+            isIcon: false,
+            isFirst: false,
+            showModalBottomSheet: () {},
             child: SingleChildScrollView(
               child: Container(
                   padding: EdgeInsets.all(1.0),
@@ -116,8 +132,8 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
                                   direction: Axis.horizontal,
                                   allowHalfRating: false,
                                   itemCount: 5,
-                                  itemPadding:
-                                      const EdgeInsets.symmetric(horizontal: 5),
+                                  itemPadding: const EdgeInsets.symmetric(
+                                      horizontal: 5),
                                   itemBuilder: (context, _) => const Icon(
                                       Icons.star,
                                       color: Colors.amber),
@@ -151,12 +167,12 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
                                   maxLength: 200,
                                   maxLines: null,
                                   decoration: const InputDecoration(
-                                    labelText:
-                                        'Enter your comment', // Nhãn của ô nhập
-                                    hintText:
-                                        'Type something...', // Gợi ý cho người dùng
-                                    border:
-                                        OutlineInputBorder(), // Định dạng viền của ô nhập
+                                    labelText: 'Enter your comment',
+                                    // Nhãn của ô nhập
+                                    hintText: 'Type something...',
+                                    // Gợi ý cho người dùng
+                                    border: OutlineInputBorder(),
+                                    // Định dạng viền của ô nhập
                                     contentPadding:
                                         EdgeInsets.symmetric(vertical: 40.0),
                                     alignLabelWithHint: true,
@@ -174,8 +190,10 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
                                 Container(
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                      color: Colors.black, // Màu của đường viền
-                                      width: 0.2, // Độ dày của đường viền
+                                      color: Colors.black,
+                                      // Màu của đường viền
+                                      width: 0.2,
+                                      // Độ dày của đường viền
                                       style: BorderStyle.solid,
                                     ),
                                   ),
@@ -194,7 +212,8 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
                                         padding: EdgeInsets.all(8.0),
                                         child: _images != null
                                             ? Image.memory(_images![index])
-                                            : Text('No image data available.'),
+                                            : Text(
+                                                'No image data available.'),
                                       );
                                     },
                                   ),
@@ -245,28 +264,17 @@ class _WriteReviewScreenState extends State<WriteReviewScreen> {
                               // );
                               // Navigator.pushNamedAndRemoveUntil(context,
                               //     MainScreen.routeName, (route) => false);
+                              _hotelBloc.add(AddReviewsHotel(widget.hotelModel.id ?? '', rating));
                               Navigator.pushNamed(context, promoCodeState.routeName);
                             }
                           },
                           child: const Text('Done'),
                         ),
-                        //  BlocBuilder<RatingBloc, RatingState>(
-                        //         bloc: _ratingBloc,
-                        //         builder: (context, state) {
-                        //           print("thanh cong");
-
-                        //           if (state is RatingFailure) {
-                        //             // Hiển thị ID của rating sau khi đã được thêm thành công
-                        //           } else if (state is RatingAdded){
-                        //             // Hiển thị trạng thái khác (nếu cần)
-                        //             print("thanh cong11");
-                        //           }
-                        //           return const SizedBox();
-                        //         },
-                        //       ),
                       ],
                     ),
                   )),
-            )));
+            )),
+      ),
+    );
   }
 }

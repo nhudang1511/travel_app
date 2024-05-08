@@ -6,10 +6,13 @@ class ItemTotalFlight extends StatelessWidget {
   const ItemTotalFlight({super.key, required this.price});
   final int price;
 
+
   @override
   Widget build(BuildContext context) {
     const int free = 0;
     int ticket = SharedService.getListSeat().length;
+    double discount = SharedService.getPromo() ?? 0;
+    int total = (free + price) - (free + price * discount).toInt();
     return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24.0),
@@ -43,8 +46,7 @@ class ItemTotalFlight extends StatelessWidget {
                       .headlineSmall
                       ?.copyWith(color: Colors.black),
                 ),
-                Text(
-                  '${free + price*ticket}',
+                Text( '$total',
                   style: Theme.of(context)
                       .textTheme
                       .headlineSmall

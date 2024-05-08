@@ -34,4 +34,20 @@ class NotificationRepository {
       rethrow;
     }
   }
+
+  Future<List<NotificationModel>> getAllNotification() async {
+    try {
+      var querySnapshot = await _firebaseFirestore
+          .collection('notification')
+          .get();
+      return querySnapshot.docs.map((doc) {
+        var data = doc.data();
+        data['id'] = doc.id;
+        return NotificationModel().fromDocument(data);
+      }).toList();
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+  }
 }

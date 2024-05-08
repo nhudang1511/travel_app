@@ -227,4 +227,37 @@ class HotelRepository {
       rethrow;
     }
   }
+
+  Future<HotelModel?> addHotelReviews(
+      String hotelId, num rating) async {
+    try {
+      var hotelDoc =
+      await _firebaseFirestore.collection('hotel').doc(hotelId).get();
+      if (hotelDoc.exists) {
+        var data = hotelDoc.data();
+        if (data != null) {
+          int total = data['total_review'] + 1;
+          num rates = rating;
+          if(data['rating'] != 0){
+            rates = (data['rating'] + rating)/2;
+          }
+          // Sử dụng `.update()` để cập nhật dữ liệu trong Firestore
+          await _firebaseFirestore.collection('hotel').doc(hotelId).update({
+            'total_review': total,
+            'rating' : rates
+          });
+          data['id'] = hotelDoc.id;
+          data['total_review'] = total;
+          data['rating'] = rating;
+          return HotelModel().fromDocument(data);
+        }
+      } else {
+        return null; // Return null if hotel not found
+      }
+    } catch (e) {
+      log(e.toString());
+      rethrow;
+    }
+    return null;
+  }
 }

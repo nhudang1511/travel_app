@@ -19,6 +19,7 @@ class HotelBloc extends Bloc<HotelEvent, HotelState> {
     on<SortHotelByServices>(_onSortHotelByServices);
     on<SortHotelByProperty>(_onSortHotelByProperty);
     on<SortHotelBy>(_onSortHotelBy);
+    on<AddReviewsHotel>(_onAddReviewsHotel);
   }
 
   void _onLoadHotel(event, Emitter<HotelState> emit) async {
@@ -54,7 +55,7 @@ class HotelBloc extends Bloc<HotelEvent, HotelState> {
   void _onRateHotel(event, Emitter<HotelState> emit) async {
     try {
       List<HotelModel> hotels =
-          await _hotelRepository.getHotelsByRating(event.rate);
+      await _hotelRepository.getHotelsByRating(event.rate);
 
       emit(HotelLoaded(hotels: hotels));
     } catch (e) {
@@ -65,7 +66,7 @@ class HotelBloc extends Bloc<HotelEvent, HotelState> {
   void _onSortHotelByBudget(event, Emitter<HotelState> emit) async {
     try {
       List<HotelModel> hotels =
-          await _hotelRepository.getHotelsByBudget(event.start, event.end);
+      await _hotelRepository.getHotelsByBudget(event.start, event.end);
       emit(HotelLoaded(hotels: hotels));
     } catch (e) {
       emit(HotelFailure());
@@ -75,7 +76,7 @@ class HotelBloc extends Bloc<HotelEvent, HotelState> {
   void _onSortHotelByServices(event, Emitter<HotelState> emit) async {
     try {
       List<HotelModel> hotels =
-          await _hotelRepository.getHotelsByServices(event.services);
+      await _hotelRepository.getHotelsByServices(event.services);
       emit(HotelLoaded(hotels: hotels));
     } catch (e) {
       emit(HotelFailure());
@@ -85,7 +86,7 @@ class HotelBloc extends Bloc<HotelEvent, HotelState> {
   void _onSortHotelByProperty(event, Emitter<HotelState> emit) async {
     try {
       List<HotelModel> hotels =
-          await _hotelRepository.getHotelsByType(event.property);
+      await _hotelRepository.getHotelsByType(event.property);
       emit(HotelLoaded(hotels: hotels));
     } catch (e) {
       emit(HotelFailure());
@@ -98,6 +99,17 @@ class HotelBloc extends Bloc<HotelEvent, HotelState> {
           event.rate, event.start, event.end, event.services, event.property);
       emit(HotelLoaded(hotels: hotels));
     } catch (e) {
+      emit(HotelFailure());
+    }
+  }
+
+  void _onAddReviewsHotel(event, Emitter<HotelState> emit) async {
+    try {
+      HotelModel? hotelModel = await _hotelRepository.addHotelReviews(
+          event.hotelId, event.rating);
+      emit(HotelLoaded(hotels: [hotelModel ?? HotelModel()]));
+    } catch (e) {
+      print(e.toString());
       emit(HotelFailure());
     }
   }

@@ -35,7 +35,7 @@ class CustomInkwell extends StatelessWidget {
                 flex: 3,
                 child: Text(
                   title,
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(color: Colors.black),
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(color: const Color(0xFF313131)),
                 ),
               ),
               Expanded(

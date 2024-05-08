@@ -57,7 +57,7 @@ class _CustomHomeAppBarState extends State<CustomHomeAppBar> {
               ),
             ),
             actions: [
-              InkWell(
+              GestureDetector(
                 onTap: (){
                   Navigator.pushNamed(context, NotificationScreen.routeName);
                 },

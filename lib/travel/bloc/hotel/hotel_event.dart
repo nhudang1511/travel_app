@@ -59,3 +59,10 @@ class SortHotelBy extends HotelEvent {
       required this.services,
       required this.property});
 }
+
+class AddReviewsHotel extends HotelEvent{
+  final String hotelId;
+  final num rating;
+  AddReviewsHotel(this.hotelId, this.rating);
+}
+

@@ -155,7 +155,7 @@ class _ConfirmFlightScreenState extends State<ConfirmFlightScreen> {
     int price = widget.flightModel.price ?? 1;
     total = numberTicket * price;
     double promo = SharedService.getPromo() ?? 0;
-    discount = total*promo.toInt();
+    discount = (numberTicket * price*promo).toInt();
   }
 
   @override

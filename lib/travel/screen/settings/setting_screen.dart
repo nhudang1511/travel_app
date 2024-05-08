@@ -47,7 +47,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         flex: 3,
                         child: Text(
                           "Dark mode",
-                          style: Theme.of(context).textTheme.displaySmall,
+                          style: Theme.of(context).textTheme.displaySmall?.copyWith(color: const Color(0xFF313131)),
                         ),
                       ),
                       Expanded(

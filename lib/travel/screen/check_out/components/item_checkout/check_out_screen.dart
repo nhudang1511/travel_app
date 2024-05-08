@@ -214,6 +214,11 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
           title: 'Payment',
           button: () {
            if(guests.isNotEmpty && savedStartDate != null && savedEndDate != null){
+             if(endDate!= null && startDate != null){
+               Duration duration = endDate!.difference(startDate!);
+               int daysDifference = duration.inDays;
+               SharedService.setDays(daysDifference);
+             }
              if(promo == null){
                SharedService.clear("promo");
              }
